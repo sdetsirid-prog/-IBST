@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานสิ่งที่ต้องทำประจำวัน</title>
+    <!-- เชื่อมต่อกับ Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 antialiased">
+
+    <!-- Container สำหรับหน้าทั้งหมด (Page Container) -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- ส่วนแบนเนอร์ (Header) ที่แสดงอยู่บนทุกหน้า -->
+        <div class="bg-indigo-600 rounded-xl p-6 text-center shadow-lg mb-8">
+            <h1 id="banner-title" class="text-2xl sm:text-3xl font-bold text-white tracking-wide">รายงานสิ่งที่ต้องทำประจำวัน</h1>
+        </div>
+
+        <!-- หน้าหลัก (Main Page) -->
+        <div id="main-page" class="">
+            <!-- ตารางไอคอน (Icons Grid) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+                <!-- ไอคอน 1: สินค้าจากสาขา (คลิกได้) -->
+                <div id="branch-products-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-16 h-16 mx-auto mb-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-9 0a2 2 0 012-2h2a2 2 0 012 2m-4 0h5a2 2 0 012 2v8a2 2 0 01-2 2h-5a2 2 0 01-2-2v-8a2 2 0 012-2zM9 5h5a2 2 0 012 2v10a2 2 0 01-2 2h-5a2 2 0 01-2-2V7a2 2 0 012-2z"></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">สินค้าจากสาขา</p>
+                </div>
+                
+                <!-- ไอคอน 2: ปฏิทิน (คลิกได้) -->
+                <div id="calendar-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-16 h-16 mx-auto mb-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M17 11h.01M16 16h.01M8 16h.01M12 16h.01M12 21a2 2 0 01-2 2h-3a2 2 0 01-2-2V5a2 2 0 012-2h3a2 2 0 012 2v16z"></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">ปฏิทิน</p>
+                </div>
+
+                <!-- ไอคอน 3: ซัพพลายเออร์และพาเลท -->
+                <div id="supplier-pallet-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-16 h-16 mx-auto mb-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">ซัพพลายเออร์และพาเลท</p>
+                </div>
+
+                <!-- ไอคอน 4: สถิติ (คลิกได้) -->
+                <div id="statistics-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l2 2 4-4m5.618-4.016a11.955 11.955 0 011.944 6.644c0 4.418-3.582 8-8 8s-8-3.582-8-8a8 8 0 011.944-6.644M12 2V.5m0 23V22.5M2.5 12h1m19 0h1M12 2a10 10 0 100 20 10 10 0 000-20z" ></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">สถิติ</p>
+                </div>
+            </div>
+             <!-- ไอคอน 5: ถาม AI -->
+            <div id="ai-chat-icon" class="mt-8 bg-purple-600 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-purple-700 transition-colors duration-200">
+                <svg class="w-16 h-16 mx-auto mb-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3.25l3 3m0 0l3-3m-3 3v13.5m0-13.5a9 9 0 100 18 9 9 0 000-18z"></path>
+                </svg>
+                <p class="text-white font-semibold mt-2">ถาม AI</p>
+            </div>
+        </div>
+        
+        <!-- หน้าสถิติ (Statistics Page) -->
+        <div id="statistics-page" class="hidden">
+            <div class="mb-6">
+                <button id="back-button-to-main-from-stats" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Main Menu
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">ภาพรวมสถิติ</h2>
+                <div id="statistics-content">
+                    <p class="text-center text-gray-400 py-8">กำลังโหลดข้อมูล...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- หน้าปฏิทิน (Calendar Page) -->
+        <div id="calendar-page" class="hidden">
+            <div class="mb-6">
+                <button id="back-button-to-main-from-calendar" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Main Menu
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <div class="flex justify-between items-center mb-6">
+                    <button id="prev-month-button" class="text-indigo-400 hover:text-indigo-200 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <h2 id="calendar-header" class="text-2xl font-bold text-white"></h2>
+                    <button id="next-month-button" class="text-indigo-400 hover:text-indigo-200 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-7 text-center text-sm font-semibold text-gray-400 mb-4">
+                    <span>อาทิตย์</span>
+                    <span>จันทร์</span>
+                    <span>อังคาร</span>
+                    <span>พุธ</span>
+                    <span>พฤหัสบดี</span>
+                    <span>ศุกร์</span>
+                    <span>เสาร์</span>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-2">
+                    <!-- วันที่ในปฏิทินจะถูกเพิ่มที่นี่โดย JavaScript -->
+                </div>
+
+                <div id="daily-entries-list" class="mt-8 space-y-4">
+                    <!-- รายการที่บันทึกไว้ในแต่ละวันจะถูกแสดงที่นี่ -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- หน้าซัพพลายเออร์และพาเลท (Supplier and Pallet Page) -->
+        <div id="supplier-pallet-page" class="hidden">
+            <!-- ปุ่มย้อนกลับ -->
+            <div class="mb-6">
+                <button id="back-button-to-main-from-supplier" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Main Menu
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">ฐานข้อมูลซัพพลายเออร์และพาเลท</h2>
+                <!-- ตารางสำหรับแสดงข้อมูล -->
+                <div class="overflow-x-auto rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-200 uppercase bg-gray-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">ชื่อซัพพลายเออร์</th>
+                                <th scope="col" class="px-6 py-3">รหัสพาเลท</th>
+                                <th scope="col" class="px-6 py-3">จำนวนพาเลทที่ลงได้</th>
+                                <th scope="col" class="px-6 py-3">หมายเหตุ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplier-pallet-container">
+                            <!-- ข้อมูลจะถูกเพิ่มที่นี่โดย JavaScript -->
+                             <tr>
+                                <td colspan="4" class="px-6 py-4 text-center">
+                                    <div class="text-center text-gray-400 py-8">
+                                        กำลังโหลดข้อมูล...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- หน้าสินค้าย่อย (Branch Products Sub-Page) -->
+        <div id="branch-products-page" class="hidden">
+            <!-- ปุ่มย้อนกลับ -->
+            <div class="mb-6">
+                <button id="back-button-to-main" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Main Menu
+                </button>
+            </div>
+            <!-- ตารางไอคอนสำหรับหน้าย่อย -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+                <!-- ไอคอนย่อย 1: แบบฟอร์มลงสินค้า (คลิกได้) -->
+                <div id="entry-form-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-16 h-16 mx-auto mb-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-9 0a2 2 0 012-2h2a2 2 0 012 2m-4 0h5a2 2 0 012 2v8a2 2 0 01-2 2h-5a2 2 0 01-2-2v-8a2 2 0 012-2zM9 5h5a2 2 0 012 2v10a2 2 0 01-2 2h-5a2 2 0 01-2-2V7a2 2 0 012-2z"></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">แบบฟอร์มลงสินค้าสาขา</p>
+                </div>
+
+                <!-- ไอคอนย่อย 2: รายละเอียดสินค้า -->
+                <div id="product-details-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-16 h-16 mx-auto mb-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">รายละเอียดสินค้าจากสาขา</p>
+                </div>
+
+                <!-- ไอคอนย่อย 3: สินค้าเสียหาย -->
+                <div id="damaged-products-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-16 h-16 mx-auto mb-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">สินค้าเสียหายจากสาขา</p>
+                </div>
+
+                <!-- ไอคอนย่อย 4: สินค้าที่เช็คเสร็จแล้ว (คลิกได้) -->
+                <div id="completed-products-icon" class="bg-gray-800 p-6 rounded-xl text-center shadow-md cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                    <svg class="w-16 h-16 mx-auto mb-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <p class="text-gray-200 font-semibold mt-2">สินค้าสาขาที่เช็คเสร็จแล้ว</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- หน้าแสดงรายละเอียดสินค้า (Product Details Page) -->
+        <div id="product-details-page" class="hidden">
+             <!-- ปุ่มย้อนกลับ -->
+            <div class="mb-6">
+                <button id="back-button-to-sub-from-details" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Branch Products
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">รายการสินค้าจากสาขา</h2>
+                <!-- ตารางสำหรับแสดงข้อมูล -->
+                <div class="overflow-x-auto rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-200 uppercase bg-gray-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">สถานะการเช็ค</th>
+                                <th scope="col" class="px-6 py-3">วันที่รถมาส่ง</th>
+                                <th scope="col" class="px-6 py-3">ทะเบียนรถ</th>
+                                <th scope="col" class="px-6 py-3">หมายเลข TFOR</th>
+                                <th scope="col" class="px-6 py-3">สาขาต้นทาง</th>
+                                <th scope="col" class="px-6 py-3">จำนวนพาเลท</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-list-container">
+                            <!-- รายการสินค้าจะถูกเพิ่มที่นี่โดย JavaScript -->
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center">
+                                    <div class="text-center text-gray-400 py-8">
+                                        กำลังโหลดข้อมูล...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- หน้าแสดงรายละเอียด TFOR (TFOR Details Page) -->
+        <div id="tfor-details-page" class="hidden">
+            <!-- ปุ่มย้อนกลับ -->
+            <div class="mb-6">
+                <button id="back-button-to-product-details" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Product List
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">รายละเอียด TFOR <span id="tfor-number-display"></span></h2>
+                <div id="tfor-detail-content" class="space-y-6">
+                    <!-- รายละเอียดและฟอร์มจะถูกสร้างขึ้นที่นี่ -->
+                    <p class="text-gray-300">
+                        <strong>วันที่รถมาส่ง:</strong> <span id="tfor-delivery-date"></span>
+                    </p>
+                    <p class="text-gray-300">
+                        <strong>ทะเบียนรถ:</strong> <span id="tfor-license-plate"></span>
+                    </p>
+                    <p class="text-gray-300">
+                        <strong>สถานะการเช็คปัจจุบัน:</strong> <span id="tfor-status-display" class="font-semibold text-red-400"></span>
+                    </p>
+
+                    <div class="border-t border-gray-600 pt-6">
+                        <h3 class="text-lg font-semibold text-white mb-2">อัปเดตสถานะการเช็ค</h3>
+                    </div>
+                    
+                    <div id="pallet-status-container" class="space-y-4">
+                        <!-- ปุ่มสถานะแต่ละพาเลทจะถูกเพิ่มที่นี่ -->
+                        <div class="grid grid-cols-5 sm:grid-cols-10 gap-2" id="pallet-buttons-grid">
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-600 pt-6">
+                        <h3 class="text-lg font-semibold text-white mb-2">รายการสินค้าเสียหาย</h3>
+                    </div>
+
+                    <!-- รายการสินค้าเสียหายที่เพิ่มขึ้นมา -->
+                    <div id="damaged-items-container" class="space-y-4">
+                        <!-- รายการเสียหายจะถูกเพิ่มที่นี่ -->
+                        <!-- Template for a single damaged item -->
+                        <div class="damaged-item-group bg-gray-700 p-4 rounded-lg space-y-4 hidden">
+                            <div class="flex justify-end">
+                                <button type="button" class="remove-damaged-item-button text-red-400 hover:text-red-600 transition-colors duration-200">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">ปัญหา</label>
+                                <div class="mt-1 flex flex-wrap gap-2">
+                                    <button type="button" class="problem-button bg-gray-600 text-white rounded-md py-2 px-4 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-problem="สินค้ากล่องบุบ/พัง">สินค้ากล่องบุบ/พัง</button>
+                                    <button type="button" class="problem-button bg-gray-600 text-white rounded-md py-2 px-4 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-problem="สินค้าไม่ติดสติกเกอร์">สินค้าไม่ติดสติกเกอร์</button>
+                                    <button type="button" class="problem-button bg-gray-600 text-white rounded-md py-2 px-4 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-problem="สินค้ามาไม่ครบ">สินค้ามาไม่ครบ</button>
+                                    <button type="button" class="problem-button bg-gray-600 text-white rounded-md py-2 px-4 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-problem="สินค้ามาเกิน">สินค้ามาเกิน</button>
+                                    <button type="button" class="problem-button bg-gray-600 text-white rounded-md py-2 px-4 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-problem="อื่นๆ">อื่นๆ</button>
+                                </div>
+                                <input type="hidden" name="problem-types" class="problem-types-input">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">เลข ITEMNUMBER</label>
+                                <input type="text" name="item-number" class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">จำนวน</label>
+                                <input type="number" name="quantity" class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">รูปภาพสินค้า</label>
+                                <input type="file" name="item-photo" accept="image/*" class="mt-1 block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                                <div class="item-photo-preview mt-2 grid grid-cols-2 gap-2"></div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">รายละเอียดเพิ่มเติม</label>
+                                <textarea name="item-notes" rows="2" class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"></textarea>
+                            </div>
+
+                            <!-- Gemini API Features -->
+                            <div class="mt-4 flex flex-col sm:flex-row gap-2">
+                                <button type="button" class="ai-summary-button flex-1 py-2 px-4 bg-purple-600 text-white rounded-md shadow-sm hover:bg-purple-700 transition-colors duration-200">
+                                    ✨ สรุปปัญหาด้วย AI
+                                </button>
+                                <button type="button" class="ai-suggestion-button flex-1 py-2 px-4 bg-teal-600 text-white rounded-md shadow-sm hover:bg-teal-700 transition-colors duration-200">
+                                    ✨ คำแนะนำจาก AI
+                                </button>
+                            </div>
+                            <div class="ai-summary-result mt-2 text-sm text-gray-300"></div>
+                            <div class="ai-suggestion-result mt-2 text-sm text-gray-300"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center pt-4">
+                        <button type="button" id="add-damaged-item-button"
+                                 class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            + เพิ่มรายการสินค้าเสียหาย
+                        </button>
+                    </div>
+
+                    <form id="tfor-details-form" class="space-y-4">
+                        <div class="hidden">
+                            <input type="hidden" id="details-doc-id" name="docId">
+                            <input type="hidden" id="details-tfor-index" name="tforIndex">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400">หมายเหตุพาเลท</label>
+                            <textarea id="pallet-notes-textarea" name="palletNotes" rows="4" class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"></textarea>
+                        </div>
+                        <button type="submit" id="save-tfor-details-button" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                            บันทึกรายละเอียด
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- หน้าสำหรับแสดงรายการสินค้าเสียหาย (Damaged Products Page) -->
+        <div id="damaged-products-page" class="hidden">
+             <!-- ปุ่มย้อนกลับ -->
+            <div class="mb-6">
+                <button id="back-button-to-sub-from-damaged" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Branch Products
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">รายการสินค้าเสียหายจากสาขา</h2>
+                <div id="damaged-items-list-container" class="space-y-6">
+                    <!-- รายการสินค้าเสียหายจะถูกเพิ่มที่นี่โดย JavaScript -->
+                    <p class="text-center text-gray-400 py-8">กำลังโหลดข้อมูล...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- หน้าแสดงรายละเอียดสินค้าเสียหาย (Item Details Page) -->
+        <div id="item-details-page" class="hidden">
+            <div class="mb-6">
+                <button id="back-button-to-damaged-list" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Damaged List
+                </button>
+            </div>
+            <div id="item-details-content" class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <!-- รายละเอียดสินค้าเสียหายจะถูกเพิ่มที่นี่โดย JavaScript -->
+            </div>
+        </div>
+
+        <!-- หน้าสำหรับแสดงรายการที่เช็คเสร็จแล้ว (Completed Products Page) -->
+        <div id="completed-products-page" class="hidden">
+             <!-- ปุ่มย้อนกลับ -->
+            <div class="mb-6">
+                <button id="back-button-to-sub-from-completed" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Branch Products
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">สินค้าสาขาที่เช็คเสร็จแล้ว</h2>
+                 <!-- ตารางสำหรับแสดงข้อมูล -->
+                <div class="overflow-x-auto rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-200 uppercase bg-gray-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">สถานะการเช็ค</th>
+                                <th scope="col" class="px-6 py-3">วันที่รถมาส่ง</th>
+                                <th scope="col" class="px-6 py-3">ทะเบียนรถ</th>
+                                <th scope="col" class="px-6 py-3">หมายเลข TFOR</th>
+                                <th scope="col" class="px-6 py-3">สาขาต้นทาง</th>
+                                <th scope="col" class="px-6 py-3">จำนวนพาเลท</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completed-products-list-container">
+                            <!-- รายการสินค้าจะถูกเพิ่มที่นี่โดย JavaScript -->
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center">
+                                    <div class="text-center text-gray-400 py-8">
+                                        กำลังโหลดข้อมูล...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- หน้าฟอร์มลงข้อมูล (Entry Form Page) -->
+        <div id="entry-form-page" class="hidden">
+            <!-- ปุ่มย้อนกลับ -->
+            <div class="mb-6">
+                <button id="back-button-to-sub" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Branch Products
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">แบบฟอร์มลงสินค้าสาขา</h2>
+                <form id="entryForm" class="space-y-6">
+                    <!-- ข้อมูลรถทั่วไป -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-2 border-b border-gray-600 pb-2">ข้อมูลรถ</h3>
+                    </div>
+                    <!-- ช่องใส่ข้อมูล วันที่รถมาส่ง -->
+                    <div>
+                        <label for="delivery-date" class="block text-sm font-medium text-gray-400">วันที่รถมาส่ง</label>
+                        <input type="date" id="delivery-date" name="delivery-date" required
+                               class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                    </div>
+                    
+                    <!-- ช่องใส่ข้อมูล วันที่ลงข้อมูล (จะถูกกรอกให้อัตโนมัติ) -->
+                    <div>
+                        <label for="entry-date" class="block text-sm font-medium text-gray-400">วันที่ลงข้อมูล</label>
+                        <input type="date" id="entry-date" name="entry-date" disabled
+                               class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white cursor-not-allowed">
+                    </div>
+
+                    <!-- ช่องใส่ข้อมูล ทะเบียนรถ -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400">ทะเบียนรถ</label>
+                        <div class="mt-1 flex space-x-2">
+                            <input type="text" id="license-plate-alpha" name="license-plate-alpha" placeholder="กข" maxlength="4"
+                                   class="w-1/3 px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 uppercase">
+                            <input type="text" id="license-plate-num" name="license-plate-num" placeholder="1234" maxlength="4"
+                                   class="w-2/3 px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                        </div>
+                    </div>
+
+                    <!-- ช่องอัปโหลดรูปภาพ -->
+                    <div>
+                        <label for="photos" class="block text-sm font-medium text-gray-400">รูปภาพรวมบนรถ</label>
+                        <input type="file" id="photos" name="photos" multiple accept="image/*"
+                               class="mt-1 block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                    </div>
+                    <!-- พื้นที่แสดงตัวอย่างรูปภาพที่เลือก -->
+                    <div id="image-preview" class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+
+                    <div class="border-t border-gray-600 pt-6 mt-6">
+                        <h3 class="text-lg font-semibold text-white mb-2">รายละเอียดพาเลท (TFOR)</h3>
+                    </div>
+
+                    <!-- พื้นที่สำหรับกลุ่มข้อมูล TFOR (เพิ่ม-ลดได้) -->
+                    <div id="tfor-details-container" class="space-y-6">
+                        <!-- ส่วนแม่แบบสำหรับกลุ่มข้อมูล TFOR -->
+                        <div class="tfor-group bg-gray-700 p-6 rounded-lg space-y-4">
+                            <!-- หมายเลข TFOR -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">หมายเลข TFOR</label>
+                                <div class="mt-1 flex items-center space-x-2">
+                                    <span class="tfor-prefix text-white bg-gray-600 px-4 py-2 rounded-md border border-gray-500 cursor-not-allowed text-sm"></span>
+                                    <input type="text" name="tfor-suffix" maxlength="4" required
+                                         class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                                </div>
+                            </div>
+                            
+                            <!-- ช่องใส่ข้อมูล สาขาต้นทาง -->
+                            <div>
+                                <label for="origin-branch" class="block text-sm font-medium text-gray-400">สาขาต้นทาง</label>
+                                <select name="origin-branch" required
+                                         class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                                    <option value="">เลือกสาขา</option>
+                                    <option value="WH.40 (NDC)">WH.40 (NDC)</option>
+                                    <option value="WH.61 Chiangmai">WH.61 Chiangmai</option>
+                                    <option value="WH.62 Suratthani">WH.62 Suratthani</option>
+                                    <option value="WH.63 Nakhon Ratchasima">WH.63 Nakhon Ratchasima</option>
+                                    <option value="WH.64 Leamchabang">WH.64 Leamchabang</option>
+                                    <option value="WH.65 Udon Thani">WH.65 Udon Thani</option>
+                                    <option value="WH.66 Phitsanulok">WH.66 Phitsanulok</option>
+                                    <option value="WH.67 Ratchaburi">WH.67 Ratchaburi</option>
+                                    <option value="WH.68 Hat Yai">WH.68 Hat Yai</option>
+                                </select>
+                            </div>
+
+                            <!-- ปุ่มสำหรับเลือกจำนวนพาเลทที่มา -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">จำนวนพาเลทที่มา</label>
+                                <div class="mt-1 grid grid-cols-5 sm:grid-cols-10 gap-2">
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="1">1</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="2">2</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="3">3</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="4">4</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="5">5</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="6">6</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="7">7</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="8">8</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="9">9</button>
+                                    <button type="button" class="pallet-button bg-gray-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-indigo-500 transition-colors duration-200" data-pallet="10">10</button>
+                                </div>
+                                <input type="hidden" name="selected-pallets" class="selected-pallets-input">
+                            </div>
+                            
+                            <!-- ช่องใส่ หมายเหตุพาเลท (ช่องใหม่) -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">หมายเหตุพาเลท (ถ้ามี)</label>
+                                <textarea name="pallet-notes" rows="3" class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"></textarea>
+                            </div>
+
+                            <!-- ช่องใส่ หมายเลข TFOR ที่พ่วง (ช่องใหม่) -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-400">หมายเลข TFOR ที่พ่วง</label>
+                                <div class="mt-1 flex items-center space-x-2">
+                                    <span class="tfor-prefix-chained text-white bg-gray-600 px-4 py-2 rounded-md border border-gray-500 cursor-not-allowed text-sm"></span>
+                                    <input type="text" name="chained-tfor-suffix" maxlength="4"
+                                         class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ปุ่มสำหรับเพิ่มรายการ TFOR -->
+                    <div class="flex justify-center pt-4">
+                        <button type="button" id="add-tfor-button"
+                                 class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                            + เพิ่มรายการ TFOR
+                        </button>
+                    </div>
+                    
+                    
+                    <!-- ปุ่มบันทึกข้อมูล -->
+                    <div class="pt-4">
+                        <button type="submit"
+                                 class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                            บันทึก
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- หน้าสำหรับแชทกับ AI -->
+        <div id="ai-chat-page" class="hidden">
+            <div class="mb-6">
+                <button id="back-button-to-main-from-ai-chat" class="py-2 px-6 rounded-md bg-gray-700 text-white font-medium hover:bg-gray-600 transition-colors duration-200">
+                    < Back to Main Menu
+                </button>
+            </div>
+            <div class="bg-gray-800 p-8 rounded-xl shadow-lg flex flex-col h-[70vh]">
+                <h2 class="text-2xl font-bold text-center text-white mb-6">ถาม AI</h2>
+                <!-- Chat area -->
+                <div id="ai-chat-container" class="flex-1 overflow-y-auto space-y-4 p-4 rounded-lg bg-gray-700 mb-4">
+                    <!-- Chat messages will be appended here -->
+                    <div class="flex justify-start">
+                        <div class="bg-indigo-600 text-white rounded-b-xl rounded-tr-xl p-3 max-w-[80%]">
+                            สวัสดีครับ/ค่ะ มีอะไรให้ช่วยเกี่ยวกับข้อมูลในระบบบ้างครับ/คะ?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input area -->
+                <div class="flex items-center gap-2">
+                    <input type="text" id="ai-chat-input" placeholder="พิมพ์คำถามของคุณที่นี่..." class="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                    <button id="ai-chat-send-button" class="py-2 px-4 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                        ส่ง
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ส่วนแสดงข้อความแจ้งเตือน (Modal) -->
+        <div id="message-box" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden bg-gray-900 bg-opacity-75">
+            <div class="bg-gray-800 rounded-lg p-6 shadow-xl w-full max-w-sm">
+                <h3 id="message-title" class="text-xl font-bold mb-2"></h3>
+                <p id="message-text" class="text-gray-300 mb-4"></p>
+                <div class="flex justify-end">
+                    <button id="close-message-button" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-200">ตกลง</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- สคริปต์ JavaScript สำหรับการจัดการหน้าและการทำงานของฟอร์ม -->
+    <script type="module">
+        // นำเข้า Firebase และ Firestore
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, collection, onSnapshot, query, serverTimestamp, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Firebase configuration ที่คุณให้มา
+        const firebaseConfig = {
+            apiKey: "AIzaSyCyxcK17XA7tSmNTsVz4kDOyZf91O8ToKw",
+            authDomain: "ibst-5f473.firebaseapp.com",
+            projectId: "ibst-5f473",
+            storageBucket: "ibst-5f473.firebasestorage.app",
+            messagingSenderId: "910195325090",
+            appId: "1:910195325090:web:85fa3dc7827d796983bffb",
+            measurementId: "G-CF1E2VNK6"
+        };
+        const appId = "ibst-5f473"; // ใช้ Project ID เป็น appId
+
+        // ตัวแปรสำหรับ Firestore และ Auth
+        let app, db, auth, userId;
+        let isAuthReady = false;
+        let unsubscribeProductDetails = null;
+        let unsubscribeDamagedProducts = null;
+        let unsubscribeCompletedProducts = null;
+        let unsubscribeStatistics = null;
+        let unsubscribeCalendar = null;
+        let unsubscribeSupplierData = null;
+
+        // ตัวแปรสำหรับเก็บข้อมูล TFOR ที่กำลังแก้ไขอยู่
+        let currentTforData = null;
+        let currentTforDocId = null;
+        let currentTforIndex = null;
+
+        // ตัวแปรสำหรับปฏิทิน
+        let currentMonth = new Date();
+
+        // URL ของ Google Sheets ที่จะดึงข้อมูลมาแสดงผล
+        const SUPPLIER_SHEETS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTm6tSquPkA57zGgY_5y-4VOOTby_ftSHbtrotmepGky1ahqFk3AjU3Y82EPduCdjVp9G-nqOPRY-Sy/pubhtml";
+
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // รับอ้างอิงถึง div ของแต่ละหน้า
+            const mainPage = document.getElementById('main-page');
+            const branchProductsPage = document.getElementById('branch-products-page');
+            const entryFormPage = document.getElementById('entry-form-page');
+            const productDetailsPage = document.getElementById('product-details-page');
+            const tforDetailsPage = document.getElementById('tfor-details-page');
+            const damagedProductsPage = document.getElementById('damaged-products-page');
+            const completedProductsPage = document.getElementById('completed-products-page');
+            const itemDetailsPage = document.getElementById('item-details-page');
+            const statisticsPage = document.getElementById('statistics-page');
+            const calendarPage = document.getElementById('calendar-page');
+            const supplierPalletPage = document.getElementById('supplier-pallet-page'); // หน้าใหม่
+            const aiChatPage = document.getElementById('ai-chat-page');
+
+            // รับอ้างอิงถึงปุ่มและไอคอนต่างๆ
+            const branchProductsIcon = document.getElementById('branch-products-icon');
+            const calendarIcon = document.getElementById('calendar-icon');
+            const statisticsIcon = document.getElementById('statistics-icon');
+            const aiChatIcon = document.getElementById('ai-chat-icon');
+            const supplierPalletIcon = document.getElementById('supplier-pallet-icon'); // ไอคอนใหม่
+            const backButtonToMainFromStats = document.getElementById('back-button-to-main-from-stats');
+            const backButtonToMain = document.getElementById('back-button-to-main');
+            const backButtonToMainFromCalendar = document.getElementById('back-button-to-main-from-calendar');
+            const backButtonToMainFromSupplier = document.getElementById('back-button-to-main-from-supplier'); // ปุ่มใหม่
+            const backButtonToMainFromAiChat = document.getElementById('back-button-to-main-from-ai-chat');
+            const entryFormIcon = document.getElementById('entry-form-icon');
+            const productDetailsIcon = document.getElementById('product-details-icon');
+            const damagedProductsIcon = document.getElementById('damaged-products-icon');
+            const completedProductsIcon = document.getElementById('completed-products-icon'); // ปุ่มใหม่
+            const backButtonToSub = document.getElementById('back-button-to-sub');
+            const backButtonToSubFromDetails = document.getElementById('back-button-to-sub-from-details');
+            const backButtonToSubFromDamaged = document.getElementById('back-button-to-sub-from-damaged');
+            const backButtonToSubFromCompleted = document.getElementById('back-button-to-sub-from-completed'); // ปุ่มใหม่
+            const backButtonToProductDetails = document.getElementById('back-button-to-product-details');
+            const backButtonToDamagedList = document.getElementById('back-button-to-damaged-list');
+            const bannerTitle = document.getElementById('banner-title');
+            const closeMessageButton = document.getElementById('close-message-button');
+            const prevMonthButton = document.getElementById('prev-month-button');
+            const nextMonthButton = document.getElementById('next-month-button');
+            const calendarGrid = document.getElementById('calendar-grid');
+            const calendarHeader = document.getElementById('calendar-header');
+            const aiChatContainer = document.getElementById('ai-chat-container');
+            const aiChatInput = document.getElementById('ai-chat-input');
+            const aiChatSendButton = document.getElementById('ai-chat-send-button');
+            const supplierPalletContainer = document.getElementById('supplier-pallet-container'); // Container ใหม่
+            
+            // รับอ้างอิงถึงส่วนประกอบของฟอร์ม
+            const entryForm = document.getElementById('entryForm');
+            const deliveryDateInput = document.getElementById('delivery-date');
+            const entryDateInput = document.getElementById('entry-date');
+            const tforDetailsContainer = document.getElementById('tfor-details-container');
+            const addTforButton = document.getElementById('add-tfor-button');
+            const photosInput = document.getElementById('photos');
+            const imagePreviewContainer = document.getElementById('image-preview');
+            const productListContainer = document.getElementById('product-list-container');
+            const completedProductsListContainer = document.getElementById('completed-products-list-container'); // Container ใหม่
+            const tforDetailsForm = document.getElementById('tfor-details-form');
+            const palletButtonsGrid = document.getElementById('pallet-buttons-grid');
+            const damagedItemsListContainer = document.getElementById('damaged-items-list-container');
+            const damagedItemsContainer = document.getElementById('damaged-items-container');
+            const addDamagedItemButton = document.getElementById('add-damaged-item-button');
+            const damagedItemTemplate = damagedItemsContainer.querySelector('.damaged-item-group');
+            const itemDetailsContent = document.getElementById('item-details-content');
+            const saveTforDetailsButton = document.getElementById('save-tfor-details-button');
+            const statisticsContent = document.getElementById('statistics-content');
+            const dailyEntriesList = document.getElementById('daily-entries-list');
+
+
+            // ส่วนแม่แบบสำหรับกลุ่มข้อมูล TFOR ใหม่
+            const tforGroupTemplate = document.querySelector('.tfor-group');
+
+            // --- การจัดการ Firebase และ Firestore ---
+            try {
+                // Initialize Firebase
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Sign in anonymously
+                await signInAnonymously(auth);
+                
+                // Set up auth state change listener
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        isAuthReady = true;
+                        console.log("Firebase Auth State Changed. User ID:", userId);
+                    } else {
+                        console.log("No user is signed in.");
+                        userId = null;
+                        isAuthReady = false;
+                    }
+                });
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+            }
+            
+            // --- ฟังก์ชันช่วยเหลือ ---
+
+            // ฟังก์ชันสำหรับแสดงข้อความแจ้งเตือน (Modal)
+            function showMessage(title, message) {
+                const messageBox = document.getElementById('message-box');
+                const messageTitle = document.getElementById('message-title');
+                const messageText = document.getElementById('message-text');
+                
+                messageTitle.textContent = title;
+                messageText.textContent = message;
+                messageBox.classList.remove('hidden');
+            }
+
+            // ฟังก์ชันสำหรับซ่อนข้อความแจ้งเตือน (Modal)
+            function hideMessage() {
+                const messageBox = document.getElementById('message-box');
+                messageBox.classList.add('hidden');
+            }
+            
+            // ฟังก์ชันสำหรับจัดการการแสดงผลของหน้า
+            const showPage = (pageToShowId, title) => {
+                mainPage.classList.add('hidden');
+                branchProductsPage.classList.add('hidden');
+                entryFormPage.classList.add('hidden');
+                productDetailsPage.classList.add('hidden');
+                tforDetailsPage.classList.add('hidden');
+                damagedProductsPage.classList.add('hidden');
+                completedProductsPage.classList.add('hidden');
+                itemDetailsPage.classList.add('hidden');
+                statisticsPage.classList.add('hidden');
+                calendarPage.classList.add('hidden');
+                supplierPalletPage.classList.add('hidden');
+                aiChatPage.classList.add('hidden');
+                
+                document.getElementById(pageToShowId).classList.remove('hidden');
+                
+                bannerTitle.textContent = title;
+
+                // ยกเลิก listener ที่ไม่จำเป็นเมื่อเปลี่ยนหน้า
+                if (unsubscribeProductDetails) {
+                    unsubscribeProductDetails();
+                    unsubscribeProductDetails = null;
+                }
+                if (unsubscribeDamagedProducts) {
+                    unsubscribeDamagedProducts();
+                    unsubscribeDamagedProducts = null;
+                }
+                if (unsubscribeCompletedProducts) {
+                    unsubscribeCompletedProducts();
+                    unsubscribeCompletedProducts = null;
+                }
+                if (unsubscribeStatistics) {
+                    unsubscribeStatistics();
+                    unsubscribeStatistics = null;
+                }
+                if (unsubscribeCalendar) {
+                    unsubscribeCalendar();
+                    unsubscribeCalendar = null;
+                }
+                if (unsubscribeSupplierData) {
+                    unsubscribeSupplierData();
+                    unsubscribeSupplierData = null;
+                }
+            };
+
+            // ฟังก์ชันสำหรับกำหนดวันที่ปัจจุบันให้กับฟิลด์วันที่ทั้งสอง
+            const setCurrentDates = () => {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+
+                deliveryDateInput.value = formattedDate;
+                entryDateInput.value = formattedDate;
+            };
+            
+            // ฟังก์ชันสำหรับเพิ่มกลุ่มข้อมูล TFOR ใหม่
+            const addTforGroup = () => {
+                const newTforGroup = tforGroupTemplate.cloneNode(true);
+                
+                newTforGroup.querySelectorAll('input, select, textarea, .pallet-button').forEach(input => {
+                    if (input.type === 'button') {
+                        input.classList.remove('bg-indigo-500');
+                        input.classList.add('bg-gray-600');
+                    } else if (input.type === 'hidden') {
+                        input.value = '';
+                    } else {
+                        input.value = '';
+                    }
+                });
+
+                // แก้ไข: อัปเดตส่วนแสดง TFOR prefix ให้ถูกต้อง
+                const tforPrefixSpan = newTforGroup.querySelector('.tfor-prefix');
+                const tforPrefixChainedSpan = newTforGroup.querySelector('.tfor-prefix-chained');
+                const currentYear = new Date().getFullYear().toString().slice(-2);
+                if (tforPrefixSpan) {
+                    tforPrefixSpan.textContent = `TFOR${currentYear}-`;
+                }
+                if (tforPrefixChainedSpan) {
+                    tforPrefixChainedSpan.textContent = `TFOR${currentYear}-`;
+                }
+                
+                tforDetailsContainer.appendChild(newTforGroup);
+            };
+
+            // ฟังก์ชันสำหรับสร้างแถวในตาราง
+            const createProductRow = (docId, tfor, index, product, container) => {
+                const row = document.createElement('tr');
+                row.className = `bg-gray-800 border-b border-gray-700 hover:bg-gray-700`;
+                
+                let statusClass = 'bg-red-600 hover:bg-red-700';
+                let statusText = 'ยังไม่เช็ค';
+
+                const checkedCount = tfor.checked_pallets ? tfor.checked_pallets.length : 0;
+                const totalCount = tfor.total_pallets || 0;
+
+                if (checkedCount > 0 && checkedCount < totalCount) {
+                    statusText = 'อยู่ระหว่างเช็ค';
+                    statusClass = 'bg-yellow-600 hover:bg-yellow-700';
+                } else if (checkedCount > 0 && checkedCount === totalCount) {
+                    statusText = 'เช็คเสร็จแล้ว';
+                    statusClass = 'bg-green-600 hover:bg-green-700';
+                }
+                
+                const licensePlate = `${product.license_plate_alpha || ''} ${product.license_plate_num || ''}`.trim();
+                const tforNumber = tfor.tfor_number || 'ไม่ระบุ';
+
+                // เพิ่มปุ่มดูรายละเอียดสำหรับรายการที่ยังไม่เสร็จ
+                const statusButtonHtml = `<button class="view-details-button text-white font-bold py-2 px-4 rounded-md transition-colors duration-200 ${statusClass}" data-doc-id="${docId}" data-tfor-index="${index}">${statusText}</button>`;
+                // สำหรับรายการที่เช็คเสร็จแล้ว จะไม่มีปุ่มให้คลิกอีก
+                const statusDisplayHtml = `<span class="text-white font-bold py-2 px-4 rounded-md transition-colors duration-200 ${statusClass}">${statusText}</span>`;
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        ${container === productListContainer ? statusButtonHtml : statusDisplayHtml}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">${product.delivery_date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${licensePlate}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${tforNumber}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${tfor.origin_branch}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${tfor.total_pallets || 'ไม่ระบุ'}</td>
+                `;
+                container.appendChild(row);
+            };
+
+            // ฟังก์ชันสำหรับดึงและแสดงข้อมูลที่ยังไม่เสร็จจาก Firestore
+            const setupProductDetailsListener = () => {
+                productListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-gray-400 py-8">กำลังโหลดข้อมูล...</div></td></tr>`;
+                if (!userId || !isAuthReady) {
+                    productListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล: ผู้ใช้ไม่ได้เข้าสู่ระบบ</div></td></tr>`;
+                    return;
+                }
+                const q = query(collection(db, `/artifacts/${appId}/users/${userId}/branch-products`));
+                unsubscribeProductDetails = onSnapshot(q, (querySnapshot) => {
+                    productListContainer.innerHTML = '';
+                    let hasUncompletedItems = false;
+                    querySnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        product.tfor_details.forEach((tfor, index) => {
+                            if (tfor.check_status !== 'เช็คเสร็จแล้ว') {
+                                hasUncompletedItems = true;
+                                createProductRow(doc.id, tfor, index, product, productListContainer);
+                            }
+                        });
+                    });
+                    if (!hasUncompletedItems) {
+                        productListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-gray-400 py-8">ไม่มีรายการที่ต้องเช็คในขณะนี้</div></td></tr>`;
+                    }
+                }, (error) => {
+                    console.error("Error fetching documents:", error);
+                    productListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล. กรุณาลองใหม่อีกครั้ง.</div></td></tr>`;
+                });
+            };
+
+            // ฟังก์ชันสำหรับดึงและแสดงข้อมูลที่เช็คเสร็จแล้วจาก Firestore
+            const setupCompletedProductsListener = () => {
+                completedProductsListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-gray-400 py-8">กำลังโหลดข้อมูล...</div></td></tr>`;
+                if (!userId || !isAuthReady) {
+                    completedProductsListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล: ผู้ใช้ไม่ได้เข้าสู่ระบบ</div></td></tr>`;
+                    return;
+                }
+                const q = query(collection(db, `/artifacts/${appId}/users/${userId}/branch-products`));
+                unsubscribeCompletedProducts = onSnapshot(q, (querySnapshot) => {
+                    completedProductsListContainer.innerHTML = '';
+                    let hasCompletedItems = false;
+                    querySnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        product.tfor_details.forEach((tfor, index) => {
+                            if (tfor.check_status === 'เช็คเสร็จแล้ว') {
+                                hasCompletedItems = true;
+                                createProductRow(doc.id, tfor, index, product, completedProductsListContainer);
+                            }
+                        });
+                    });
+                    if (!hasCompletedItems) {
+                        completedProductsListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-gray-400 py-8">ยังไม่มีรายการที่เช็คเสร็จแล้ว</div></td></tr>`;
+                    }
+                }, (error) => {
+                    console.error("Error fetching completed documents:", error);
+                    completedProductsListContainer.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center"><div class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล. กรุณาลองใหม่อีกครั้ง.</div></td></tr>`;
+                });
+            };
+            
+            // ฟังก์ชันสำหรับดึงและแสดงสถิติทั้งหมด
+            const fetchAndDisplayStatistics = () => {
+                statisticsContent.innerHTML = `<p class="text-center text-gray-400 py-8">กำลังโหลดข้อมูล...</p>`;
+
+                if (!userId || !isAuthReady) {
+                    statisticsContent.innerHTML = `<p class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล: ผู้ใช้ไม่ได้เข้าสู่ระบบ</p>`;
+                    return;
+                }
+                
+                const q = query(collection(db, `/artifacts/${appId}/users/${userId}/branch-products`));
+                unsubscribeStatistics = onSnapshot(q, (querySnapshot) => {
+                    let totalPending = 0;
+                    let totalCompleted = 0;
+                    let totalDamagedItems = 0;
+                    let totalOverdue = 0;
+                    const tforCountByBranch = {};
+
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    querySnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        const deliveryDate = new Date(product.delivery_date);
+                        deliveryDate.setHours(0, 0, 0, 0);
+
+                        product.tfor_details.forEach(tfor => {
+                            // นับจำนวน TFOR แต่ละสาขา
+                            const branch = tfor.origin_branch || 'ไม่ระบุ';
+                            tforCountByBranch[branch] = (tforCountByBranch[branch] || 0) + 1;
+
+                            // นับจำนวน TFOR ที่ค้างและเสร็จแล้ว
+                            if (tfor.check_status === 'เช็คเสร็จแล้ว') {
+                                totalCompleted++;
+                            } else {
+                                totalPending++;
+                                // นับจำนวนรถที่มาเกินกำหนด
+                                if (deliveryDate < today) {
+                                    totalOverdue++;
+                                }
+                            }
+
+                            // นับจำนวนสินค้าเสียหาย
+                            if (tfor.damaged_items_list && tfor.damaged_items_list.length > 0) {
+                                totalDamagedItems += tfor.damaged_items_list.length;
+                            }
+                        });
+                    });
+
+                    // สร้าง HTML เพื่อแสดงผลสถิติ
+                    let statisticsHtml = `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-gray-700 p-6 rounded-lg text-center shadow-md">
+                                    <h3 class="text-indigo-400 text-lg font-semibold">TFOR ที่รอเช็ค</h3>
+                                    <p class="text-4xl font-bold mt-2 text-red-400">${totalPending}</p>
+                                </div>
+                                <div class="bg-gray-700 p-6 rounded-lg text-center shadow-md">
+                                    <h3 class="text-indigo-400 text-lg font-semibold">TFOR ที่เช็คเสร็จแล้ว</h3>
+                                    <p class="text-4xl font-bold mt-2 text-green-400">${totalCompleted}</p>
+                                </div>
+                                <div class="bg-gray-700 p-6 rounded-lg text-center shadow-md">
+                                    <h3 class="text-indigo-400 text-lg font-semibold">รถค้างเช็ค (เกินกำหนด)</h3>
+                                    <p class="text-4xl font-bold mt-2 text-yellow-400">${totalOverdue}</p>
+                                </div>
+                                <div class="bg-gray-700 p-6 rounded-lg text-center shadow-md">
+                                    <h3 class="text-indigo-400 text-lg font-semibold">รายการเสียหายทั้งหมด</h3>
+                                    <p class="text-4xl font-bold mt-2 text-orange-400">${totalDamagedItems}</p>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-600 pt-6 mt-6">
+                                <h3 class="text-xl font-bold text-white mb-4">จำนวน TFOR แยกตามสาขา</h3>
+                                <div class="space-y-2">
+                    `;
+                    // เพิ่มรายการสาขาและจำนวน TFOR
+                    for (const branch in tforCountByBranch) {
+                        statisticsHtml += `
+                            <div class="flex justify-between items-center bg-gray-700 p-4 rounded-lg">
+                                <span class="text-gray-300">${branch}</span>
+                                <span class="text-lg font-semibold text-indigo-400">${tforCountByBranch[branch]}</span>
+                            </div>
+                        `;
+                    }
+                    statisticsHtml += `
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    statisticsContent.innerHTML = statisticsHtml;
+                }, (error) => {
+                    console.error("Error fetching statistics:", error);
+                    statisticsContent.innerHTML = `<p class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูลสถิติ. กรุณาลองใหม่อีกครั้ง.</p>`;
+                });
+            };
+            
+            // ฟังก์ชันสำหรับดึงข้อมูลและแสดงผลในปฏิทิน
+            const setupCalendarListener = (date) => {
+                if (!userId || !isAuthReady) {
+                    calendarGrid.innerHTML = `<p class="col-span-7 text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล: ผู้ใช้ไม่ได้เข้าสู่ระบบ</p>`;
+                    return;
+                }
+                const q = query(collection(db, `/artifacts/${appId}/users/${userId}/branch-products`));
+                unsubscribeCalendar = onSnapshot(q, (querySnapshot) => {
+                    const dataByDate = {};
+                    querySnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        const deliveryDate = product.delivery_date;
+                        if (dataByDate[deliveryDate]) {
+                            dataByDate[deliveryDate].push({ ...product, docId: doc.id });
+                        } else {
+                            dataByDate[deliveryDate] = [{ ...product, docId: doc.id }];
+                        }
+                    });
+                    renderCalendar(date, dataByDate);
+                }, (error) => {
+                    console.error("Error fetching calendar data:", error);
+                    calendarGrid.innerHTML = `<p class="col-span-7 text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูลปฏิทิน. กรุณาลองใหม่อีกครั้ง.</p>`;
+                });
+            };
+
+            // ฟังก์ชันสำหรับสร้างและแสดงปฏิทิน
+            const renderCalendar = (date, dataByDate) => {
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const monthName = date.toLocaleString('th-TH', { month: 'long', year: 'numeric' });
+                
+                calendarHeader.textContent = monthName;
+                calendarGrid.innerHTML = '';
+                dailyEntriesList.innerHTML = '';
+
+                const firstDayOfMonth = new Date(year, month, 1);
+                const lastDayOfMonth = new Date(year, month + 1, 0);
+                const startDayOfWeek = firstDayOfMonth.getDay(); // 0 = Sunday, 1 = Monday...
+
+                // เพิ่มวันที่ว่างเปล่าก่อนวันแรกของเดือน
+                for (let i = 0; i < startDayOfWeek; i++) {
+                    const emptyDay = document.createElement('div');
+                    calendarGrid.appendChild(emptyDay);
+                }
+
+                // เพิ่มวันที่ในปฏิทิน
+                for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
+                    const dayElement = document.createElement('button');
+                    const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const hasData = dataByDate[formattedDate];
+                    
+                    dayElement.className = `p-2 rounded-lg text-center transition-colors duration-200`;
+                    dayElement.textContent = day;
+                    dayElement.dataset.date = formattedDate;
+
+                    if (hasData) {
+                        dayElement.classList.add('bg-indigo-600', 'text-white', 'font-bold', 'hover:bg-indigo-700', 'cursor-pointer');
+                        dayElement.addEventListener('click', () => {
+                            displayDailyEntries(formattedDate, dataByDate);
+                        });
+                    } else {
+                        dayElement.classList.add('bg-gray-700', 'text-gray-400', 'cursor-not-allowed');
+                    }
+                    calendarGrid.appendChild(dayElement);
+                }
+            };
+
+            // ฟังก์ชันสำหรับแสดงรายการที่บันทึกไว้ในวันที่เลือก
+            const displayDailyEntries = (date, dataByDate) => {
+                dailyEntriesList.innerHTML = `<h3 class="text-xl font-bold text-white mb-4">รายการของวันที่ ${new Date(date).toLocaleDateString('th-TH')}</h3>`;
+                const entries = dataByDate[date];
+                if (entries && entries.length > 0) {
+                    entries.forEach(entry => {
+                        const entryCard = document.createElement('div');
+                        entryCard.className = 'bg-gray-700 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-600 transition-colors duration-200';
+                        
+                        let tforDetailsHtml = '';
+                        entry.tfor_details.forEach((tfor, tforIndex) => {
+                            const statusText = tfor.check_status === 'เช็คเสร็จแล้ว' ? 'เช็คแล้ว' : 'ยังไม่เช็ค';
+                            tforDetailsHtml += `
+                                <div class="flex justify-between items-center mb-1 view-details-button" data-doc-id="${entry.docId}" data-tfor-index="${tforIndex}">
+                                    <span>TFOR: ${tfor.tfor_number}</span>
+                                    <span class="text-sm ${tfor.check_status === 'เช็คเสร็จแล้ว' ? 'text-green-400' : 'text-red-400'}">${statusText}</span>
+                                </div>
+                            `;
+                        });
+
+                        entryCard.innerHTML = `
+                            <p class="font-semibold text-white">ทะเบียนรถ: ${entry.license_plate_alpha} ${entry.license_plate_num}</p>
+                            <p class="text-gray-400 text-sm mb-2">สาขาต้นทาง: ${entry.tfor_details[0].origin_branch}</p>
+                            <div class="border-t border-gray-600 pt-2">
+                                ${tforDetailsHtml}
+                            </div>
+                        `;
+                        
+                        entryCard.addEventListener('click', (e) => {
+                            const target = e.target.closest('.view-details-button');
+                            if (target) {
+                                const docId = target.dataset.docId;
+                                const tforIndex = target.dataset.tforIndex;
+                                showTforDetails(docId, parseInt(tforIndex));
+                            }
+                        });
+
+                        dailyEntriesList.appendChild(entryCard);
+                    });
+                } else {
+                    dailyEntriesList.innerHTML += `<p class="text-gray-400">ไม่มีข้อมูลที่ถูกบันทึกในวันนี้</p>`;
+                }
+            };
+            
+            // ฟังก์ชันสำหรับจัดการการแชทกับ AI
+            const handleAiChat = async () => {
+                const userMessage = aiChatInput.value.trim();
+                if (!userMessage) return;
+
+                // เพิ่มข้อความของผู้ใช้ลงในหน้าจอ
+                appendMessage(userMessage, 'user');
+                aiChatInput.value = '';
+
+                // เพิ่มข้อความ "กำลังพิมพ์..."
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'ai-typing-indicator flex justify-start';
+                typingIndicator.innerHTML = '<div class="bg-gray-600 text-white rounded-b-xl rounded-tr-xl p-3 max-w-[80%]">พิมพ์...</div>';
+                aiChatContainer.appendChild(typingIndicator);
+                aiChatContainer.scrollTop = aiChatContainer.scrollHeight;
+
+                try {
+                    // ดึงข้อมูลทั้งหมดจาก Firestore เพื่อให้ AI สามารถตอบคำถามได้
+                    const allDocs = await getDocs(collection(db, `/artifacts/${appId}/users/${userId}/branch-products`));
+                    const allData = [];
+                    allDocs.forEach(doc => {
+                        allData.push({ id: doc.id, ...doc.data() });
+                    });
+                    const allDataJson = JSON.stringify(allData);
+
+                    // สร้าง prompt สำหรับ Gemini API
+                    const prompt = `
+                        คุณคือผู้ช่วย AI ที่เชี่ยวชาญด้านการจัดการข้อมูล TFOR
+                        ข้อมูลในระบบมีดังนี้:
+                        ${allDataJson}
+
+                        คำถามจากผู้ใช้: "${userMessage}"
+                        
+                        โปรดตอบคำถามของผู้ใช้โดยใช้ข้อมูลที่ได้รับมา และให้คำตอบที่เป็นประโยชน์และกระชับในภาษาไทย.
+                        ถ้าข้อมูลไม่พบหรือไม่เพียงพอ ให้แจ้งผู้ใช้ตามตรงว่าไม่พบข้อมูลที่เกี่ยวข้อง.
+                        ห้ามแต่งข้อมูลขึ้นเอง.
+                    `;
+
+                    // เรียกใช้ Gemini API
+                    const payload = {
+                        contents: [{ role: "user", parts: [{ text: prompt }] }],
+                    };
+                    const apiKey = "AIzaSyAA5KnCSUP4cYnUtRDGfcJXI078WF1LL5Y";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API call failed with status: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    const aiResponse = result.candidates[0].content.parts[0].text;
+                    
+                    // ลบข้อความ "กำลังพิมพ์..."
+                    aiChatContainer.removeChild(typingIndicator);
+                    
+                    // เพิ่มคำตอบของ AI ลงในหน้าจอ
+                    appendMessage(aiResponse, 'ai');
+
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    aiChatContainer.removeChild(typingIndicator);
+                    appendMessage("ขออภัยครับ/ค่ะ เกิดข้อผิดพลาดในการเชื่อมต่อกับ AI กรุณาลองใหม่อีกครั้ง", 'ai');
+                }
+            };
+            
+            // ฟังก์ชันสำหรับแสดงข้อความในหน้าแชท
+            const appendMessage = (text, sender) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+                
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = `rounded-b-xl p-3 max-w-[80%] ${sender === 'user' ? 'bg-indigo-600 text-white rounded-tl-xl' : 'bg-gray-600 text-white rounded-tr-xl'}`;
+                bubbleDiv.textContent = text;
+                
+                messageDiv.appendChild(bubbleDiv);
+                aiChatContainer.appendChild(messageDiv);
+                aiChatContainer.scrollTop = aiChatContainer.scrollHeight;
+            };
+
+            // ฟังก์ชันสำหรับแสดงหน้าแก้ไขรายละเอียด TFOR
+            const showTforDetails = (docId, tforIndex) => {
+                // ดึงข้อมูล TFOR จาก Firestore
+                const docRef = doc(db, `/artifacts/${appId}/users/${userId}/branch-products`, docId);
+                getDoc(docRef).then(docSnap => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        currentTforData = data.tfor_details[tforIndex];
+                        currentTforDocId = docId;
+                        currentTforIndex = tforIndex;
+                        
+                        // แสดงผลข้อมูลบนหน้า
+                        document.getElementById('tfor-number-display').textContent = currentTforData.tfor_number;
+                        document.getElementById('tfor-delivery-date').textContent = data.delivery_date;
+                        document.getElementById('tfor-license-plate').textContent = `${data.license_plate_alpha || ''} ${data.license_plate_num || ''}`.trim();
+
+                        const checkedCount = currentTforData.checked_pallets ? currentTforData.checked_pallets.length : 0;
+                        const totalCount = currentTforData.total_pallets || 0;
+                        
+                        let statusText = 'ยังไม่เช็ค';
+                        let statusClass = 'text-red-400';
+                        if (checkedCount > 0 && checkedCount < totalCount) {
+                            statusText = 'อยู่ระหว่างเช็ค';
+                            statusClass = 'text-yellow-400';
+                        } else if (checkedCount > 0 && checkedCount === totalCount) {
+                            statusText = 'เช็คเสร็จแล้ว';
+                            statusClass = 'text-green-400';
+                        }
+
+                        document.getElementById('tfor-status-display').textContent = statusText;
+                        document.getElementById('tfor-status-display').className = `font-semibold ${statusClass}`;
+
+                        // แสดงข้อมูลรายการเสียหายที่บันทึกไว้
+                        damagedItemsContainer.innerHTML = '';
+                        const damagedItemsList = currentTforData.damaged_items_list || [];
+                        damagedItemsList.forEach(item => {
+                            addDamagedItem(item);
+                        });
+                        
+                        // ถ้าไม่มีรายการเสียหายเลย ให้เพิ่มรายการเริ่มต้น 1 รายการ
+                        if (damagedItemsList.length === 0) {
+                            addDamagedItem();
+                        }
+                        
+                        document.getElementById('pallet-notes-textarea').value = currentTforData.pallet_notes || '';
+                        
+                        // แก้ไข: แสดงหมายเลข TFOR ที่พ่วง
+                        const chainedTforNumber = currentTforData.chained_tfor_number || '';
+                        const chainedTforInput = document.getElementById('chained-tfor-number-input');
+                        if (chainedTforInput) {
+                            chainedTforInput.value = chainedTforNumber;
+                        }
+
+                        // สร้างปุ่มพาเลทสำหรับแก้ไขสถานะ
+                        const palletButtonsGrid = document.getElementById('pallet-buttons-grid');
+                        palletButtonsGrid.innerHTML = '';
+                        // ใช้ total_pallets จากข้อมูลที่บันทึกมา
+                        const totalPallets = currentTforData.total_pallets || (currentTforData.selected_pallets ? currentTforData.selected_pallets.split(',').length : 0);
+                        const checkedPallets = currentTforData.checked_pallets || [];
+
+                        for (let i = 1; i <= totalPallets; i++) {
+                            const isChecked = checkedPallets.includes(i.toString());
+                            const buttonClass = isChecked ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600 hover:bg-indigo-500';
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.className = `pallet-button text-white rounded-md py-2 text-sm font-semibold transition-colors duration-200 ${buttonClass}`;
+                            button.textContent = i;
+                            button.dataset.pallet = i;
+                            palletButtonsGrid.appendChild(button);
+                        }
+
+                        showPage('tfor-details-page', 'รายละเอียด TFOR');
+                    }
+                }).catch(e => {
+                    console.error("Error fetching TFOR details:", e);
+                    showMessage("ข้อผิดพลาด", "ไม่สามารถดึงรายละเอียด TFOR ได้");
+                });
+            };
+
+            // ฟังก์ชันสำหรับบันทึกการแก้ไขในหน้า TFOR details
+            const saveTforDetails = async (e) => {
+                e.preventDefault();
+
+                if (!userId || !currentTforDocId || currentTforIndex === null) {
+                    showMessage("ข้อผิดพลาด", "ข้อมูลไม่ถูกต้อง. กรุณาลองใหม่.");
+                    return;
+                }
+
+                // แสดงสถานะกำลังบันทึก
+                saveTforDetailsButton.textContent = 'กำลังบันทึก...';
+                saveTforDetailsButton.disabled = true;
+
+                // รวบรวมข้อมูลรายการเสียหาย
+                const damagedItems = [];
+                const damagedItemElements = damagedItemsContainer.querySelectorAll('.damaged-item-group:not(.hidden)');
+                for (const itemGroup of damagedItemElements) {
+                    const itemPhotoInput = itemGroup.querySelector('[name="item-photo"]');
+                    let photoUrl = '';
+                    if (itemPhotoInput.files.length > 0) {
+                         photoUrl = await new Promise(resolve => {
+                            const reader = new FileReader();
+                            reader.onload = (e) => resolve(e.target.result);
+                            reader.readAsDataURL(itemPhotoInput.files[0]);
+                        });
+                    } else {
+                        // ถ้าไม่มีไฟล์ใหม่ ให้ใช้ URL เดิม
+                        const existingImage = itemGroup.querySelector('.item-photo-preview img');
+                        if (existingImage) {
+                            photoUrl = existingImage.src;
+                        }
+                    }
+
+                    const problemButtons = Array.from(itemGroup.querySelectorAll('.problem-button.bg-indigo-500')).map(btn => btn.dataset.problem);
+
+                    damagedItems.push({
+                        problems: problemButtons,
+                        item_number: itemGroup.querySelector('[name="item-number"]').value,
+                        quantity: parseInt(itemGroup.querySelector('[name="quantity"]').value) || 0,
+                        notes: itemGroup.querySelector('[name="item-notes"]').value,
+                        photo_url: photoUrl
+                    });
+                }
+
+                const palletNotes = document.getElementById('pallet-notes-textarea').value;
+                const checkedPallets = Array.from(document.querySelectorAll('#pallet-buttons-grid .pallet-button.bg-green-600'))
+                                            .map(btn => btn.dataset.pallet);
+                
+                const totalPallets = currentTforData.total_pallets || 0;
+                let checkStatus = 'ยังไม่เช็ค';
+                if (checkedPallets.length > 0 && checkedPallets.length < totalPallets) {
+                    checkStatus = 'อยู่ระหว่างเช็ค';
+                } else if (checkedPallets.length > 0 && checkedPallets.length === totalPallets) {
+                    checkStatus = 'เช็คเสร็จแล้ว';
+                }
+
+                const docRef = doc(db, `/artifacts/${appId}/users/${userId}/branch-products`, currentTforDocId);
+                try {
+                    const docSnap = await getDoc(docRef);
+                    const data = docSnap.data();
+                    const updatedTforDetails = [...data.tfor_details];
+
+                    // อัปเดตข้อมูล TFOR ที่ถูกต้อง
+                    updatedTforDetails[currentTforIndex].check_status = checkStatus;
+                    updatedTforDetails[currentTforIndex].pallet_notes = palletNotes;
+                    updatedTforDetails[currentTforIndex].checked_pallets = checkedPallets;
+                    updatedTforDetails[currentTforIndex].damaged_items_list = damagedItems;
+
+                    await updateDoc(docRef, {
+                        tfor_details: updatedTforDetails
+                    });
+                    showMessage("บันทึกสำเร็จ", "ข้อมูล TFOR ได้รับการอัปเดตเรียบร้อยแล้ว");
+                    showPage('product-details-page', 'รายละเอียดสินค้าจากสาขา');
+                } catch (e) {
+                    console.error("Error updating TFOR details:", e);
+                    showMessage("อัปเดตไม่สำเร็จ", "เกิดข้อผิดพลาดในการบันทึกรายละเอียด: " + e.message);
+                } finally {
+                    // คืนค่าปุ่มบันทึก
+                    saveTforDetailsButton.textContent = 'บันทึกรายละเอียด';
+                    saveTforDetailsButton.disabled = false;
+                }
+            };
+            
+            // ฟังก์ชันสำหรับเพิ่มรายการสินค้าเสียหาย
+            const addDamagedItem = (itemData = {}) => {
+                const newDamagedItem = damagedItemTemplate.cloneNode(true);
+                newDamagedItem.classList.remove('hidden');
+                
+                // ล้างค่าที่อาจจะติดมาจากการ clone
+                const inputFields = newDamagedItem.querySelectorAll('input, textarea');
+                inputFields.forEach(input => {
+                    input.value = '';
+                });
+                newDamagedItem.querySelector('.item-photo-preview').innerHTML = '';
+                newDamagedItem.querySelector('.ai-summary-result').innerHTML = '';
+                newDamagedItem.querySelector('.ai-suggestion-result').innerHTML = '';
+                newDamagedItem.querySelectorAll('.problem-button').forEach(btn => {
+                    btn.classList.remove('bg-indigo-500');
+                    btn.classList.add('bg-gray-600');
+                });
+
+                if (Object.keys(itemData).length > 0) {
+                    newDamagedItem.querySelector('[name="item-number"]').value = itemData.item_number || '';
+                    newDamagedItem.querySelector('[name="quantity"]').value = itemData.quantity || '';
+                    newDamagedItem.querySelector('[name="item-notes"]').value = itemData.notes || '';
+                    
+                    const problemButtons = newDamagedItem.querySelectorAll('.problem-button');
+                    problemButtons.forEach(btn => {
+                        if (itemData.problems && itemData.problems.includes(btn.dataset.problem)) {
+                            btn.classList.add('bg-indigo-500');
+                            btn.classList.remove('bg-gray-600');
+                        }
+                    });
+
+                    if (itemData.photo_url) {
+                        const previewContainer = newDamagedItem.querySelector('.item-photo-preview');
+                        const imgDiv = document.createElement('div');
+                        imgDiv.innerHTML = `<img src="${itemData.photo_url}" class="rounded-md w-full h-auto object-cover">`;
+                        previewContainer.appendChild(imgDiv);
+                    }
+                }
+
+                // Event listeners for the new item
+                newDamagedItem.querySelector('.remove-damaged-item-button').addEventListener('click', () => {
+                    newDamagedItem.remove();
+                });
+
+                newDamagedItem.querySelectorAll('.problem-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        button.classList.toggle('bg-indigo-500');
+                        button.classList.toggle('bg-gray-600');
+                        const problems = Array.from(newDamagedItem.querySelectorAll('.problem-button.bg-indigo-500')).map(btn => btn.dataset.problem);
+                        newDamagedItem.querySelector('.problem-types-input').value = problems.join(',');
+                    });
+                });
+                
+                // Event listener สำหรับปุ่ม ✨ สรุปปัญหาด้วย AI
+                newDamagedItem.querySelector('.ai-summary-button').addEventListener('click', async () => {
+                    const problems = Array.from(newDamagedItem.querySelectorAll('.problem-button.bg-indigo-500')).map(btn => btn.dataset.problem);
+                    const notes = newDamagedItem.querySelector('[name="item-notes"]').value;
+                    const resultDiv = newDamagedItem.querySelector('.ai-summary-result');
+                    
+                    if (problems.length === 0 && !notes) {
+                        resultDiv.innerHTML = `<p class="text-red-400">กรุณาเลือกปัญหาหรือใส่รายละเอียดเพิ่มเติมก่อน</p>`;
+                        return;
+                    }
+                    
+                    resultDiv.innerHTML = `<p class="text-yellow-400">กำลังสร้างสรุป...</p>`;
+
+                    try {
+                        let prompt = `เขียนสรุปสั้นๆ และเป็นทางการเกี่ยวกับความเสียหายของสินค้า โดยใช้ภาษาไทย. ข้อมูลที่ได้รับคือ: ปัญหาหลักคือ ${problems.join(', ')} และมีหมายเหตุเพิ่มเติมว่า ${notes}.`
+                        
+                        const payload = {
+                            contents: [{ role: "user", parts: [{ text: prompt }] }],
+                        };
+                        const apiKey = "AIzaSyAA5KnCSUP4cYnUtRDGfcJXI078WF1LL5Y";
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                        
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`API call failed with status: ${response.status}`);
+                        }
+                        
+                        const result = await response.json();
+                        const summary = result.candidates[0].content.parts[0].text;
+                        resultDiv.innerHTML = `<p>${summary}</p>`;
+
+                    } catch (error) {
+                        console.error("Error generating AI summary:", error);
+                        resultDiv.innerHTML = `<p class="text-red-400">เกิดข้อผิดพลาดในการสร้างสรุป</p>`;
+                    }
+                });
+
+                // Event listener สำหรับปุ่ม ✨ คำแนะนำจาก AI
+                newDamagedItem.querySelector('.ai-suggestion-button').addEventListener('click', async () => {
+                    const problems = Array.from(newDamagedItem.querySelectorAll('.problem-button.bg-indigo-500')).map(btn => btn.dataset.problem);
+                    const resultDiv = newDamagedItem.querySelector('.ai-suggestion-result');
+                    
+                    if (problems.length === 0) {
+                        resultDiv.innerHTML = `<p class="text-red-400">กรุณาเลือกปัญหาอย่างน้อย 1 อย่างก่อน</p>`;
+                        return;
+                    }
+
+                    resultDiv.innerHTML = `<p class="text-yellow-400">กำลังสร้างคำแนะนำ...</p>`;
+
+                    try {
+                        let prompt = `ให้คำแนะนำที่เป็นขั้นตอนสั้นๆ ในการจัดการกับความเสียหายของสินค้า ปัญหาคือ: ${problems.join(', ')}. ให้ตอบเป็นภาษาไทย.`;
+                        
+                        const payload = {
+                            contents: [{ role: "user", parts: [{ text: prompt }] }],
+                        };
+                        const apiKey = "AIzaSyAA5KnCSUP4cYnUtRDGfcJXI078WF1LL5Y";
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`API call failed with status: ${response.status}`);
+                        }
+                        
+                        const result = await response.json();
+                        const suggestion = result.candidates[0].content.parts[0].text;
+                        resultDiv.innerHTML = `<p>${suggestion}</p>`;
+
+                    } catch (error) {
+                        console.error("Error generating AI suggestion:", error);
+                        resultDiv.innerHTML = `<p class="text-red-400">เกิดข้อผิดพลาดในการสร้างคำแนะนำ</p>`;
+                    }
+                });
+
+                newDamagedItem.querySelector('[name="item-photo"]').addEventListener('change', (event) => {
+                    const previewContainer = newDamagedItem.querySelector('.item-photo-preview');
+                    previewContainer.innerHTML = '';
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const imgDiv = document.createElement('div');
+                            imgDiv.innerHTML = `<img src="${e.target.result}" class="rounded-md w-full h-auto object-cover">`;
+                            previewContainer.appendChild(imgDiv);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                damagedItemsContainer.appendChild(newDamagedItem);
+            };
+
+            // ฟังก์ชันสำหรับดึงและแสดงข้อมูลสินค้าเสียหาย
+            const fetchAndDisplayDamagedProducts = () => {
+                damagedItemsListContainer.innerHTML = `<p class="text-center text-gray-400 py-8">กำลังโหลดข้อมูล...</p>`;
+
+                if (!userId || !isAuthReady) {
+                    damagedItemsListContainer.innerHTML = `<p class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล: ผู้ใช้ไม่ได้เข้าสู่ระบบ</p>`;
+                    return;
+                }
+
+                const q = query(collection(db, `/artifacts/${appId}/users/${userId}/branch-products`));
+                unsubscribeDamagedProducts = onSnapshot(q, (querySnapshot) => {
+                    damagedItemsListContainer.innerHTML = '';
+                    let hasDamagedItems = false;
+                    querySnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        product.tfor_details.forEach((tfor, tforIndex) => {
+                            if (tfor.damaged_items_list && tfor.damaged_items_list.length > 0) {
+                                hasDamagedItems = true;
+                                tfor.damaged_items_list.forEach((item, itemIndex) => {
+                                    const damagedCard = document.createElement('div');
+                                    damagedCard.className = 'damaged-item-card bg-gray-700 rounded-xl p-6 shadow-md cursor-pointer hover:bg-gray-600 transition-colors duration-200';
+                                    damagedCard.dataset.docId = doc.id;
+                                    damagedCard.dataset.tforIndex = tforIndex; 
+                                    damagedCard.dataset.itemIndex = itemIndex;
+
+                                    const problems = item.problems && item.problems.length > 0 ? item.problems.join(', ') : 'ไม่ระบุ';
+                                    const photoHtml = item.photo_url ? `<div class="mt-4"><img src="${item.photo_url}" alt="รูปภาพสินค้าเสียหาย" class="rounded-lg w-full h-auto object-cover"></div>` : '';
+
+                                    damagedCard.innerHTML = `
+                                        <h3 class="text-lg font-bold text-white mb-2">TFOR: ${tfor.tfor_number}</h3>
+                                        <p class="text-gray-300 mb-2"><strong>ทะเบียนรถ:</strong> ${product.license_plate_alpha} ${product.license_plate_num}</p>
+                                        <p class="text-gray-300 mb-2"><strong>สาขาต้นทาง:</strong> ${tfor.origin_branch}</p>
+                                        <p class="text-gray-300 mb-2"><strong>วันที่รถมาส่ง:</strong> ${product.delivery_date}</p>
+                                        <div class="space-y-1 mt-4">
+                                            <p class="text-gray-300"><strong>เลข ITEMNUMBER:</strong> ${item.item_number || 'ไม่ระบุ'}</p>
+                                            <p class="text-gray-300"><strong>ปัญหา:</strong> ${problems}</p>
+                                        </div>
+                                    `;
+                                    damagedItemsListContainer.appendChild(damagedCard);
+                                });
+                            }
+                        });
+                    });
+                    if (!hasDamagedItems) {
+                         damagedItemsListContainer.innerHTML = `<p class="text-center text-gray-400 py-8">ยังไม่มีรายการสินค้าเสียหายที่ถูกบันทึก</p>`;
+                    }
+                }, (error) => {
+                    console.error("Error fetching damaged documents:", error);
+                    damagedItemsListContainer.innerHTML = `<p class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล. กรุณาลองใหม่อีกครั้ง.</p>`;
+                });
+            };
+
+            // ฟังก์ชันสำหรับแสดงรายละเอียดสินค้าเสียหาย
+            const showDamagedItemDetails = (docId, tforIndex, itemIndex) => {
+                 const docRef = doc(db, `/artifacts/${appId}/users/${userId}/branch-products`, docId);
+                 getDoc(docRef).then(docSnap => {
+                     if (docSnap.exists()) {
+                         const data = docSnap.data();
+                         const tfor = data.tfor_details[tforIndex];
+                         const item = tfor.damaged_items_list[itemIndex];
+
+                         const problems = item.problems && item.problems.length > 0 ? item.problems.join(', ') : 'ไม่ระบุ';
+                         const photoHtml = item.photo_url ? `<div class="mt-4"><img src="${item.photo_url}" alt="รูปภาพสินค้าเสียหาย" class="rounded-lg w-full h-auto object-cover"></div>` : '';
+
+                         itemDetailsContent.innerHTML = `
+                             <h3 class="text-xl font-bold text-white mb-4">รายละเอียดสินค้าเสียหาย</h3>
+                             <p class="text-gray-300 mb-2"><strong>TFOR:</strong> ${tfor.tfor_number}</p>
+                             <p class="text-gray-300 mb-2"><strong>ทะเบียนรถ:</strong> ${data.license_plate_alpha} ${data.license_plate_num}</p>
+                             <p class="text-gray-300 mb-2"><strong>สาขาต้นทาง:</strong> ${tfor.origin_branch}</p>
+                             <p class="text-gray-300 mb-2"><strong>วันที่รถมาส่ง:</strong> ${data.delivery_date}</p>
+                             <div class="space-y-1 mt-4 border-t border-gray-600 pt-4">
+                                 <p class="text-gray-300"><strong>เลข ITEMNUMBER:</strong> ${item.item_number || 'ไม่ระบุ'}</p>
+                                 <p class="text-gray-300"><strong>จำนวน:</strong> ${item.quantity || 0}</p>
+                                 <p class="text-gray-300"><strong>ปัญหา:</strong> ${problems}</p>
+                                 ${item.notes ? `<p class="text-gray-300"><strong>หมายเหตุเพิ่มเติม:</strong> ${item.notes}</p>` : ''}
+                             </div>
+                             ${photoHtml}
+                         `;
+                         showPage('item-details-page', 'รายละเอียดสินค้าเสียหาย');
+                     }
+                 }).catch(e => {
+                     console.error("Error fetching item details:", e);
+                     showMessage("ข้อผิดพลาด", "ไม่สามารถดึงรายละเอียดสินค้าเสียหายได้");
+                 });
+            };
+
+            // ฟังก์ชันสำหรับดึงและแสดงข้อมูลซัพพลายเออร์จาก Google Sheets
+            const fetchAndDisplaySupplierData = async () => {
+                supplierPalletContainer.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center"><div class="text-center text-gray-400 py-8">กำลังโหลดข้อมูล...</div></td></tr>`;
+                try {
+                    const response = await fetch(SUPPLIER_SHEETS_URL);
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const rows = doc.querySelectorAll('table tr');
+
+                    if (rows.length > 1) {
+                        supplierPalletContainer.innerHTML = ''; // ล้างข้อมูลเดิม
+                        for (let i = 1; i < rows.length; i++) {
+                            const cells = rows[i].querySelectorAll('td');
+                            if (cells.length >= 4) {
+                                const supplierName = cells[0].textContent.trim();
+                                const palletCode = cells[1].textContent.trim();
+                                const palletCapacity = cells[2].textContent.trim();
+                                const notes = cells[3].textContent.trim();
+                                
+                                const newRow = document.createElement('tr');
+                                newRow.className = 'bg-gray-800 border-b border-gray-700';
+                                newRow.innerHTML = `
+                                    <td class="px-6 py-4 whitespace-nowrap">${supplierName}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">${palletCode}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">${palletCapacity}</td>
+                                    <td class="px-6 py-4 whitespace-normal">${notes}</td>
+                                `;
+                                supplierPalletContainer.appendChild(newRow);
+                            }
+                        }
+                    } else {
+                        supplierPalletContainer.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center"><div class="text-center text-gray-400 py-8">ไม่พบข้อมูลซัพพลายเออร์และพาเลท</div></td></tr>`;
+                    }
+                } catch (error) {
+                    console.error("Error fetching supplier data:", error);
+                    supplierPalletContainer.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center"><div class="text-center text-red-400 py-8">เกิดข้อผิดพลาดในการโหลดข้อมูล กรุณาลองใหม่อีกครั้ง.</div></td></tr>`;
+                }
+            };
+            
+            // --- Event Listeners ---
+
+            // Event listener สำหรับไอคอน "สินค้าจากสาขา"
+            branchProductsIcon.addEventListener('click', () => {
+                showPage('branch-products-page', 'สินค้าจากสาขา');
+            });
+
+            // Event listener สำหรับไอคอน "ปฏิทิน"
+            calendarIcon.addEventListener('click', () => {
+                showPage('calendar-page', 'ปฏิทิน');
+                currentMonth = new Date();
+                setupCalendarListener(currentMonth);
+            });
+            prevMonthButton.addEventListener('click', () => {
+                currentMonth.setMonth(currentMonth.getMonth() - 1);
+                setupCalendarListener(currentMonth);
+            });
+            nextMonthButton.addEventListener('click', () => {
+                currentMonth.setMonth(currentMonth.getMonth() + 1);
+                setupCalendarListener(currentMonth);
+            });
+
+            // Event listener สำหรับไอคอน "ซัพพลายเออร์และพาเลท"
+            supplierPalletIcon.addEventListener('click', () => {
+                showPage('supplier-pallet-page', 'ซัพพลายเออร์และพาเลท');
+                fetchAndDisplaySupplierData();
+            });
+
+            // Event listener สำหรับปุ่ม "Back to Main Menu"
+            backButtonToMain.addEventListener('click', () => {
+                showPage('main-page', 'รายงานสิ่งที่ต้องทำประจำวัน');
+            });
+            backButtonToMainFromCalendar.addEventListener('click', () => {
+                showPage('main-page', 'รายงานสิ่งที่ต้องทำประจำวัน');
+            });
+            backButtonToMainFromStats.addEventListener('click', () => {
+                showPage('main-page', 'รายงานสิ่งที่ต้องทำประจำวัน');
+            });
+            backButtonToMainFromSupplier.addEventListener('click', () => {
+                showPage('main-page', 'รายงานสิ่งที่ต้องทำประจำวัน');
+            });
+            backButtonToMainFromAiChat.addEventListener('click', () => {
+                showPage('main-page', 'รายงานสิ่งที่ต้องทำประจำวัน');
+            });
+
+            // Event listener สำหรับไอคอน "สถิติ"
+            statisticsIcon.addEventListener('click', () => {
+                showPage('statistics-page', 'สถิติ');
+                fetchAndDisplayStatistics();
+            });
+
+            // Event listener สำหรับไอคอน "ถาม AI"
+            aiChatIcon.addEventListener('click', () => {
+                showPage('ai-chat-page', 'ถาม AI');
+            });
+
+
+            // Event listener สำหรับไอคอน "แบบฟอร์มลงสินค้าสาขา"
+            entryFormIcon.addEventListener('click', () => {
+                showPage('entry-form-page', 'แบบฟอร์มลงสินค้าสาขา');
+                setCurrentDates();
+                tforDetailsContainer.innerHTML = '';
+                addTforGroup();
+                imagePreviewContainer.innerHTML = '';
+            });
+
+            // Event listener สำหรับปุ่ม "รายละเอียดสินค้าจากสาขา"
+            productDetailsIcon.addEventListener('click', () => {
+                showPage('product-details-page', 'รายละเอียดสินค้าจากสาขา');
+                setupProductDetailsListener();
+            });
+
+            // Event listener สำหรับปุ่ม "สินค้าเสียหายจากสาขา"
+            damagedProductsIcon.addEventListener('click', () => {
+                showPage('damaged-products-page', 'สินค้าเสียหายจากสาขา');
+                fetchAndDisplayDamagedProducts();
+            });
+
+            // Event listener สำหรับปุ่ม "สินค้าสาขาที่เช็คเสร็จแล้ว"
+            completedProductsIcon.addEventListener('click', () => {
+                showPage('completed-products-page', 'สินค้าสาขาที่เช็คเสร็จแล้ว');
+                setupCompletedProductsListener();
+            });
+            
+            // Event listener สำหรับปุ่ม "Back to Branch Products"
+            backButtonToSub.addEventListener('click', () => {
+                showPage('branch-products-page', 'สินค้าจากสาขา');
+            });
+
+            // Event listener สำหรับปุ่ม "Back from Details"
+            backButtonToSubFromDetails.addEventListener('click', () => {
+                showPage('branch-products-page', 'สินค้าจากสาขา');
+            });
+
+            // Event listener สำหรับปุ่ม "Back from Damaged"
+            backButtonToSubFromDamaged.addEventListener('click', () => {
+                showPage('branch-products-page', 'สินค้าจากสาขา');
+            });
+
+            // Event listener สำหรับปุ่ม "Back from Completed"
+            backButtonToSubFromCompleted.addEventListener('click', () => {
+                showPage('branch-products-page', 'สินค้าจากสาขา');
+            });
+
+            // Event listener สำหรับปุ่ม "Back from TFOR Details"
+            backButtonToProductDetails.addEventListener('click', () => {
+                showPage('product-details-page', 'รายละเอียดสินค้าจากสาขา');
+                setupProductDetailsListener();
+            });
+
+            // Event listener สำหรับปุ่ม "Back from item details"
+            backButtonToDamagedList.addEventListener('click', () => {
+                showPage('damaged-products-page', 'สินค้าเสียหายจากสาขา');
+            });
+
+            // Event listener สำหรับปุ่ม "ส่ง" ในหน้าแชทกับ AI
+            aiChatSendButton.addEventListener('click', handleAiChat);
+            aiChatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleAiChat();
+                }
+            });
+
+
+            // Event listener สำหรับปุ่ม "เพิ่มรายการ TFOR"
+            addTforButton.addEventListener('click', () => {
+                addTforGroup();
+            });
+
+            // Event listener สำหรับช่องอัปโหลดรูปภาพเพื่อแสดงตัวอย่าง
+            photosInput.addEventListener('change', (event) => {
+                imagePreviewContainer.innerHTML = '';
+                const files = event.target.files;
+                if (files) {
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const imgDiv = document.createElement('div');
+                            imgDiv.className = 'relative group';
+                            imgDiv.innerHTML = `<img src="${e.target.result}" alt="Vehicle Photo" class="rounded-lg w-full h-auto object-cover">`;
+                            imagePreviewContainer.appendChild(imgDiv);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
+
+            // Event listener สำหรับการคลิกปุ่ม "แต่ละพาเลท" ในหน้าฟอร์ม
+            entryForm.addEventListener('click', (e) => {
+                if (e.target.classList.contains('pallet-button')) {
+                    const button = e.target;
+                    const parentGroup = button.closest('.tfor-group');
+                    const selectedPalletsInput = parentGroup.querySelector('.selected-pallets-input');
+                    
+                    // สลับสถานะของปุ่ม
+                    button.classList.toggle('bg-indigo-500');
+                    button.classList.toggle('bg-gray-600');
+
+                    // อัปเดตค่าใน hidden input field
+                    const selectedButtons = parentGroup.querySelectorAll('.pallet-button.bg-indigo-500');
+                    const selectedValues = Array.from(selectedButtons).map(btn => btn.dataset.pallet);
+                    selectedPalletsInput.value = selectedValues.join(',');
+                }
+            });
+
+            // Event listener สำหรับการส่งฟอร์มเพื่อบันทึกข้อมูล
+            entryForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // ป้องกันการรีโหลดหน้า
+
+                if (!userId) {
+                    showMessage("ข้อผิดพลาด", "ผู้ใช้ไม่ได้เข้าสู่ระบบ. กรุณาลองใหม่.");
+                    return;
+                }
+
+                // รวบรวมข้อมูลจากฟอร์ม
+                const formData = new FormData(entryForm);
+                const truckInfo = {
+                    delivery_date: formData.get('delivery-date'),
+                    entry_date: formData.get('entry-date'),
+                    license_plate_alpha: formData.get('license-plate-alpha'),
+                    license_plate_num: formData.get('license-plate-num'),
+                };
+
+                // รวบรวมข้อมูลรูปภาพ (Data URLs)
+                const photoFiles = photosInput.files;
+                const photoUrls = [];
+                for (let i = 0; i < photoFiles.length; i++) {
+                    const file = photoFiles[i];
+                    photoUrls.push(await new Promise(resolve => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.readAsDataURL(file);
+                    }));
+                }
+
+                // รวบรวมข้อมูล TFOR (multiple groups)
+                const tforGroups = [];
+                const tforGroupElements = tforDetailsContainer.querySelectorAll('.tfor-group');
+                tforGroupElements.forEach(group => {
+                    const selectedPalletsInput = group.querySelector('.selected-pallets-input');
+                    const selectedPalletValues = selectedPalletsInput.value.split(',').filter(v => v !== '');
+
+                    const currentYear = new Date().getFullYear().toString().slice(-2);
+                    const tforPrefix = `TFOR${currentYear}-`;
+                    const tforSuffix = group.querySelector('[name="tfor-suffix"]').value;
+                    const chainedTforSuffix = group.querySelector('[name="chained-tfor-suffix"]').value;
+                    
+                    const tforData = {
+                        tfor_number: tforPrefix + tforSuffix,
+                        origin_branch: group.querySelector('[name="origin-branch"]').value,
+                        total_pallets: selectedPalletValues.length, // นับจำนวนพาเลทที่ถูกเลือก
+                        pallet_notes: group.querySelector('[name="pallet-notes"]').value,
+                        chained_tfor_number: chainedTforSuffix ? `TFOR${currentYear}-${chainedTforSuffix}` : '',
+                        check_status: 'ยังไม่เช็ค', // เพิ่มสถานะเริ่มต้น
+                        checked_pallets: [],
+                        damaged_items_list: [], // เพิ่ม array สำหรับรายการสินค้าเสียหาย
+                    };
+                    tforGroups.push(tforData);
+                });
+                
+                // สร้าง object ที่จะบันทึกลง Firestore
+                const dataToSave = {
+                    ...truckInfo,
+                    photo_urls: photoUrls,
+                    tfor_details: tforGroups,
+                    timestamp: serverTimestamp() // เพิ่ม timestamp สำหรับการจัดเรียง
+                };
+
+                try {
+                    // บันทึกข้อมูลลงใน Firestore
+                    const collectionPath = `/artifacts/${appId}/users/${userId}/branch-products`;
+                    await addDoc(collection(db, collectionPath), dataToSave);
+                    showMessage("บันทึกข้อมูลสำเร็จ", "ข้อมูลถูกบันทึกเรียบร้อยแล้ว");
+                    entryForm.reset(); // ล้างฟอร์ม
+                    imagePreviewContainer.innerHTML = '';
+                    tforDetailsContainer.innerHTML = ''; // ล้างกลุ่ม TFOR
+                    addTforGroup(); // เพิ่มกลุ่ม TFOR ใหม่ 1 กลุ่ม
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                    showMessage("บันทึกข้อมูลไม่สำเร็จ", "เกิดข้อผิดพลาดในการบันทึกข้อมูล: " + e.message);
+                }
+            });
+
+            // Event listener สำหรับการคลิกปุ่ม "ดูรายละเอียด" ในตาราง
+            productDetailsPage.addEventListener('click', (e) => {
+                if (e.target.classList.contains('view-details-button')) {
+                    const button = e.target;
+                    const docId = button.dataset.docId;
+                    const tforIndex = button.dataset.tforIndex;
+                    showTforDetails(docId, parseInt(tforIndex));
+                }
+            });
+
+            // Event listener สำหรับการคลิกที่รายการสินค้าเสียหาย
+            damagedItemsListContainer.addEventListener('click', (e) => {
+                 const card = e.target.closest('.damaged-item-card');
+                 if (card) {
+                     const docId = card.dataset.docId;
+                     const tforIndex = parseInt(card.dataset.tforIndex);
+                     const itemIndex = parseInt(card.dataset.itemIndex);
+                     showDamagedItemDetails(docId, tforIndex, itemIndex);
+                 }
+            });
+
+
+            // Event listener สำหรับการคลิกปุ่ม "แต่ละพาเลท" ในหน้า TFOR Details
+            palletButtonsGrid.addEventListener('click', (e) => {
+                if (e.target.classList.contains('pallet-button')) {
+                    const button = e.target;
+                    button.classList.toggle('bg-green-600');
+                    button.classList.toggle('bg-gray-600');
+                }
+            });
+
+            // Event listener สำหรับการส่งฟอร์มบันทึกรายละเอียด TFOR
+            tforDetailsForm.addEventListener('submit', saveTforDetails);
+
+            // Event listener สำหรับปุ่มเพิ่มรายการสินค้าเสียหาย
+            addDamagedItemButton.addEventListener('click', () => {
+                addDamagedItem();
+            });
+
+            // Event listener สำหรับปุ่มปิดข้อความแจ้งเตือน
+            closeMessageButton.addEventListener('click', hideMessage);
+
+            // กำหนดหน้าหลักที่แสดงเมื่อโหลดหน้าเว็บครั้งแรก
+            showPage('main-page', 'รายงานสิ่งที่ต้องทำประจำวัน');
+        });
+    </script>
+</body>
+</html>
