@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INBOUND SYSTEM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #cbebff 50%, #d8e6ff 100%);
+            min-height: 100vh;
+        }
+        .view { display: none; }
+        .active-view { display: block; }
+        @keyframes pulse-once {
+            0% { transform: scale(1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+            50% { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+            100% { transform: scale(1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        }
+        @keyframes spinner { to {transform: rotate(360deg);} }
+        .animated-icon.pulse { animation: pulse-once 0.5s ease-in-out; }
+        .loading-spinner { animation: spinner 1s linear infinite; }
+        .password-container { position: relative; }
+        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); cursor: pointer; }
+        #notification-toast { transition: transform 0.5s ease-in-out; }
+        .chat-message-container { display: flex; flex-direction: column; gap: 1rem; }
+        .chat-bubble { padding: 0.75rem 1rem; border-radius: 1.25rem; max-width: 80%; word-wrap: break-word; }
+        .user-bubble { background-color: #bfdbfe; align-self: flex-end; }
+        .ai-bubble { background-color: #e5e7eb; align-self: flex-start; }
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.5); }
+        .pallet-button.active { background-color: #a21caf; color: white; transform: scale(1.1); }
+        .calendar-day { 
+            transition: background-color 0.2s; 
+            position: relative;
+            padding-top: 0.5rem;
+            padding-bottom: 1.25rem;
+            min-height: 50px;
+        }
+        .calendar-day:hover { background-color: #e0f2fe; }
+        .calendar-day.has-events { cursor: pointer; }
+        .calendar-day.today { background-color: #a5f3fc; border-radius: 0.5rem; }
+        .event-dot {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #f59e0b;
+        }
+        .admin-only { display: none; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Notification Toast -->
+    <div id="notification-toast" class="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full z-50">
+        <p id="notification-message"></p>
+    </div>
+    
+    <!-- Details Modal -->
+    <div id="details-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-overlay">
+        <div id="details-modal-content" class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative max-h-[80vh] overflow-y-auto">
+            <!-- Content will be injected by JS -->
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app-container">
+        <!-- Login/Register View -->
+        <div id="login-register-view" class="view min-h-screen flex items-center justify-center p-4">
+            <div class="w-full max-w-sm p-8 space-y-6 bg-white rounded-2xl shadow-xl">
+                <h1 class="text-3xl font-bold text-center text-gray-800">INBOUND SYSTEM</h1>
+                <div class="flex border-b">
+                    <button id="login-tab" class="flex-1 py-2 text-center font-semibold text-white bg-fuchsia-600 rounded-t-lg">เข้าสู่ระบบ</button>
+                    <button id="register-tab" class="flex-1 py-2 text-center font-semibold text-gray-500">สมัครสมาชิก</button>
+                </div>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="sr-only">อีเมล</label>
+                        <input type="email" id="login-email" required placeholder="อีเมล" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+                    </div>
+                    <div class="password-container">
+                        <label for="login-password" class="sr-only">รหัสผ่าน</label>
+                        <input type="password" id="login-password" required placeholder="รหัสผ่าน" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+                        <span class="toggle-password">👁️</span>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="remember-me" type="checkbox" class="h-4 w-4 text-fuchsia-600 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">จดจำรหัสผ่าน</label>
+                    </div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-fuchsia-600 hover:bg-fuchsia-700">เข้าสู่ระบบ</button>
+                </form>
+                <form id="register-form" class="hidden space-y-6">
+                     <div>
+                        <label for="register-email" class="sr-only">อีเมล</label>
+                        <input type="email" id="register-email" required placeholder="อีเมล" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+                    </div>
+                    <div class="password-container">
+                        <label for="register-password" class="sr-only">รหัสผ่าน</label>
+                        <input type="password" id="register-password" required placeholder="รหัสผ่าน" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm">
+                         <span class="toggle-password">👁️</span>
+                    </div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-fuchsia-600 hover:bg-fuchsia-700">สมัครสมาชิก</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Menu View -->
+        <div id="main-menu-view" class="view">
+            <header class="bg-white shadow-sm">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="font-bold text-xl text-fuchsia-600">INBOUND SYSTEM</h1>
+                        <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                        <span class="admin-only px-3 py-1 text-xs font-bold text-white bg-fuchsia-500 rounded-full">Admin Mode</span>
+                    </div>
+                    <button id="logout-button-main" class="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600">ออกจากระบบ</button>
+                </div>
+            </header>
+            <main class="container mx-auto px-4 py-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-center">
+                    <div id="summary-pending-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
+                        <h4 class="font-semibold text-gray-600">TFORs รอดำเนินการ</h4>
+                        <p id="summary-pending" class="text-4xl font-bold text-yellow-500 mt-1">0</p>
+                    </div>
+                     <div id="summary-completed-today-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
+                        <h4 class="font-semibold text-gray-600">เช็คเสร็จวันนี้</h4>
+                        <p id="summary-completed-today" class="text-4xl font-bold text-green-500 mt-1">0</p>
+                    </div>
+                     <div id="summary-issues-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
+                        <h4 class="font-semibold text-gray-600">รายการมีปัญหา</h4>
+                        <p id="summary-issues" class="text-4xl font-bold text-red-500 mt-1">0</p>
+                    </div>
+                </div>
+                <div id="go-to-ai-chat" class="animated-icon p-6 bg-gradient-to-r from-fuchsia-500 to-indigo-600 rounded-3xl shadow-lg hover:shadow-2xl transition-all cursor-pointer text-white text-center mb-8 flex flex-col sm:flex-row items-center justify-center">
+                    <svg class="w-20 h-20 sm:w-24 sm:h-24 mb-4 sm:mb-0 sm:mr-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    <div>
+                        <h2 class="text-4xl font-bold">INBOUND-ASSISTANT</h2>
+                        <p class="mt-1 text-lg opacity-90">สอบถามข้อมูลกับผู้ช่วย AI</p>
+                    </div>
+                </div>
+                <div id="go-to-transfers" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer text-center mb-8 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-fuchsia-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    <h2 class="text-4xl font-bold">TRANFERS</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                    <div id="go-to-calendar" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                        <svg class="w-16 h-16 text-blue-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <h3 class="font-semibold">ปฏิทิน</h3>
+                    </div>
+                    <div id="go-to-statistics" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                        <svg class="w-16 h-16 text-green-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <h3 class="font-semibold">สถิติ</h3>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- AI Chat View -->
+        <div id="ai-chat-view" class="view">
+            <div class="flex flex-col h-screen">
+                <header class="bg-white shadow-sm">
+                    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                         <div class="flex items-center space-x-4">
+                            <h1 class="font-bold text-xl text-fuchsia-600">INBOUND Assistant</h1>
+                            <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                            <span class="admin-only px-3 py-1 text-xs font-bold text-white bg-fuchsia-500 rounded-full">Admin Mode</span>
+                        </div>
+                        <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            กลับหน้าหลัก
+                        </button>
+                    </div>
+                </header>
+                <main id="chat-messages" class="flex-1 overflow-y-auto p-4 container mx-auto chat-message-container"></main>
+                <footer class="bg-white border-t">
+                    <form id="chat-form" class="container mx-auto p-4 flex items-center">
+                        <input type="text" id="chat-input" placeholder="พิมพ์คำถามของคุณที่นี่..." class="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-fuchsia-500">
+                        <button type="submit" class="ml-4 p-3 bg-fuchsia-600 text-white rounded-full hover:bg-fuchsia-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </button>
+                    </form>
+                </footer>
+            </div>
+        </div>
+
+        <!-- Transfers View -->
+        <div id="transfers-view" class="view">
+             <header class="bg-white shadow-sm">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="font-bold text-xl text-fuchsia-600">Transfers</h1>
+                        <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                        <span class="admin-only px-3 py-1 text-xs font-bold text-white bg-fuchsia-500 rounded-full">Admin Mode</span>
+                    </div>
+                    <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        กลับหน้าหลัก
+                    </button>
+                </div>
+            </header>
+            <main class="container mx-auto px-4 py-8 md:py-12">
+                <div id="transfers-menu-view">
+                    <div class="max-w-4xl mx-auto text-center">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-8">เมนูสำหรับ TRANFERS</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                            <div id="menu-1" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                                <svg class="w-16 h-16 text-fuchsia-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2-10H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2z"></path></svg>
+                                <h3 class="text-xl font-semibold">แบบฟอร์มลงข้อมูล</h3>
+                            </div>
+                            <div id="menu-2" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                                <svg class="w-16 h-16 text-indigo-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                                <h3 class="text-xl font-semibold">รายละเอียดข้อมูล TRANFERS</h3>
+                            </div>
+                            <div id="menu-3" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                                <svg class="w-16 h-16 text-yellow-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <h3 class="text-xl font-semibold">เช็คเสร็จแล้ว</h3>
+                            </div>
+                            <div id="menu-4" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                                <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                                <h3 class="text-xl font-semibold">สินค้ามีปัญหา</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="form-view" class="hidden">
+                    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12">
+                        <button class="back-to-transfers-menu mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700">กลับ</button>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">แบบฟอร์มลงสินค้าสาขา</h2>
+                        <form id="inbound-form">
+                            <div class="mb-6">
+                                <label for="delivery-date" class="block text-gray-700 font-semibold mb-2">วันที่รถมาส่ง</label>
+                                <input type="text" id="delivery-date" class="w-full rounded-lg border-gray-300 shadow-sm bg-gray-100" readonly>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-2">ทะเบียนรถ</label>
+                                <div class="flex space-x-4">
+                                    <div class="flex-grow">
+                                        <label for="lp-front" class="block text-xs text-gray-500 mb-1">ด้านหน้า (เช่น กข123)</label>
+                                        <input type="text" id="lp-front" maxlength="4" class="w-full rounded-lg border-2 border-fuchsia-300 shadow-md uppercase text-lg text-center font-bold">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <label for="lp-back" class="block text-xs text-gray-500 mb-1">ด้านหลัง (ตัวเลข 4 ตัว)</label>
+                                        <input type="text" id="lp-back" maxlength="4" pattern="[0-9]{4}" class="w-full rounded-lg border-2 border-fuchsia-300 shadow-md text-lg text-center font-bold">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-2">รูปภาพรวมบนรถ</label>
+                                <div id="drag-drop-area" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-500 cursor-pointer hover:bg-gray-50">
+                                    ลากและวางรูปภาพที่นี่ หรือคลิกเพื่อเลือกไฟล์
+                                </div>
+                                <input type="file" id="file-input" class="hidden" multiple accept="image/*">
+                                <div id="image-preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                            </div>
+                            <div class="mb-6">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">รายละเอียดพาเลท (TFOR)</h3>
+                                <div id="tfor-container" class="space-y-6"></div>
+                                <button type="button" id="add-tfor-button" class="mt-4 px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow-md hover:bg-fuchsia-700">เพิ่ม TFOR</button>
+                            </div>
+                            <div class="mt-8 text-center">
+                                <button type="submit" id="save-button" class="w-full md:w-auto px-10 py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:bg-indigo-700 flex items-center justify-center mx-auto">บันทึกข้อมูล</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="details-view" class="hidden">
+                     <div class="max-w-6xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12">
+                        <button class="back-to-transfers-menu mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700">กลับ</button>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">รายละเอียดข้อมูล TRANFERS</h2>
+                        <div class="mb-6"><input type="search" id="details-search" placeholder="ค้นหา TFOR, ทะเบียนรถ, สาขา..." class="w-full p-2 border rounded-lg"></div>
+                        <div id="details-table-container" class="overflow-x-auto"></div>
+                    </div>
+                </div>
+                <div id="completed-view" class="hidden">
+                    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12">
+                        <button class="back-to-transfers-menu mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700">กลับ</button>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">เช็คเสร็จแล้ว</h2>
+                        <div class="mb-6"><input type="search" id="completed-search" placeholder="ค้นหา TFOR, ทะเบียนรถ, สาขา..." class="w-full p-2 border rounded-lg"></div>
+                        <div id="completed-container" class="space-y-6"></div>
+                    </div>
+                </div>
+                <div id="issues-view" class="hidden">
+                     <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12">
+                        <button class="back-to-transfers-menu mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700">กลับ</button>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">รายการสินค้ามีปัญหา</h2>
+                        <div id="issues-container" class="space-y-4"></div>
+                    </div>
+                </div>
+                <div id="check-view" class="hidden">
+                    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12">
+                        <button id="back-to-previous-view-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700">กลับ</button>
+                        <h2 id="check-view-title" class="text-3xl font-bold text-gray-900 mb-8 text-center">เช็คสินค้า</h2>
+                        <div id="check-details-container" class="mb-8 p-4 bg-gray-50 rounded-lg"></div>
+                        <hr class="my-6">
+                        <div id="check-section">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">ยืนยันการเช็คสินค้า</h3>
+                            <div id="pallet-buttons-container" class="flex flex-wrap gap-2 mb-6"></div>
+                        </div>
+                        <hr class="my-6">
+                        <div id="report-issue-section">
+                             <h3 class="text-xl font-bold text-gray-800 mb-4">รายงานปัญหาแต่ละพาเลท</h3>
+                            <div id="issue-pallet-buttons-container" class="flex flex-wrap gap-2 mb-6"></div>
+                            <div id="issue-forms-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- Calendar View -->
+        <div id="calendar-view" class="view">
+            <header class="bg-white shadow-sm">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="font-bold text-xl text-fuchsia-600">ปฏิทิน</h1>
+                        <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                        <span class="admin-only px-3 py-1 text-xs font-bold text-white bg-fuchsia-500 rounded-full">Admin Mode</span>
+                    </div>
+                    <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        กลับหน้าหลัก
+                    </button>
+                </div>
+            </header>
+            <main class="container mx-auto p-4">
+                <div id="calendar-container" class="bg-white p-6 rounded-2xl shadow-lg"></div>
+            </main>
+        </div>
+
+        <!-- Statistics View -->
+        <div id="statistics-view" class="view">
+             <header class="bg-white shadow-sm">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="font-bold text-xl text-fuchsia-600">สถิติและ Dashboard</h1>
+                        <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                        <span class="admin-only px-3 py-1 text-xs font-bold text-white bg-fuchsia-500 rounded-full">Admin Mode</span>
+                    </div>
+                    <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        กลับหน้าหลัก
+                    </button>
+                </div>
+            </header>
+            <main id="statistics-container" class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Statistics cards and charts will be injected here -->
+            </main>
+        </div>
+
+    </div>
+    
+    <script type="module">
+        // Firebase Core and Auth
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // Firestore Database
+        import { getFirestore, doc, addDoc, updateDoc, collection, onSnapshot, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyAJRXZqHsSKT6ea1bVM9ctycAlg0cqeT50",
+          authDomain: "inbound-system-prod.firebaseapp.com",
+          projectId: "inbound-system-prod",
+          storageBucket: "inbound-system-prod.firebasestorage.app",
+          messagingSenderId: "1080446836155",
+          appId: "1:1080446836155:web:da8d3f12f76d83b408389e"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Your Gemini API Key
+        const geminiApiKey = "AIzaSyBNDp-YoQf1qC4VEYpKy5MGVWCpX1i2Sf0";
+
+        async function callGeminiAPI(prompt) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+                const result = await response.json();
+                if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    return "ขออภัยค่ะ ไม่สามารถประมวลผลคำตอบได้ในขณะนี้";
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                throw error;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginRegisterView = document.getElementById('login-register-view');
+            const mainMenuView = document.getElementById('main-menu-view');
+            const transfersView = document.getElementById('transfers-view');
+            const aiChatView = document.getElementById('ai-chat-view');
+            const calendarView = document.getElementById('calendar-view');
+            const statisticsView = document.getElementById('statistics-view');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+            const logoutButtonMain = document.getElementById('logout-button-main');
+            const goToTransfersButton = document.getElementById('go-to-transfers');
+            const goToAiChatButton = document.getElementById('go-to-ai-chat');
+            const goToCalendarButton = document.getElementById('go-to-calendar');
+            const goToStatisticsButton = document.getElementById('go-to-statistics');
+            const inboundForm = document.getElementById('inbound-form');
+            const saveButton = document.getElementById('save-button');
+            const transfersMenuView = document.getElementById('transfers-menu-view');
+            const formView = document.getElementById('form-view');
+            const detailsView = document.getElementById('details-view');
+            const issuesView = document.getElementById('issues-view');
+            const completedView = document.getElementById('completed-view');
+            const checkView = document.getElementById('check-view');
+            const menu1Button = document.getElementById('menu-1');
+            const menu2Button = document.getElementById('menu-2');
+            const menu3Button = document.getElementById('menu-3');
+            const menu4Button = document.getElementById('menu-4');
+            const backToPreviousViewButton = document.getElementById('back-to-previous-view-button');
+            const detailsModal = document.getElementById('details-modal');
+            const detailsModalContent = document.getElementById('details-modal-content');
+
+            let currentChartInstances = {};
+            let isAdmin = false;
+            let currentUser = null;
+            let unsubscribePending = null;
+            let unsubscribeCompleted = null;
+            let unsubscribeIssues = null;
+
+            let allTransfersData = [];
+            let completedTransfersData = [];
+            let issuesData = {};
+            let currentTforData = null;
+            let previousView = null;
+
+            function showNotification(message, isSuccess = true) {
+                const toast = document.getElementById('notification-toast');
+                const messageP = document.getElementById('notification-message');
+                if (!toast || !messageP) return;
+                messageP.textContent = message;
+                toast.className = `fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform duration-500 z-50 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`;
+                toast.classList.remove('translate-x-full');
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full');
+                }, 3000);
+            }
+
+            function showMainView(viewToShow) {
+                [loginRegisterView, mainMenuView, transfersView, aiChatView, calendarView, statisticsView].forEach(v => v.style.display = 'none');
+                if (viewToShow) viewToShow.style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+
+            function showAuthForm(formToShow) {
+                loginForm.classList.toggle('hidden', formToShow !== 'login');
+                registerForm.classList.toggle('hidden', formToShow !== 'register');
+                loginTab.classList.toggle('bg-fuchsia-600', formToShow === 'login');
+                loginTab.classList.toggle('text-white', formToShow === 'login');
+                registerTab.classList.toggle('bg-fuchsia-600', formToShow === 'register');
+                registerTab.classList.toggle('text-white', formToShow === 'register');
+            }
+
+            loginTab.addEventListener('click', () => showAuthForm('login'));
+            registerTab.addEventListener('click', () => showAuthForm('register'));
+
+            function updateUserDisplays(user) {
+                const displayElements = document.querySelectorAll('.user-display');
+                const adminElements = document.querySelectorAll('.admin-only');
+                if (user) {
+                    displayElements.forEach(el => {
+                        el.textContent = user.email;
+                        el.classList.remove('hidden');
+                    });
+                    adminElements.forEach(el => el.style.display = isAdmin ? 'inline-block' : 'none');
+                } else {
+                    displayElements.forEach(el => el.classList.add('hidden'));
+                    adminElements.forEach(el => el.style.display = 'none');
+                }
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                isAdmin = user && user.email === 'admin@admin.com';
+                updateUserDisplays(user);
+                if (user) {
+                    setupFirestoreListeners();
+                    showMainView(mainMenuView);
+                } else {
+                    detachFirestoreListeners();
+                    showMainView(loginRegisterView);
+                    showAuthForm('login');
+                }
+            });
+            
+            function detachFirestoreListeners() {
+                if (unsubscribePending) unsubscribePending();
+                if (unsubscribeCompleted) unsubscribeCompleted();
+                if (unsubscribeIssues) unsubscribeIssues();
+            }
+
+            function setupFirestoreListeners() {
+                if (!currentUser) return;
+                detachFirestoreListeners();
+
+                const pendingQuery = query(collection(db, "transfers"), where("isCompleted", "==", false));
+                unsubscribePending = onSnapshot(pendingQuery, (snapshot) => {
+                    allTransfersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    updateMainMenuSummary();
+                    if (detailsView.style.display === 'block') renderDetailsTable();
+                    if (statisticsView.style.display === 'block') renderStatistics();
+                }, (error) => console.error("Pending listener error:", error));
+
+                const completedQuery = query(collection(db, "transfers"), where("isCompleted", "==", true));
+                unsubscribeCompleted = onSnapshot(completedQuery, (snapshot) => {
+                    completedTransfersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    updateMainMenuSummary();
+                    if (completedView.style.display === 'block') renderCompletedView();
+                    if (statisticsView.style.display === 'block') renderStatistics();
+                }, (error) => console.error("Completed listener error:", error));
+
+                const issuesQuery = query(collection(db, "issues"));
+                unsubscribeIssues = onSnapshot(issuesQuery, (snapshot) => {
+                    const newIssuesData = { 'ปัญหาป้าย': [], 'กล่องชำรุด': [], 'สินค้าขาด': [], 'สินค้าเกิน': [], 'อื่นๆ': [] };
+                    snapshot.forEach(doc => {
+                        const issue = { id: doc.id, ...doc.data() };
+                        (issue.issueTypes || []).forEach(type => {
+                            let category = Object.keys(newIssuesData).find(k => type.includes(k)) || 'อื่นๆ';
+                            newIssuesData[category].push(issue);
+                        });
+                    });
+                    issuesData = newIssuesData;
+                    updateMainMenuSummary();
+                    if (issuesView.style.display === 'block') renderIssuesView();
+                    if (statisticsView.style.display === 'block') renderStatistics();
+                }, (error) => console.error("Issues listener error:", error));
+            }
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = loginForm['login-email'].value;
+                const password = loginForm['login-password'].value;
+                signInWithEmailAndPassword(auth, email, password)
+                    .then(() => showNotification('เข้าสู่ระบบสำเร็จ!'))
+                    .catch((error) => showNotification(`เข้าสู่ระบบไม่สำเร็จ: ${error.message}`, false));
+            });
+
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = registerForm['register-email'].value;
+                const password = registerForm['register-password'].value;
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showNotification('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+                    showAuthForm('login');
+                } catch (error) {
+                    showNotification(`สมัครสมาชิกไม่สำเร็จ: ${error.message}`, false);
+                }
+            });
+
+            logoutButtonMain.addEventListener('click', () => signOut(auth));
+            
+            goToTransfersButton.addEventListener('click', () => showMainView(transfersView));
+            goToAiChatButton.addEventListener('click', () => showMainView(aiChatView));
+            goToCalendarButton.addEventListener('click', () => {
+                renderCalendar(new Date());
+                showMainView(calendarView);
+            });
+            goToStatisticsButton.addEventListener('click', () => {
+                renderStatistics();
+                showMainView(statisticsView);
+            });
+
+            document.querySelectorAll('.toggle-password').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    const input = e.target.previousElementSibling;
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    e.target.textContent = type === 'password' ? ' ️' : '🙈';
+                });
+            });
+
+            function updateMainMenuSummary() {
+                const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                const pendingCount = allTransfersData.length;
+                const completedTodayCount = completedTransfersData.filter(t => t.completionDate === todayString).length;
+                const issuesCount = Object.values(issuesData).reduce((sum, arr) => sum + (arr?.length || 0), 0);
+                document.getElementById('summary-pending').textContent = pendingCount;
+                document.getElementById('summary-completed-today').textContent = completedTodayCount;
+                document.getElementById('summary-issues').textContent = issuesCount;
+            }
+
+            function showSubView(viewToShow) {
+                [transfersMenuView, formView, detailsView, issuesView, completedView, checkView].forEach(v => v.classList.add('hidden'));
+                viewToShow.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
+
+            function initializeForm() {
+                document.getElementById('inbound-form').reset();
+                document.getElementById('delivery-date').value = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('image-preview').innerHTML = '';
+                uploadedImages = [];
+                const tforContainer = document.getElementById('tfor-container');
+                tforContainer.innerHTML = '';
+                addTforBlock();
+            }
+
+            document.getElementById('summary-pending-card').addEventListener('click', () => {
+                showMainView(transfersView);
+                renderDetailsTable();
+                showSubView(detailsView);
+            });
+            document.getElementById('summary-completed-today-card').addEventListener('click', () => {
+                showMainView(transfersView);
+                renderCompletedView();
+                showSubView(completedView);
+            });
+            document.getElementById('summary-issues-card').addEventListener('click', () => {
+                showMainView(transfersView);
+                renderIssuesView();
+                showSubView(issuesView);
+            });
+
+            document.querySelectorAll('.back-to-main-menu').forEach(btn => btn.addEventListener('click', () => {
+                updateMainMenuSummary();
+                showMainView(mainMenuView);
+            }));
+            document.querySelectorAll('.back-to-transfers-menu').forEach(btn => btn.addEventListener('click', () => showSubView(transfersMenuView)));
+            
+            menu1Button.addEventListener('click', () => { initializeForm(); showSubView(formView); });
+            menu2Button.addEventListener('click', () => { renderDetailsTable(); showSubView(detailsView); });
+            menu3Button.addEventListener('click', () => { renderCompletedView(); showSubView(completedView); });
+            menu4Button.addEventListener('click', () => { renderIssuesView(); showSubView(issuesView); });
+            backToPreviousViewButton.addEventListener('click', () => showSubView(previousView || detailsView));
+            
+            const lpFrontInput = document.getElementById('lp-front');
+            const lpBackInput = document.getElementById('lp-back');
+            lpFrontInput.addEventListener('input', () => { if (lpFrontInput.value.length >= 4) lpBackInput.focus(); });
+
+            const dragDropArea = document.getElementById('drag-drop-area');
+            const fileInput = document.getElementById('file-input');
+            const imagePreview = document.getElementById('image-preview');
+            let uploadedImages = [];
+
+            dragDropArea.addEventListener('click', () => fileInput.click());
+            dragDropArea.addEventListener('dragover', (e) => { e.preventDefault(); dragDropArea.classList.add('bg-indigo-50'); });
+            dragDropArea.addEventListener('dragleave', () => dragDropArea.classList.remove('bg-indigo-50'));
+            dragDropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dragDropArea.classList.remove('bg-indigo-50');
+                handleFiles(e.dataTransfer.files, imagePreview, uploadedImages);
+            });
+            fileInput.addEventListener('change', (e) => handleFiles(e.target.files, imagePreview, uploadedImages));
+
+            function handleFiles(files, previewContainer, imageArray) {
+                for (const file of files) {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            if (imageArray) imageArray.push(e.target.result);
+                            const div = document.createElement('div');
+                            div.className = 'relative group h-32 overflow-hidden rounded-lg shadow-md';
+                            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                            previewContainer.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+
+            const tforContainer = document.getElementById('tfor-container');
+            const addTforButton = document.getElementById('add-tfor-button');
+            const branches = ['WH.40 (NDC)', 'WH.61 Chiangmai', 'WH.62 Suratthani', 'WH.63 Nakhon Ratchasima', 'WH.64 Leamchabang', 'WH.65 Udon Thani', 'WH.66 Phitsanulok', 'WH.67 Ratchaburi', 'WH.68 Hat Yai'];
+
+            function addTforBlock() {
+                const year = new Date().getFullYear().toString().substr(-2);
+                const tforBlock = document.createElement('div');
+                tforBlock.className = 'tfor-block border-2 border-gray-200 rounded-xl p-6 bg-white shadow-inner relative';
+                tforBlock.innerHTML = `
+                    <button type="button" class="remove-tfor-button absolute top-4 right-4 text-red-500 hover:text-red-700 font-bold text-xl">&times;</button>
+                    <div class="mb-4 bg-gray-100 rounded-lg p-4 flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                        <label class="inline-flex items-center"><input type="checkbox" class="tfor-no-tfor-check form-checkbox h-5 w-5 text-fuchsia-600 rounded"><span class="ml-2 text-gray-700 font-semibold">สินค้าไม่ติดเลข TFOR</span></label>
+                        <label class="inline-flex items-center"><input type="checkbox" class="tfor-no-label-check form-checkbox h-5 w-5 text-fuchsia-600 rounded"><span class="ml-2 text-gray-700 font-semibold">ไม่มีป้าย</span></label>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">หมายเลข TFOR</label>
+                        <div class="flex items-center">
+                            <span class="bg-gray-200 text-gray-600 px-4 py-2 rounded-l-lg font-mono">TFOR${year}000</span>
+                            <input type="text" maxlength="4" placeholder="1234" class="w-24 rounded-r-lg border-gray-300 shadow-sm">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">สาขาต้นทาง</label>
+                        <select class="w-full rounded-lg border-gray-300 shadow-sm">
+                            <option value="">เลือกสาขา</option>
+                            ${branches.map(branch => `<option value="${branch}">${branch}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">เลือกหมายเลขพาเลท</label>
+                        <div class="flex flex-wrap gap-2">${Array.from({ length: 10 }, (_, i) => `<button type="button" class="pallet-button px-4 py-2 text-sm rounded-full bg-gray-200" data-value="${i + 1}">${i + 1}</button>`).join('')}</div>
+                        <input type="hidden" class="pallet-count-input">
+                        <div class="mt-2 text-sm text-gray-600 font-semibold pallet-status">ยังไม่ได้เลือกพาเลท</div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">หมายเหตุพาเลท (ถ้ามี)</label>
+                        <textarea rows="3" class="w-full rounded-lg border-gray-300 shadow-sm"></textarea>
+                    </div>
+                    <div class="mt-6 border-t pt-4">
+                        <h4 class="text-md font-semibold text-gray-700 mb-2">เพิ่ม TFOR ที่พ่วง (ถ้ามี)</h4>
+                        <div class="linked-tfor-container space-y-4"></div>
+                        <button type="button" class="add-linked-tfor-button mt-2 px-3 py-1 bg-gray-300 text-gray-700 rounded-lg shadow-sm hover:bg-gray-400 text-sm">+ เพิ่ม TFOR พ่วง</button>
+                    </div>
+                `;
+                tforContainer.appendChild(tforBlock);
+                addTforBlockListeners(tforBlock);
+            }
+            addTforButton.addEventListener('click', addTforBlock);
+
+            function addTforBlockListeners(tforBlock) {
+                tforBlock.querySelectorAll('.pallet-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        button.classList.toggle('bg-fuchsia-600');
+                        button.classList.toggle('text-white');
+                        button.classList.toggle('bg-gray-200');
+                        const selectedValues = Array.from(tforBlock.querySelectorAll('.pallet-button.bg-fuchsia-600')).map(b => b.dataset.value).sort((a,b) => parseInt(a) - parseInt(b));
+                        tforBlock.querySelector('.pallet-count-input').value = selectedValues.join(',');
+                        tforBlock.querySelector('.pallet-status').textContent = selectedValues.length > 0 ? `คุณเลือกพาเลทที่ ${selectedValues.join(', ')}` : `ยังไม่ได้เลือกพาเลท`;
+                    });
+                });
+                tforBlock.querySelector('.remove-tfor-button').addEventListener('click', () => tforBlock.remove());
+                tforBlock.querySelector('.add-linked-tfor-button').addEventListener('click', (e) => {
+                    const container = e.target.previousElementSibling;
+                    const year = new Date().getFullYear().toString().substr(-2);
+                    const linkedTforBlock = document.createElement('div');
+                    linkedTforBlock.className = 'flex items-center space-x-2';
+                    linkedTforBlock.innerHTML = `
+                        <span class="bg-gray-200 text-gray-600 px-3 py-1 rounded-l-lg font-mono text-sm">TFOR${year}000</span>
+                        <input type="text" maxlength="4" placeholder="1234" class="w-20 rounded-r-lg border-gray-300 shadow-sm text-sm">
+                        <button type="button" class="remove-linked-tfor-button text-red-500 hover:text-red-700 text-sm">ลบ</button>
+                    `;
+                    container.appendChild(linkedTforBlock);
+                    linkedTforBlock.querySelector('.remove-linked-tfor-button').addEventListener('click', () => linkedTforBlock.remove());
+                });
+            }
+            
+            inboundForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveButton.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full animate-spin mr-2"></div> กำลังบันทึก...`;
+                saveButton.disabled = true;
+
+                try {
+                    const deliveryDate = document.getElementById('delivery-date').value;
+                    const licensePlate = `${document.getElementById('lp-front').value} ${document.getElementById('lp-back').value}`;
+                    
+                    for (const block of document.querySelectorAll('.tfor-block')) {
+                        const palletNumbers = block.querySelector('.pallet-count-input').value.split(',').filter(Boolean);
+                        const tforData = {
+                            deliveryDate, licensePlate,
+                            images: [], // Placeholder. Use Firebase Storage for production.
+                            isNoTFOR: block.querySelector('.tfor-no-tfor-check').checked,
+                            isNoLabel: block.querySelector('.tfor-no-label-check').checked,
+                            tforNumber: block.querySelector('input[type="text"][maxlength="4"]').value,
+                            branch: block.querySelector('select').value,
+                            palletNumbers,
+                            palletCount: palletNumbers.length,
+                            notes: block.querySelector('textarea').value,
+                            linkedTfors: Array.from(block.querySelectorAll('.linked-tfor-container input')).map(input => input.value),
+                            checkedPallets: [],
+                            isCompleted: false,
+                            createdAt: serverTimestamp(),
+                            createdBy: currentUser.email
+                        };
+
+                        const newTransferRef = await addDoc(collection(db, "transfers"), tforData);
+
+                        if (tforData.isNoTFOR || tforData.isNoLabel) {
+                            const issueTypes = [];
+                            if (tforData.isNoTFOR) issueTypes.push('สินค้าไม่ติดเลข TFOR');
+                            if (tforData.isNoLabel) issueTypes.push('ไม่มีป้าย');
+                            const issue = {
+                                ...tforData,
+                                transferId: newTransferRef.id,
+                                issueTypes,
+                                issueNotes: "สร้างจากหน้าฟอร์มหลัก",
+                                issueImages: [],
+                                reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
+                            };
+                            await addDoc(collection(db, "issues"), issue);
+                        }
+                    }
+                    showNotification('บันทึกข้อมูลสำเร็จแล้ว!');
+                    showSubView(detailsView);
+                } catch (error) {
+                    console.error("Error saving data: ", error);
+                    showNotification('เกิดข้อผิดพลาดในการบันทึก', false);
+                } finally {
+                    saveButton.innerHTML = `บันทึกข้อมูล`;
+                    saveButton.disabled = false;
+                }
+            });
+
+            async function handlePalletCheck(palletNum) {
+                const checkedPallets = [...(currentTforData.checkedPallets || [])];
+                const index = checkedPallets.indexOf(palletNum);
+                if (index > -1) {
+                    checkedPallets.splice(index, 1);
+                } else {
+                    checkedPallets.push(palletNum);
+                }
+
+                const transferDocRef = doc(db, "transfers", currentTforData.id);
+                const isNowCompleted = checkedPallets.length === currentTforData.palletNumbers.length;
+
+                try {
+                    await updateDoc(transferDocRef, {
+                        isCompleted: isNowCompleted,
+                        completionDate: isNowCompleted ? new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : null,
+                        checkedPallets: checkedPallets
+                    });
+                    if (isNowCompleted) {
+                        showNotification('เช็คสินค้าครบถ้วนแล้ว!');
+                        showSubView(detailsView);
+                    }
+                } catch (error) {
+                    console.error("Error updating pallet check status: ", error);
+                    showNotification('เกิดข้อผิดพลาดในการอัปเดต', false);
+                }
+            }
+
+            async function savePalletIssues(palletNum, formWrapper) {
+                try {
+                    for (const itemForm of formWrapper.querySelectorAll('.issue-item-form')) {
+                        const issueTypes = Array.from(itemForm.querySelectorAll('.issue-type-cb:checked')).map(cb => cb.value);
+                        if (itemForm.querySelector('.issue-type-cb-other:checked')) {
+                            issueTypes.push(itemForm.querySelector('.issue-other-details').value || 'อื่นๆ');
+                        }
+
+                        const newIssue = {
+                            ...currentTforData,
+                            transferId: currentTforData.id,
+                            palletNumber: palletNum,
+                            itemNumber: itemForm.querySelector('.issue-item-number').value,
+                            quantity: itemForm.querySelector('.issue-quantity').value,
+                            issueTypes: issueTypes,
+                            issueNotes: itemForm.querySelector('.issue-other-details').value,
+                            issueImages: [], // Placeholder
+                            reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+                            reportedBy: currentUser.email
+                        };
+                        delete newIssue.id;
+
+                        await addDoc(collection(db, "issues"), newIssue);
+                    }
+                    showNotification(`บันทึกปัญหาสำหรับพาเลทที่ ${palletNum} เรียบร้อยแล้ว!`);
+                    formWrapper.remove();
+                    document.querySelectorAll('.issue-pallet-button').forEach(btn => btn.classList.remove('active'));
+                } catch (error) {
+                    console.error("Error saving issue: ", error);
+                    showNotification('เกิดข้อผิดพลาดในการบันทึกปัญหา', false);
+                }
+            }
+
+            function renderDetailsTable(filter = '') {
+                const container = document.getElementById('details-table-container');
+                const filteredData = allTransfersData.filter(d => 
+                    (d.tforNumber || '').includes(filter) || 
+                    (d.licensePlate || '').toLowerCase().includes(filter.toLowerCase()) ||
+                    (d.branch || '').toLowerCase().includes(filter.toLowerCase())
+                );
+                container.innerHTML = filteredData.length === 0 ? `<p class="text-gray-500 text-center">ไม่พบข้อมูล</p>` : '';
+                if(filteredData.length === 0) return;
+
+                const table = document.createElement('table');
+                table.className = 'min-w-full bg-white rounded-lg shadow';
+                table.innerHTML = `
+                    <thead class="bg-gray-200"><tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">สถานะ</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">วันที่</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">TFOR</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">สาขา</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">พาเลทที่</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ทะเบียนรถ</th>
+                        ${isAdmin ? '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">จัดการ</th>' : ''}
+                    </tr></thead>
+                    <tbody class="bg-white divide-y divide-gray-200"></tbody>`;
+                const tbody = table.querySelector('tbody');
+                filteredData.forEach(data => {
+                    const statusText = data.isCompleted ? 'เช็คเสร็จ' : ((data.checkedPallets?.length || 0) > 0 ? 'กำลังเช็ค' : 'ยังไม่เช็ค');
+                    const statusColor = data.isCompleted ? 'bg-green-100 text-green-800' : ((data.checkedPallets?.length || 0) > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800');
+                    const row = tbody.insertRow();
+                    row.className = 'hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">${statusText}</span></td>
+                        <td class="px-6 py-4 text-sm">${formatDateAbbreviated(data.deliveryDate)}</td>
+                        <td class="px-6 py-4 text-sm">...${data.tforNumber}</td>
+                        <td class="px-6 py-4 text-sm">${data.branch}</td>
+                        <td class="px-6 py-4 text-sm">${data.palletNumbers?.join(', ') || 'N/A'}</td>
+                        <td class="px-6 py-4 text-sm">${data.licensePlate}</td>
+                        ${isAdmin ? '<td class="px-6 py-4 text-sm"></td>' : ''}`;
+                    
+                    const mainActionCell = row.cells[0];
+                    mainActionCell.style.cursor = 'pointer';
+                    mainActionCell.addEventListener('click', () => {
+                        currentTforData = data;
+                        renderCheckView('check');
+                        showSubView(checkView);
+                    });
+
+                    if (isAdmin) {
+                        const adminCell = row.cells[6];
+                        const editButton = document.createElement('button');
+                        editButton.textContent = 'แก้ไข';
+                        editButton.className = 'px-3 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600';
+                        editButton.onclick = (e) => {
+                            e.stopPropagation();
+                            currentTforData = data;
+                            renderCheckView('admin-edit');
+                            showSubView(checkView);
+                        };
+                        adminCell.appendChild(editButton);
+                    }
+                });
+                container.appendChild(table);
+            }
+            
+            document.getElementById('details-search').addEventListener('input', (e) => renderDetailsTable(e.target.value));
+
+            function renderCheckView(mode = 'check') {
+                previousView = (mode === 'admin-add-issue') ? completedView : detailsView;
+                const detailsContainer = document.getElementById('check-details-container');
+                const palletButtonsContainer = document.getElementById('pallet-buttons-container');
+                const issuePalletButtonsContainer = document.getElementById('issue-pallet-buttons-container');
+                const issueFormsContainer = document.getElementById('issue-forms-container');
+                const checkSection = document.getElementById('check-section');
+                const checkViewTitle = document.getElementById('check-view-title');
+
+                checkViewTitle.textContent = (mode === 'admin-add-issue') ? 'เพิ่ม/แก้ไขปัญหาย้อนหลัง' : 'เช็คสินค้า';
+                checkSection.style.display = (mode === 'admin-add-issue') ? 'none' : 'block';
+                detailsContainer.innerHTML = `<p><b>TFOR:</b> ...${currentTforData.tforNumber}</p><p><b>ทะเบียนรถ:</b> ${currentTforData.licensePlate}</p>`;
+                palletButtonsContainer.innerHTML = '';
+                issuePalletButtonsContainer.innerHTML = '';
+                issueFormsContainer.innerHTML = '';
+
+                (currentTforData.palletNumbers || []).forEach(palletNum => {
+                    if (mode !== 'admin-add-issue') {
+                        const checkBtn = document.createElement('button');
+                        checkBtn.className = 'pallet-check-button px-4 py-2 text-sm rounded-full transition-all transform hover:scale-105';
+                        checkBtn.textContent = `พาเลทที่ ${palletNum}`;
+                        checkBtn.dataset.palletNumber = palletNum;
+                        if (currentTforData.checkedPallets?.includes(palletNum)) {
+                            checkBtn.classList.add('bg-green-500', 'text-white');
+                        } else {
+                            checkBtn.classList.add('bg-gray-200');
+                        }
+                        checkBtn.addEventListener('click', () => handlePalletCheck(palletNum));
+                        palletButtonsContainer.appendChild(checkBtn);
+                    }
+
+                    const issueBtn = document.createElement('button');
+                    issueBtn.className = 'issue-pallet-button px-4 py-2 text-sm rounded-full transition-all transform hover:scale-105 bg-red-100 text-red-700';
+                    issueBtn.textContent = `รายงานปัญหา พาเลทที่ ${palletNum}`;
+                    issueBtn.dataset.palletNumber = palletNum;
+                    issueBtn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.issue-pallet-button').forEach(btn => btn.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        renderIssueFormForPallet(palletNum, mode);
+                    });
+                    issuePalletButtonsContainer.appendChild(issueBtn);
+                });
+            }
+
+            function renderIssueFormForPallet(palletNum, mode) {
+                const issueFormsContainer = document.getElementById('issue-forms-container');
+                issueFormsContainer.innerHTML = ''; 
+                const formWrapper = document.createElement('div');
+                formWrapper.id = `issue-form-pallet-${palletNum}`;
+                formWrapper.className = 'mt-6 border-t pt-6';
+                formWrapper.innerHTML = `
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">รายงานปัญหาสำหรับพาเลทที่ ${palletNum}</h3>
+                    <div class="issue-items-container space-y-4"></div>
+                    <button type="button" class="add-issue-item-btn mt-4 px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600">+ เพิ่มรายการปัญหา</button>
+                    <button type="button" class="save-pallet-issues-btn mt-4 ml-2 px-3 py-1 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600">บันทึกปัญหาพาเลทนี้</button>
+                `;
+                issueFormsContainer.appendChild(formWrapper);
+                
+                const itemsContainer = formWrapper.querySelector('.issue-items-container');
+                
+                function addIssueItem() {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'issue-item-form bg-gray-50 p-4 rounded-lg border space-y-4 relative';
+                    itemDiv.innerHTML = `
+                        <button type="button" class="remove-issue-item-btn absolute top-2 right-2 text-red-500 hover:text-red-700">&times;</button>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-medium">ITEM NUMBER</label><input type="text" class="issue-item-number mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                            <div><label class="block text-sm font-medium">จำนวน</label><input type="number" class="issue-quantity mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">รูปรายละเอียดปัญหา</label>
+                            <div class="issue-drag-drop mt-1 border-2 border-dashed rounded-md p-4 text-center cursor-pointer">ลากและวางไฟล์ หรือ คลิก</div>
+                            <input type="file" class="issue-file-input hidden" multiple>
+                            <div class="issue-image-preview grid grid-cols-3 gap-2 mt-2"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">รายละเอียดปัญหา</label>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <label class="flex items-center"><input type="checkbox" value="กล่องชำรุด" class="issue-type-cb rounded"> <span class="ml-2">กล่องชำรุด</span></label>
+                                <label class="flex items-center"><input type="checkbox" value="ไม่ติดสติกเกอร์" class="issue-type-cb rounded"> <span class="ml-2">ไม่ติดสติกเกอร์</span></label>
+                                <label class="flex items-center"><input type="checkbox" value="สินค้าขาด" class="issue-type-cb rounded"> <span class="ml-2">สินค้าขาด</span></label>
+                                <label class="flex items-center"><input type="checkbox" value="สินค้าเกิน" class="issue-type-cb rounded"> <span class="ml-2">สินค้าเกิน</span></label>
+                                <label class="flex items-center"><input type="checkbox" value="อื่นๆ" class="issue-type-cb-other rounded"> <span class="ml-2">อื่นๆ</span></label>
+                            </div>
+                            <textarea class="issue-other-details hidden mt-2 w-full rounded-md border-gray-300 shadow-sm" placeholder="ระบุรายละเอียด..."></textarea>
+                        </div>
+                    `;
+                    itemsContainer.appendChild(itemDiv);
+                    
+                    const dnd = itemDiv.querySelector('.issue-drag-drop');
+                    const fileInput = itemDiv.querySelector('.issue-file-input');
+                    const preview = itemDiv.querySelector('.issue-image-preview');
+                    dnd.addEventListener('click', () => fileInput.click());
+                    fileInput.addEventListener('change', (e) => handleFiles(e.target.files, preview, []));
+                    
+                    itemDiv.querySelector('.issue-type-cb-other').addEventListener('change', (e) => {
+                        itemDiv.querySelector('.issue-other-details').classList.toggle('hidden', !e.target.checked);
+                    });
+                    itemDiv.querySelector('.remove-issue-item-btn').addEventListener('click', () => itemDiv.remove());
+                }
+                
+                addIssueItem();
+                formWrapper.querySelector('.add-issue-item-btn').addEventListener('click', addIssueItem);
+                formWrapper.querySelector('.save-pallet-issues-btn').addEventListener('click', () => savePalletIssues(palletNum, formWrapper));
+            }
+
+            function renderCompletedView(filter = '') {
+                const container = document.getElementById('completed-container');
+                const filteredData = completedTransfersData.filter(d => 
+                    (d.tforNumber || '').includes(filter) || 
+                    (d.licensePlate || '').toLowerCase().includes(filter.toLowerCase()) ||
+                    (d.branch || '').toLowerCase().includes(filter.toLowerCase())
+                );
+                container.innerHTML = filteredData.length === 0 ? `<p class="text-gray-500 text-center">ไม่พบข้อมูลที่เช็คเสร็จแล้ว</p>` : '';
+                filteredData.forEach(data => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-6 rounded-2xl shadow-md border border-gray-200';
+                    card.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div><p class="text-sm text-gray-500">วันที่รถมาส่ง</p><p class="font-semibold">${data.deliveryDate}</p></div>
+                            <div><p class="text-sm text-gray-500">ทะเบียนรถ</p><p class="font-semibold">${data.licensePlate}</p></div>
+                            <div><p class="text-sm text-gray-500">รูปภาพรวม</p><img src="${data.images?.[0] || 'https://placehold.co/150x100'}" class="mt-1 rounded-lg w-32 h-auto" alt="Vehicle"></div>
+                        </div>
+                        <hr class="my-4">
+                        <h3 class="font-semibold mb-3">รายละเอียด TFOR</h3>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p><span class="font-semibold">TFOR:</span> ...${data.tforNumber}</p>
+                            <p><span class="font-semibold">สาขา:</span> ${data.branch}</p>
+                            <p><span class="font-semibold">พาเลท:</span> ${data.palletNumbers?.join(', ') || '-'}</p>
+                            <p><span class="font-semibold">หมายเหตุ:</span> ${data.notes || '-'}</p>
+                            <p><span class="font-semibold">TFOR พ่วง:</span> ${data.linkedTfors?.join(', ') || '-'}</p>
+                        </div>
+                        <div class="admin-only mt-4 text-right"></div>
+                    `;
+                    if (isAdmin) {
+                        const adminControls = card.querySelector('.admin-only');
+                        const addIssueButton = document.createElement('button');
+                        addIssueButton.textContent = 'เพิ่ม/แก้ไขปัญหา';
+                        addIssueButton.className = 'px-4 py-2 text-sm bg-orange-500 text-white rounded-lg hover:bg-orange-600';
+                        addIssueButton.onclick = () => {
+                            currentTforData = data;
+                            renderCheckView('admin-add-issue');
+                            showSubView(checkView);
+                        };
+                        adminControls.appendChild(addIssueButton);
+                        adminControls.style.display = 'block';
+                    }
+                    container.appendChild(card);
+                });
+            }
+            
+            document.getElementById('completed-search').addEventListener('input', (e) => renderCompletedView(e.target.value));
+
+            function renderIssuesView() {
+                const container = document.getElementById('issues-container');
+                container.innerHTML = '';
+                Object.keys(issuesData).forEach(category => {
+                    if (issuesData[category]?.length > 0) {
+                        const categoryDiv = document.createElement('div');
+                        categoryDiv.className = 'bg-white rounded-lg shadow-md';
+                        categoryDiv.innerHTML = `
+                            <div class="issue-category-header p-4 flex justify-between items-center cursor-pointer">
+                                <h3 class="font-semibold text-lg">${category} (${issuesData[category].length})</h3>
+                                <span class="text-gray-500">▼</span>
+                            </div>
+                            <div class="issue-list hidden p-4 border-t"></div>
+                        `;
+                        const issueList = categoryDiv.querySelector('.issue-list');
+                        issuesData[category].forEach(issue => {
+                            const issueItem = document.createElement('div');
+                            issueItem.className = 'p-2 hover:bg-gray-100 rounded-md cursor-pointer';
+                            issueItem.innerHTML = `<p>${issue.deliveryDate} | ${issue.licensePlate} | ...${issue.tforNumber} | ${issue.issueTypes.join(', ')}</p>`;
+                            issueItem.addEventListener('click', () => showDetailsModal(issue));
+                            issueList.appendChild(issueItem);
+                        });
+                        categoryDiv.querySelector('.issue-category-header').addEventListener('click', (e) => {
+                            e.currentTarget.nextElementSibling.classList.toggle('hidden');
+                        });
+                        container.appendChild(categoryDiv);
+                    }
+                });
+                if(container.innerHTML === '') container.innerHTML = `<p class="text-gray-500 text-center">ไม่พบรายการสินค้ามีปัญหา</p>`;
+            }
+
+            function showDetailsModal(item, isHtml = false) {
+                detailsModalContent.innerHTML = `
+                    <button id="close-details-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                `;
+                if (isHtml) {
+                    detailsModalContent.innerHTML += item;
+                } else {
+                    detailsModalContent.innerHTML += `
+                        <h2 class="text-xl font-bold mb-4">รายละเอียด</h2>
+                        <div class="space-y-3">
+                            <p><strong>วันที่:</strong> ${item.deliveryDate}</p>
+                            <p><strong>ทะเบียนรถ:</strong> ${item.licensePlate}</p>
+                            <p><strong>TFOR:</strong> ...${item.tforNumber}</p>
+                            <p><strong>สาขา:</strong> ${item.branch}</p>
+                            <p><strong>ประเภทปัญหา:</strong> ${item.issueTypes ? item.issueTypes.join(', ') : 'N/A'}</p>
+                            <p><strong>Item Number:</strong> ${item.itemNumber || '-'}</p>
+                            <p><strong>จำนวนสินค้า:</strong> ${item.quantity || '-'}</p>
+                            <p><strong>หมายเหตุ:</strong> ${item.issueNotes || item.notes || '-'}</p>
+                            <p><strong>รูปภาพ:</strong></p>
+                            <div class="grid grid-cols-2 gap-2">${(item.issueImages && item.issueImages.length > 0 ? item.issueImages : (item.images || [])).map(img => `<img src="${img}" class="rounded-lg w-full h-auto">`).join('') || 'ไม่มีรูปภาพ'}</div>
+                        </div>
+                    `;
+                }
+                detailsModal.classList.remove('hidden');
+                detailsModal.classList.add('flex');
+                document.getElementById('close-details-modal').addEventListener('click', () => {
+                    detailsModal.classList.add('hidden');
+                    detailsModal.classList.remove('flex');
+                });
+            }
+
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+            let chatHistory = [];
+
+            function addChatMessage(message, sender) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'ai-bubble');
+                bubble.textContent = message;
+                chatMessages.appendChild(bubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                if (sender === 'user') {
+                    chatHistory.push({ role: 'user', parts: [{ text: message }] });
+                } else {
+                    chatHistory.push({ role: 'model', parts: [{ text: message }] });
+                }
+            }
+
+            addChatMessage('สวัสดีครับ! ผมคือ INBOUND-ASSISTANT มีอะไรให้ช่วยเหลือเกี่ยวกับข้อมูล Transfers บ้างครับ?', 'ai');
+
+            chatForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const userMessage = chatInput.value.trim();
+                if (!userMessage) return;
+                addChatMessage(userMessage, 'user');
+                chatInput.value = '';
+                const thinkingBubble = document.createElement('div');
+                thinkingBubble.classList.add('chat-bubble', 'ai-bubble');
+                thinkingBubble.textContent = 'กำลังประมวลผล...';
+                chatMessages.appendChild(thinkingBubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                const dataContext = JSON.stringify({transfers: allTransfersData, issues: issuesData});
+                const fullPrompt = `คุณคือ "INBOUND Assistant" ... (rest of the prompt is the same)`;
+                try {
+                    const aiResponse = await callGeminiAPI(fullPrompt);
+                    thinkingBubble.remove();
+                    addChatMessage(aiResponse, 'ai');
+                } catch (error) {
+                    thinkingBubble.textContent = 'ขออภัย, เกิดข้อผิดพลาดในการเชื่อมต่อกับ AI';
+                    console.error("AI Error:", error);
+                }
+            });
+
+            document.querySelectorAll('.animated-icon').forEach(icon => {
+                icon.addEventListener('click', () => {
+                    icon.classList.add('pulse');
+                    setTimeout(() => icon.classList.remove('pulse'), 500);
+                });
+            });
+            
+            const thaiMonths = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const thaiMonthMap = thaiMonths.reduce((map, month, i) => { map[month] = i; return map; }, {});
+
+            function parseThaiDate(thaiDateStr) {
+                if (!thaiDateStr) return null;
+                const parts = thaiDateStr.split(' ');
+                if (parts.length !== 3) return null;
+                const day = parseInt(parts[0], 10);
+                const month = thaiMonthMap[parts[1]];
+                const year = parseInt(parts[2], 10) - 543;
+                if (isNaN(day) || month === undefined || isNaN(year)) return null;
+                return new Date(year, month, day);
+            }
+
+            function renderCalendar(dateToDisplay) {
+                const container = document.getElementById('calendar-container');
+                container.innerHTML = '';
+                const month = dateToDisplay.getMonth();
+                const year = dateToDisplay.getFullYear();
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const today = new Date();
+                const header = document.createElement('div');
+                header.className = 'flex justify-between items-center mb-4';
+                header.innerHTML = `
+                    <button id="prev-month" class="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300">&lt;</button>
+                    <h2 class="text-xl font-semibold">${thaiMonths[month]} ${year + 543}</h2>
+                    <button id="next-month" class="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300">&gt;</button>
+                `;
+                container.appendChild(header);
+                header.querySelector('#prev-month').addEventListener('click', () => renderCalendar(new Date(year, month - 1, 1)));
+                header.querySelector('#next-month').addEventListener('click', () => renderCalendar(new Date(year, month + 1, 1)));
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-7 gap-2 text-center';
+                const daysOfWeek = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+                daysOfWeek.forEach(day => grid.innerHTML += `<div class="font-bold text-gray-600">${day}</div>`);
+                for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayEl = document.createElement('div');
+                    dayEl.className = 'calendar-day p-2 rounded-lg';
+                    dayEl.textContent = day;
+                    if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                        dayEl.classList.add('today');
+                    }
+                    const currentDate = new Date(year, month, day);
+                    const eventsOnDay = [...allTransfersData, ...completedTransfersData].filter(t => {
+                        const tDate = parseThaiDate(t.deliveryDate);
+                        return tDate && tDate.toDateString() === currentDate.toDateString();
+                    });
+                    if (eventsOnDay.length > 0) {
+                        dayEl.classList.add('has-events');
+                        dayEl.innerHTML += '<div class="event-dot"></div>';
+                        dayEl.addEventListener('click', () => {
+                            const eventHtml = `
+                                <h3 class="text-lg font-bold mb-3">รายการในวันที่ ${day} ${thaiMonths[month]}</h3>
+                                <div class="space-y-2">
+                                    ${eventsOnDay.map(e => `<div class="p-2 bg-gray-100 rounded-md"><p><strong>TFOR:</strong> ...${e.tforNumber} <strong>ทะเบียน:</strong> ${e.licensePlate}</p></div>`).join('')}
+                                </div>`;
+                            showDetailsModal(eventHtml, true);
+                        });
+                    }
+                    grid.appendChild(dayEl);
+                }
+                container.appendChild(grid);
+            }
+
+            function renderStatistics() {
+                const container = document.getElementById('statistics-container');
+                container.innerHTML = '';
+                Object.values(currentChartInstances).forEach(chart => chart.destroy());
+                currentChartInstances = {};
+
+                const cardsData = [
+                    { title: 'TFORs รอดำเนินการ', value: allTransfersData.length, color: 'bg-yellow-100', textColor: 'text-yellow-800' },
+                    { title: 'TFORs เช็คเสร็จแล้ว', value: completedTransfersData.length, color: 'bg-green-100', textColor: 'text-green-800' },
+                    { title: 'ปัญหารวม', value: Object.values(issuesData).reduce((sum, arr) => sum + (arr?.length || 0), 0), color: 'bg-red-100', textColor: 'text-red-800' },
+                    { title: 'พาเลททั้งหมด', value: [...allTransfersData, ...completedTransfersData].reduce((sum, t) => sum + (t.palletCount || 0), 0), color: 'bg-blue-100', textColor: 'text-blue-800' }
+                ];
+                cardsData.forEach(card => {
+                    const cardEl = document.createElement('div');
+                    cardEl.className = `p-6 rounded-2xl shadow-lg ${card.color}`;
+                    cardEl.innerHTML = `<h3 class="font-semibold text-lg ${card.textColor}">${card.title}</h3><p class="text-4xl font-bold mt-2 ${card.textColor}">${card.value}</p>`;
+                    container.appendChild(cardEl);
+                });
+                
+                const overdueContainer = document.createElement('div');
+                overdueContainer.className = 'md:col-span-2 p-6 bg-white rounded-2xl shadow-lg';
+                overdueContainer.innerHTML = `<h3 class="text-xl font-bold mb-4 text-red-600">TFORs ที่เกินกำหนด</h3><div id="overdue-tfor-list" class="space-y-3 max-h-60 overflow-y-auto"></div>`;
+                container.appendChild(overdueContainer);
+                renderOverdueStatistics();
+
+                const chartsWrapper = document.createElement('div');
+                chartsWrapper.className = 'md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6';
+                container.appendChild(chartsWrapper);
+
+                const issueChartContainer = document.createElement('div');
+                issueChartContainer.className = 'p-6 bg-white rounded-2xl shadow-lg';
+                issueChartContainer.innerHTML = '<h3 class="text-xl font-bold mb-4">ประเภทของปัญหา</h3><div class="relative h-64 md:h-80"><canvas id="issue-pie-chart"></canvas></div>';
+                chartsWrapper.appendChild(issueChartContainer);
+                const issueCtx = document.getElementById('issue-pie-chart').getContext('2d');
+                const issueLabels = Object.keys(issuesData);
+                const issueChartData = issueLabels.map(label => issuesData[label]?.length || 0);
+                currentChartInstances.issueChart = new Chart(issueCtx, {
+                    type: 'pie',
+                    data: { labels: issueLabels, datasets: [{ label: 'จำนวนปัญหา', data: issueChartData, backgroundColor: ['#f87171', '#fb923c', '#facc15', '#a3e635', '#4ade80', '#38bdf8'] }] },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+
+                const branchChartContainer = document.createElement('div');
+                branchChartContainer.className = 'p-6 bg-white rounded-2xl shadow-lg';
+                branchChartContainer.innerHTML = '<h3 class="text-xl font-bold mb-4">จำนวน TFORs ตามสาขา</h3><div class="relative h-64 md:h-80"><canvas id="branch-bar-chart"></canvas></div>';
+                chartsWrapper.appendChild(branchChartContainer);
+                const branchCounts = [...allTransfersData, ...completedTransfersData].reduce((acc, t) => {
+                    if(t.branch) acc[t.branch] = (acc[t.branch] || 0) + 1;
+                    return acc;
+                }, {});
+                const branchCtx = document.getElementById('branch-bar-chart').getContext('2d');
+                currentChartInstances.branchChart = new Chart(branchCtx, {
+                    type: 'bar',
+                    data: { labels: Object.keys(branchCounts), datasets: [{ label: 'จำนวน TFORs', data: Object.values(branchCounts), backgroundColor: '#a855f7', borderColor: '#9333ea', borderWidth: 1 }] },
+                    options: { scales: { y: { beginAtZero: true } }, responsive: true, maintainAspectRatio: false }
+                });
+            }
+            
+            function renderOverdueStatistics() {
+                const container = document.getElementById('overdue-tfor-list');
+                if (!container) return;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const overdueItems = allTransfersData.filter(t => {
+                    const tDate = parseThaiDate(t.deliveryDate);
+                    if (!tDate) return false;
+                    tDate.setHours(0, 0, 0, 0);
+                    return tDate < today;
+                });
+                if (overdueItems.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500">ไม่มีรายการที่เกินกำหนด</p>';
+                    return;
+                }
+                container.innerHTML = '';
+                overdueItems.sort((a, b) => parseThaiDate(a.deliveryDate) - parseThaiDate(b.deliveryDate));
+                overdueItems.forEach(item => {
+                    const tDate = parseThaiDate(item.deliveryDate);
+                    const diffTime = Math.abs(today - tDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'flex justify-between items-center bg-red-50 p-3 rounded-lg';
+                    itemEl.innerHTML = `
+                        <div>
+                            <p class="font-semibold text-sm">TFOR: ...${item.tforNumber} (${item.branch})</p>
+                            <p class="text-xs text-gray-600">ทะเบียน: ${item.licensePlate}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-lg text-red-500">${diffDays}</p>
+                            <p class="text-xs text-red-500">วัน</p>
+                        </div>
+                    `;
+                    container.appendChild(itemEl);
+                });
+            }
+
+            function formatDateAbbreviated(dateString) {
+                const date = parseThaiDate(dateString);
+                if (!date) return dateString;
+                const day = date.getDate();
+                const month = thaiMonths[date.getMonth()].substring(0, 3);
+                const year = (date.getFullYear() + 543).toString().slice(-2);
+                return `${day} ${month} ${year}`;
+            }
+
+        });
+    </script>
+</body>
+</html>
+ 
