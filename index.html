@@ -88,6 +88,19 @@
             border-color: #a21caf;
             box-shadow: 0 0 10px rgba(162, 28, 175, 0.5);
         }
+        /* Styles for PDF Export Content */
+        #pdf-export-content {
+            font-family: 'Sarabun', sans-serif;
+            color: #333;
+            width: 100%;
+        }
+        #pdf-export-content h1 { font-size: 24px; font-weight: bold; margin-bottom: 16px; text-align: center; }
+        #pdf-export-content h2 { font-size: 18px; font-weight: bold; margin-top: 24px; margin-bottom: 12px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+        #pdf-export-content table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        #pdf-export-content th, #pdf-export-content td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        #pdf-export-content th { background-color: #f2f2f2; }
+        #pdf-export-content .chart-image { max-width: 90%; height: auto; display: block; margin: 20px auto; }
+        #pdf-export-content .page-break { page-break-after: always; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -172,6 +185,11 @@
                  <button type="button" id="backup-modal-cancel" class="px-4 py-2 bg-gray-200 rounded-lg">ปิด</button>
             </div>
         </div>
+    </div>
+
+    <!-- Hidden container for PDF export content -->
+    <div id="pdf-export-container" class="hidden">
+        <div id="pdf-export-content"></div>
     </div>
 
 
@@ -606,10 +624,16 @@
                         <button data-frame="month" class="timeframe-btn px-4 py-2 rounded-full text-sm font-semibold bg-fuchsia-600 text-white">เดือนนี้</button>
                         <button data-frame="year" class="timeframe-btn px-4 py-2 rounded-full text-sm font-semibold">ปีนี้</button>
                     </div>
-                    <button id="export-pdf-btn" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        Export PDF
-                    </button>
+                    <div class="flex gap-2">
+                        <button id="export-excel-btn" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Export Excel
+                        </button>
+                        <button id="export-pdf-btn" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Export PDF
+                        </button>
+                    </div>
                 </div>
                 <div id="statistics-report-container" class="bg-white rounded-2xl shadow-lg p-6">
                     <h2 id="report-title" class="text-2xl font-bold text-center mb-6">รายงานสรุปผล</h2>
@@ -899,13 +923,13 @@
                     completedTransfersData = allData.filter(d => d.isCompleted);
                     updateMainMenuSummary();
                     // Conditional UI updates
-                    if (detailsView.style.display === 'block') renderDetailsTable();
-                    if (completedView.style.display === 'block') renderCompletedView();
-                    if (views.statistics.style.display === 'block') renderAdvancedStatistics();
-                    if (views.todaysPlan.style.display === 'block') renderTodaysPlanView();
-                    if (views.kpi.style.display === 'block') renderKpiView();
-                    if (views.profile.style.display === 'block') renderRecentActivity();
-                    if (checkView.style.display === 'block' && currentTforData) {
+                    if (views.detailsView && views.detailsView.style.display === 'block') renderDetailsTable();
+                    if (views.completedView && views.completedView.style.display === 'block') renderCompletedView();
+                    if (views.statistics && views.statistics.style.display === 'block') renderAdvancedStatistics();
+                    if (views.todaysPlan && views.todaysPlan.style.display === 'block') renderTodaysPlanView();
+                    if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
+                    if (views.profile && views.profile.style.display === 'block') renderRecentActivity();
+                    if (checkView && checkView.style.display === 'block' && currentTforData) {
                         const updatedData = allData.find(t => t.id === currentTforData.id);
                         if(updatedData) {
                             currentTforData = updatedData;
@@ -926,9 +950,9 @@
                     });
                     issuesData = newIssuesData;
                     updateMainMenuSummary();
-                    if (issuesView.style.display === 'block') renderIssuesView();
-                    if (views.kpi.style.display === 'block') renderKpiView();
-                    if (views.profile.style.display === 'block') renderRecentActivity();
+                    if (views.issuesView && views.issuesView.style.display === 'block') renderIssuesView();
+                    if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
+                    if (views.profile && views.profile.style.display === 'block') renderRecentActivity();
                 }, (error) => console.error("Issues listener error:", error));
 
                 const userRole = currentUserProfile?.role;
@@ -936,13 +960,13 @@
                     const usersQuery = query(collection(db, "users"));
                     unsubscribeUsers = onSnapshot(usersQuery, (snapshot) => {
                         allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        if (views.kpi.style.display === 'block') renderKpiView();
+                        if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
                     });
                     
                     const scoresQuery = query(collection(db, "scores"));
                     unsubscribeScores = onSnapshot(scoresQuery, (snapshot) => {
                         allScores = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                         if (views.kpi.style.display === 'block' && document.getElementById('kpi-details-container').style.display !== 'none') {
+                         if (views.kpi && views.kpi.style.display === 'block' && document.getElementById('kpi-details-container').style.display !== 'none') {
                             const activeUserId = document.getElementById('kpi-details-container').dataset.userId;
                             if (activeUserId) {
                                 const activeUser = allUsers.find(u => u.id === activeUserId);
@@ -1613,12 +1637,12 @@
                         ${imagesHTML}
                     `;
                     
-                    const adminControls = card.querySelector('.delete-permission');
+                    const adminCell = card.querySelector('.delete-permission');
                     const deleteButton = document.createElement('button');
                     deleteButton.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
                     deleteButton.className = 'text-red-500 hover:text-red-700';
                     deleteButton.onclick = () => deleteTransfer(data.id);
-                    adminControls.appendChild(deleteButton);
+                    adminCell.appendChild(deleteButton);
                     
                     container.appendChild(card);
                 });
@@ -1869,7 +1893,7 @@
                 const dateObj = parseThaiDate(dateString);
                 const newEntriesOnDay = allTransfersData.filter(t => parseThaiDate(t.deliveryDate)?.toDateString() === dateObj?.toDateString());
                 const scheduledOnDay = allTransfersData.filter(t => t.scheduledDate === dateString);
-                const completedOnDay = completedTransfersData.filter(t => t.completionDate === dateString);
+                const completedOnDay = completedTransfersData.filter(t => parseThaiDate(t.completionDate)?.toDateString() === dateObj?.toDateString());
 
                 let modalHtml = `
                     <button id="close-details-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
@@ -2011,26 +2035,15 @@
                 });
             }
 
-            function renderAdvancedStatistics(timeframe = 'month') {
-                const container = document.getElementById('statistics-container');
-                const chartsContainer = document.getElementById('charts-container');
-                const reportTitle = document.getElementById('report-title');
-                container.innerHTML = '';
-                chartsContainer.innerHTML = '';
-                Object.values(currentChartInstances).forEach(chart => chart.destroy());
-                currentChartInstances = {};
-
-                const now = new Date();
+            function getStatsData(timeframe = 'month') {
+                 const now = new Date();
                 let startDate;
                 if (timeframe === 'week') {
                     startDate = new Date(now.setDate(now.getDate() - now.getDay()));
-                    reportTitle.textContent = 'รายงานสรุปผลประจำสัปดาห์';
                 } else if (timeframe === 'month') {
                     startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                    reportTitle.textContent = 'รายงานสรุปผลประจำเดือน';
                 } else { // year
                     startDate = new Date(now.getFullYear(), 0, 1);
-                    reportTitle.textContent = 'รายงานสรุปผลประจำปี';
                 }
                 startDate.setHours(0, 0, 0, 0);
 
@@ -2056,14 +2069,39 @@
                     return dueDate < new Date();
                 });
                 const totalOverdue = overdueItems.length;
+
+                return {
+                    filteredData,
+                    totalInbound,
+                    totalCompleted,
+                    totalPallets,
+                    totalIssues,
+                    overdueItems,
+                    totalOverdue
+                };
+            }
+
+            function renderAdvancedStatistics(timeframe = 'month') {
+                const container = document.getElementById('statistics-container');
+                const chartsContainer = document.getElementById('charts-container');
+                const reportTitle = document.getElementById('report-title');
+                container.innerHTML = '';
+                chartsContainer.innerHTML = '';
+                Object.values(currentChartInstances).forEach(chart => chart.destroy());
+                currentChartInstances = {};
+
+                const stats = getStatsData(timeframe);
+
+                if (timeframe === 'week') reportTitle.textContent = 'รายงานสรุปผลประจำสัปดาห์';
+                else if (timeframe === 'month') reportTitle.textContent = 'รายงานสรุปผลประจำเดือน';
+                else reportTitle.textContent = 'รายงานสรุปผลประจำปี';
                 
-                // Adjusted card data to fit better in a 3-column layout for PDF
                 const cardsData = [
-                    { title: 'ของเข้าทั้งหมด', value: totalInbound, color: 'bg-blue-100', textColor: 'text-blue-800', items: filteredData },
-                    { title: 'เช็คเสร็จแล้ว', value: totalCompleted, color: 'bg-green-100', textColor: 'text-green-800', items: filteredData.filter(d => d.isCompleted) },
-                    { title: 'คงค้าง (ล่าช้า)', value: totalOverdue, color: 'bg-red-100', textColor: 'text-red-800', items: overdueItems },
-                    { title: 'พาเลททั้งหมด', value: totalPallets, color: 'bg-indigo-100', textColor: 'text-indigo-800', items: filteredData },
-                    { title: 'สินค้ามีปัญหา', value: totalIssues, color: 'bg-yellow-100', textColor: 'text-yellow-800', items: allIssues.filter(i => { const iDate = i.createdAt?.toDate ? i.createdAt.toDate() : parseThaiDate(i.reportDate); return iDate && iDate >= startDate; }) }
+                    { title: 'ของเข้าทั้งหมด', value: stats.totalInbound, color: 'bg-blue-100', textColor: 'text-blue-800', items: stats.filteredData },
+                    { title: 'เช็คเสร็จแล้ว', value: stats.totalCompleted, color: 'bg-green-100', textColor: 'text-green-800', items: stats.filteredData.filter(d => d.isCompleted) },
+                    { title: 'คงค้าง (ล่าช้า)', value: stats.totalOverdue, color: 'bg-red-100', textColor: 'text-red-800', items: stats.overdueItems },
+                    { title: 'พาเลททั้งหมด', value: stats.totalPallets, color: 'bg-indigo-100', textColor: 'text-indigo-800', items: stats.filteredData },
+                    { title: 'สินค้ามีปัญหา', value: stats.totalIssues, color: 'bg-yellow-100', textColor: 'text-yellow-800', items: Object.values(issuesData).flat().filter(i => { const iDate = i.createdAt?.toDate ? i.createdAt.toDate() : parseThaiDate(i.reportDate); return iDate && iDate >= new Date(new Date().getFullYear(), 0, 1);}) }
                 ];
 
                 container.innerHTML = ''; // Clear previous cards
@@ -2080,7 +2118,7 @@
                 branchChartContainer.className = 'p-6 bg-white rounded-2xl shadow-inner';
                 branchChartContainer.innerHTML = '<h3 class="text-xl font-bold mb-4">จำนวนของเข้าตามสาขา</h3><div class="relative h-64 md:h-80"><canvas id="branch-bar-chart"></canvas></div>';
                 chartsContainer.appendChild(branchChartContainer);
-                const branchCounts = filteredData.reduce((acc, t) => {
+                const branchCounts = stats.filteredData.reduce((acc, t) => {
                     if(t.branch) acc[t.branch] = (acc[t.branch] || 0) + 1;
                     return acc;
                 }, {});
@@ -2102,7 +2140,7 @@
                     data: { 
                         labels: ['เช็คเสร็จแล้ว', 'รอดำเนินการ'], 
                         datasets: [{ 
-                            data: [totalCompleted, totalInbound - totalCompleted], 
+                            data: [stats.totalCompleted, stats.totalInbound - stats.totalCompleted], 
                             backgroundColor: ['#22c55e', '#f59e0b'] 
                         }] 
                     },
@@ -2152,17 +2190,123 @@
                 });
             });
 
-            document.getElementById('export-pdf-btn').addEventListener('click', () => {
-                const element = document.getElementById('statistics-report-container');
+            // --- NEW/IMPROVED EXPORT LOGIC ---
+            
+            async function generateAndExportPdf() {
+                const button = document.getElementById('export-pdf-btn');
+                button.disabled = true;
+                button.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full inline-block mr-2"></div> กำลังสร้าง...`;
+                
+                const timeframe = document.querySelector('.timeframe-btn.bg-fuchsia-600').dataset.frame;
+                const stats = getStatsData(timeframe);
+                const reportTitle = document.getElementById('report-title').textContent;
+                const exportContent = document.getElementById('pdf-export-content');
+                
+                const branchChartImg = currentChartInstances.branchChart ? currentChartInstances.branchChart.toBase64Image() : '';
+                const statusChartImg = currentChartInstances.statusChart ? currentChartInstances.statusChart.toBase64Image() : '';
+                
+                let html = `<h1>${reportTitle}</h1>`;
+                
+                // Summary Table
+                html += `<h2>สรุปข้อมูลภาพรวม</h2>
+                <table>
+                    <thead><tr><th>รายการ</th><th>จำนวน</th></tr></thead>
+                    <tbody>
+                        <tr><td>ของเข้าทั้งหมด (TFORs)</td><td>${stats.totalInbound}</td></tr>
+                        <tr><td>เช็คเสร็จแล้ว</td><td>${stats.totalCompleted}</td></tr>
+                        <tr><td>คงค้าง (ล่าช้า)</td><td>${stats.totalOverdue}</td></tr>
+                        <tr><td>พาเลททั้งหมด</td><td>${stats.totalPallets}</td></tr>
+                        <tr><td>สินค้ามีปัญหา</td><td>${stats.totalIssues}</td></tr>
+                    </tbody>
+                </table>`;
+
+                // Charts
+                html += `<h2>กราฟสรุปผล</h2>
+                         <img src="${branchChartImg}" class="chart-image">
+                         <img src="${statusChartImg}" class="chart-image">
+                         <div class="page-break"></div>`;
+
+                // Detailed Table
+                html += `<h2>รายละเอียดข้อมูล TFORs</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>วันที่มาถึง</th><th>ทะเบียนรถ</th><th>TFOR</th><th>สาขา</th>
+                            <th>จำนวนพาเลท</th><th>สถานะ</th><th>วันที่เช็คเสร็จ</th><th>ผู้เช็ค</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${stats.filteredData.map(d => `
+                            <tr>
+                                <td>${d.deliveryDate || 'N/A'}</td>
+                                <td>${d.licensePlate || 'N/A'}</td>
+                                <td>...${d.tforNumber || 'N/A'}</td>
+                                <td>${d.branch || 'N/A'}</td>
+                                <td>${d.palletCount || 0}</td>
+                                <td>${d.isCompleted ? 'เช็คเสร็จแล้ว' : 'รอดำเนินการ'}</td>
+                                <td>${d.completionDate || '-'}</td>
+                                <td>${d.lastCheckedByName || '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+
+                exportContent.innerHTML = html;
+
                 const opt = {
-                    margin:       [0.5, 0.2, 0.5, 0.2],
-                    filename:     'inbound_report.pdf',
+                    margin:       [0.5, 0.5, 0.5, 0.5],
+                    filename:     `inbound_report_${timeframe}_${new Date().toISOString().split('T')[0]}.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { scale: 2, useCORS: true },
                     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
                 };
-                html2pdf().from(element).set(opt).save();
-            });
+
+                await html2pdf().from(exportContent).set(opt).save();
+
+                button.disabled = false;
+                button.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Export PDF`;
+            }
+
+            function exportToCsv() {
+                const button = document.getElementById('export-excel-btn');
+                button.disabled = true;
+                button.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full inline-block mr-2"></div> กำลังสร้าง...`;
+
+                const timeframe = document.querySelector('.timeframe-btn.bg-fuchsia-600').dataset.frame;
+                const { filteredData } = getStatsData(timeframe);
+
+                const headers = ["วันที่มาถึง", "ทะเบียนรถ", "TFOR", "สาขาต้นทาง", "จำนวนพาเลท", "สถานะ", "วันที่เช็คเสร็จ", "ผู้เช็คล่าสุด", "ผู้นำเข้าข้อมูล"];
+                const rows = filteredData.map(row => [
+                    row.deliveryDate || '',
+                    row.licensePlate || '',
+                    `...${row.tforNumber || ''}`,
+                    row.branch || '',
+                    row.palletCount || 0,
+                    row.isCompleted ? 'เช็คเสร็จแล้ว' : 'รอดำเนินการ',
+                    row.completionDate || '',
+                    row.lastCheckedByName || '',
+                    row.createdByName || ''
+                ]);
+
+                let csvContent = "data:text/csv;charset=utf-8,\uFEFF" // \uFEFF for BOM to handle Thai characters in Excel
+                    + headers.join(",") + "\n" 
+                    + rows.map(e => e.map(cell => `"${cell}"`).join(",")).join("\n");
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `inbound_data_${timeframe}_${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                button.disabled = false;
+                button.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Export Excel`;
+            }
+
+            document.getElementById('export-pdf-btn').addEventListener('click', generateAndExportPdf);
+            document.getElementById('export-excel-btn').addEventListener('click', exportToCsv);
+
 
             function formatDateAbbreviated(dateString) {
                 const date = parseThaiDate(dateString);
@@ -2207,7 +2351,7 @@
                     const checkedCount = completedTransfersData.filter(t => t.lastCheckedByUid === user.id).length;
                     const issuesCount = allIssues.filter(i => i.reportedByUid === user.id).length;
                     const userScores = allScores.filter(s => s.userId === user.id);
-                    const totalStars = userScores.reduce((sum, score) => sum + score.score, 0);
+                    const totalStars = userScores.reduce((sum, score) => sum + (score.score || 0), 0);
                     const profilePic = user.profilePictureUrl || 'https://placehold.co/80x80/e0e0e0/757575?text=?';
                     // Calculate Performance Score: (Checked * 2) + Created - (Issues * 3) + Stars
                     const performanceScore = (checkedCount * 2) + createdCount - (issuesCount * 3) + totalStars;
@@ -2287,11 +2431,25 @@
                 });
             }
 
+            function getMillis(timestamp) {
+                if (!timestamp) return 0;
+                if (typeof timestamp.toMillis === 'function') {
+                    return timestamp.toMillis();
+                }
+                if (typeof timestamp === 'string') {
+                    return new Date(timestamp).getTime();
+                }
+                if (timestamp.seconds) {
+                    return timestamp.seconds * 1000;
+                }
+                return 0;
+            }
+
             function renderKpiDetails(user) {
                 const container = document.getElementById('kpi-details-container');
                 container.dataset.userId = user.id;
-                const userScores = allScores.filter(s => s.userId === user.id).sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
-                const totalStars = userScores.reduce((sum, score) => sum + score.score, 0);
+                const userScores = allScores.filter(s => s.userId === user.id).sort((a, b) => getMillis(b.timestamp) - getMillis(a.timestamp));
+                const totalStars = userScores.reduce((sum, score) => sum + (score.score || 0), 0);
                 const blackStarsCount = userScores.filter(s => s.score < 0).reduce((sum, s) => sum + Math.abs(s.score), 0);
                 const profilePic = user.profilePictureUrl || 'https://placehold.co/128x128/e0e0e0/757575?text=?';
                 const allUserTransfers = [...allTransfersData, ...completedTransfersData];
@@ -2304,7 +2462,7 @@
                 let scoreHistoryHtml = '<p class="text-gray-500">ยังไม่มีประวัติคะแนนพิเศษ</p>';
                 if (userScores.length > 0) {
                     scoreHistoryHtml = userScores.map(score => {
-                        const scoreDate = score.timestamp ? score.timestamp.toDate().toLocaleDateString('th-TH') : 'ไม่มีข้อมูลวันที่';
+                        const scoreDate = score.timestamp ? new Date(getMillis(score.timestamp)).toLocaleDateString('th-TH') : 'ไม่มีข้อมูลวันที่';
                         const starColor = score.score < 0 ? 'text-red-500' : 'text-amber-500';
                         const stars = '★'.repeat(Math.abs(score.score));
                         
@@ -2331,8 +2489,10 @@
                             <img src="${profilePic}" alt="Profile" class="w-24 h-24 rounded-full object-cover shadow-md">
                             <div>
                                 <h2 class="text-2xl font-bold">${user.firstName} ${user.lastName}</h2>
-                                <p class="text-lg font-bold">คะแนนประสิทธิภาพ: <span class="text-2xl ${performanceScore > 10 ? 'text-green-500' : performanceScore > 0 ? 'text-blue-500' : 'text-red-500'}">${performanceScore}</span></p>
-                                <p class="text-sm text-gray-600">อัตราการเกิดปัญหา: ${issueRate}%</p>
+                                <p class="text-lg font-bold">
+                                    <span class="text-amber-500">คะแนนรวม: ${totalStars} ★</span>
+                                    ${blackStarsCount > 0 ? `<span class="text-red-500 ml-2">(หัก ${blackStarsCount} ★)</span>` : ''}
+                                </p>
                             </div>
                         </div>
                         <button id="add-score-btn" data-user-id="${user.id}" class="mt-4 sm:mt-0 px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow hover:bg-fuchsia-700">ให้คะแนนพิเศษ</button>
@@ -2445,7 +2605,7 @@
                     awardedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
                     timestamp: serverTimestamp()
                 };
-                if (!scoreData.score) {
+                if (!scoreData.score || isNaN(scoreValue)) {
                     showNotification('กรุณาให้คะแนนดาว', false); return;
                 }
                 try {
@@ -2556,9 +2716,22 @@
             function renderRecentActivity() {
                 const container = document.getElementById('recent-activity-container');
                 const allUserTransfers = [...allTransfersData, ...completedTransfersData];
-                const userActivity = allUserTransfers
-                    .filter(t => t.createdByUid === currentUser.uid || t.lastCheckedByUid === currentUser.uid)
-                    .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
+                const allUserIssues = Object.values(issuesData).flat();
+                
+                const createdActivity = allUserTransfers
+                    .filter(t => t.createdByUid === currentUser.uid)
+                    .map(t => ({...t, type: 'สร้าง', timestamp: t.createdAt}));
+                
+                const checkedActivity = completedTransfersData
+                    .filter(t => t.lastCheckedByUid === currentUser.uid)
+                    .map(t => ({...t, type: 'เช็คเสร็จ', timestamp: t.createdAt})); // Note: using createdAt for sorting consistency
+
+                const issueActivity = allUserIssues
+                    .filter(i => i.reportedByUid === currentUser.uid)
+                    .map(i => ({...i, type: 'รายงานปัญหา', timestamp: i.createdAt}));
+
+                const userActivity = [...createdActivity, ...checkedActivity, ...issueActivity]
+                    .sort((a, b) => getMillis(b.timestamp) - getMillis(a.timestamp))
                     .slice(0, 5);
 
                 if (userActivity.length === 0) {
@@ -2569,21 +2742,21 @@
                 container.innerHTML = userActivity.map(item => {
                     let actionText = '';
                     let actionColor = '';
-                    if (item.lastCheckedByUid === currentUser.uid && item.isCompleted) {
+                    if (item.type === 'เช็คเสร็จ') {
                         actionText = 'คุณเช็ค TFOR นี้เสร็จแล้ว';
                         actionColor = 'text-green-600';
-                    } else if (item.createdByUid === currentUser.uid) {
+                    } else if (item.type === 'สร้าง') {
                         actionText = 'คุณสร้าง TFOR นี้';
                         actionColor = 'text-blue-600';
-                    } else {
-                         actionText = 'คุณเช็ค TFOR นี้ล่าสุด';
-                         actionColor = 'text-yellow-600';
+                    } else if (item.type === 'รายงานปัญหา') {
+                        actionText = 'คุณรายงานปัญหา';
+                        actionColor = 'text-red-600';
                     }
 
                     return `
                         <div class="p-3 bg-gray-50 rounded-lg">
                             <p class="font-semibold">TFOR: ...${item.tforNumber} (${item.branch})</p>
-                            <p class="text-sm ${actionColor}">${actionText} - ${formatDateAbbreviated(item.deliveryDate)}</p>
+                            <p class="text-sm ${actionColor}">${actionText} - ${formatDateAbbreviated(item.deliveryDate || item.reportDate)}</p>
                         </div>
                     `;
                 }).join('');
