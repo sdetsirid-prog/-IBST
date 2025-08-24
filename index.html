@@ -73,6 +73,9 @@
         .star-rating .star.selected, .star-rating .star:hover {
             color: #f59e0b; /* amber-500 */
         }
+        .star-rating.deduction .star.selected, .star-rating.deduction .star:hover {
+            color: #ef4444; /* red-500 */
+        }
         .default-avatar {
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -585,7 +588,7 @@
                 </div>
                 <div id="statistics-report-container" class="bg-white rounded-2xl shadow-lg p-6">
                     <h2 id="report-title" class="text-2xl font-bold text-center mb-6">รายงานสรุปผล</h2>
-                    <div id="statistics-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div id="statistics-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         <!-- Summary cards will be injected here -->
                     </div>
                     <div id="charts-container" class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -624,7 +627,7 @@
         const db = getFirestore(app);
 
         // Your Gemini API Key
-        const geminiApiKey = "";
+        const geminiApiKey = "AIzaSyBNDp-YoQf1qC4VEYpKy5MGVWCpX1i2Sf0";
 
         async function callGeminiAPI(prompt) {
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
@@ -1651,10 +1654,11 @@
                      detailsModal.classList.add('hidden');
                      detailsModal.classList.remove('flex');
                 }
-                const taskItem = e.target.closest('.scheduled-task-item');
+                const taskItem = e.target.closest('.calendar-task-item');
                 if (taskItem && !e.target.classList.contains('unschedule-btn')) {
                     const transferId = taskItem.dataset.id;
-                    const transferData = allTransfersData.find(t => t.id === transferId);
+                    const allTransfers = [...allTransfersData, ...completedTransfersData];
+                    const transferData = allTransfers.find(t => t.id === transferId);
                     if (transferData) {
                         currentTforData = transferData;
                         detailsModal.classList.add('hidden');
@@ -1662,6 +1666,22 @@
                         showMainView(views.transfers);
                         renderCheckView();
                         showSubView(checkView);
+                    }
+                }
+                const statsItem = e.target.closest('.stats-detail-item');
+                if (statsItem) {
+                    const transferId = statsItem.dataset.id;
+                    const allTransfers = [...allTransfersData, ...completedTransfersData];
+                    const transferData = allTransfers.find(t => t.id === transferId);
+                    if (transferData) {
+                        currentTforData = transferData;
+                        detailsModal.classList.add('hidden');
+                        detailsModal.classList.remove('flex');
+                        showMainView(views.transfers);
+                        renderCheckView();
+                        showSubView(checkView);
+                    } else {
+                        showNotification("ไม่พบข้อมูล TFOR ที่เกี่ยวข้อง", false);
                     }
                 }
             });
@@ -1788,23 +1808,50 @@
             }
             
             function showDayDetailsModal(dateString) {
+                const dateObj = parseThaiDate(dateString);
+                const newEntriesOnDay = allTransfersData.filter(t => parseThaiDate(t.deliveryDate)?.toDateString() === dateObj?.toDateString());
                 const scheduledOnDay = allTransfersData.filter(t => t.scheduledDate === dateString);
+                const completedOnDay = completedTransfersData.filter(t => t.completionDate === dateString);
+
                 let modalHtml = `
                     <button id="close-details-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
                     <h3 class="text-lg font-bold mb-3">รายละเอียดวันที่ ${dateString}</h3>
                 `;
 
+                let hasContent = false;
+
                 if (scheduledOnDay.length > 0) {
+                    hasContent = true;
                     modalHtml += '<h4 class="font-semibold mt-4 text-purple-600">งานที่วางแผนไว้</h4><div class="space-y-2 border-l-4 border-purple-200 pl-4 py-2">';
                     scheduledOnDay.forEach(e => {
-                        modalHtml += `<div class="p-2 bg-purple-50 rounded-md flex justify-between items-center hover:bg-purple-100 cursor-pointer scheduled-task-item" data-id="${e.id}">
+                        modalHtml += `<div class="p-2 bg-purple-50 rounded-md flex justify-between items-center hover:bg-purple-100 cursor-pointer calendar-task-item" data-id="${e.id}">
                             <span><strong>TFOR:</strong> ...${e.tforNumber} (โดย ${e.scheduledByName || 'N/A'})</span>
                             <button class="unschedule-btn text-xs text-red-500 hover:underline plan-work-permission" data-id="${e.id}">ยกเลิก</button>
                         </div>`;
                     });
                     modalHtml += '</div>';
-                } else {
-                    modalHtml += '<p class="text-gray-500 mt-4">ยังไม่มีงานที่วางแผนไว้สำหรับวันนี้</p>';
+                }
+                
+                if (newEntriesOnDay.length > 0) {
+                    hasContent = true;
+                    modalHtml += '<h4 class="font-semibold mt-4 text-blue-600">TFORs ที่มาถึง</h4><div class="space-y-2 border-l-4 border-blue-200 pl-4 py-2">';
+                    newEntriesOnDay.forEach(e => {
+                         modalHtml += `<div class="p-2 bg-blue-50 rounded-md hover:bg-blue-100 cursor-pointer calendar-task-item" data-id="${e.id}"><span><strong>TFOR:</strong> ...${e.tforNumber} (${e.branch})</span></div>`;
+                    });
+                    modalHtml += '</div>';
+                }
+
+                if (completedOnDay.length > 0) {
+                    hasContent = true;
+                    modalHtml += '<h4 class="font-semibold mt-4 text-green-600">TFORs ที่เช็คเสร็จ</h4><div class="space-y-2 border-l-4 border-green-200 pl-4 py-2">';
+                    completedOnDay.forEach(e => {
+                         modalHtml += `<div class="p-2 bg-green-50 rounded-md hover:bg-green-100 cursor-pointer calendar-task-item" data-id="${e.id}"><span><strong>TFOR:</strong> ...${e.tforNumber} (โดย ${e.lastCheckedByName || 'N/A'})</span></div>`;
+                    });
+                    modalHtml += '</div>';
+                }
+
+                if (!hasContent) {
+                    modalHtml += '<p class="text-gray-500 mt-4">ไม่มีกิจกรรมสำหรับวันนี้</p>';
                 }
 
                 modalHtml += `<div class="mt-6 text-center plan-work-permission">
@@ -1937,6 +1984,7 @@
                 
                 const totalInbound = filteredData.length;
                 const totalCompleted = filteredData.filter(d => d.isCompleted).length;
+                const totalPallets = filteredData.reduce((sum, item) => sum + (item.palletCount || 0), 0);
                 const allIssues = Object.values(issuesData).flat();
                 const totalIssues = allIssues.filter(i => {
                     const iDate = i.createdAt?.toDate ? i.createdAt.toDate() : parseThaiDate(i.reportDate);
@@ -1955,6 +2003,7 @@
                 const cardsData = [
                     { title: 'ของเข้าทั้งหมด', value: totalInbound, color: 'bg-blue-100', textColor: 'text-blue-800', items: filteredData },
                     { title: 'เช็คเสร็จแล้ว', value: totalCompleted, color: 'bg-green-100', textColor: 'text-green-800', items: filteredData.filter(d => d.isCompleted) },
+                    { title: 'จำนวนพาเลททั้งหมด', value: totalPallets, color: 'bg-indigo-100', textColor: 'text-indigo-800', items: filteredData },
                     { title: 'คงค้าง (ล่าช้า)', value: totalOverdue, color: 'bg-red-100', textColor: 'text-red-800', items: overdueItems },
                     { title: 'สินค้ามีปัญหา', value: totalIssues, color: 'bg-yellow-100', textColor: 'text-yellow-800', items: allIssues.filter(i => { const iDate = i.createdAt?.toDate ? i.createdAt.toDate() : parseThaiDate(i.reportDate); return iDate && iDate >= startDate; }) }
                 ];
@@ -2008,21 +2057,24 @@
                     listHtml = '<p class="text-gray-500 text-center">ไม่พบข้อมูล</p>';
                 } else {
                     listHtml = items.map(item => {
-                        let overdueText = '';
-                        if (title === 'คงค้าง (ล่าช้า)') {
+                        const transferId = item.id || item.transferId; 
+                        let detailText = `ทะเบียน: ${item.licensePlate} | วันที่: ${item.deliveryDate || item.reportDate}`;
+                        if (title === 'จำนวนพาเลททั้งหมด') {
+                            detailText = `พาเลท: ${item.palletNumbers.join(', ')}`;
+                        } else if (title === 'คงค้าง (ล่าช้า)') {
                             const tDate = parseThaiDate(item.deliveryDate);
                             if (tDate) {
                                 const dueDate = new Date(tDate);
                                 dueDate.setDate(dueDate.getDate() + 3);
                                 const overdueDays = Math.floor((new Date() - dueDate) / (1000 * 60 * 60 * 24));
                                 if (overdueDays > 0) {
-                                    overdueText = `<span class="text-red-600 font-bold ml-2">(ล่าช้า ${overdueDays} วัน)</span>`;
+                                    detailText += `<span class="text-red-600 font-bold ml-2">(ล่าช้า ${overdueDays} วัน)</span>`;
                                 }
                             }
                         }
-                        return `<div class="p-2 border-b">
-                                    <p>TFOR: ...${item.tforNumber} | ${item.branch} ${overdueText}</p>
-                                    <p class="text-sm text-gray-600">ทะเบียน: ${item.licensePlate} | วันที่: ${item.deliveryDate || item.reportDate}</p>
+                        return `<div class="p-2 border-b hover:bg-gray-100 cursor-pointer stats-detail-item" data-id="${transferId}">
+                                    <p>TFOR: ...${item.tforNumber} | ${item.branch}</p>
+                                    <p class="text-sm text-gray-600">${detailText}</p>
                                 </div>`;
                     }).join('');
                 }
@@ -2178,16 +2230,20 @@
                 container.dataset.userId = user.id;
                 const userScores = allScores.filter(s => s.userId === user.id).sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
                 const totalStars = userScores.reduce((sum, score) => sum + score.score, 0);
+                const blackStarsCount = userScores.filter(s => s.score < 0).reduce((sum, s) => sum + Math.abs(s.score), 0);
                 const profilePic = user.profilePictureUrl || 'https://placehold.co/128x128/e0e0e0/757575?text=?';
 
                 let scoreHistoryHtml = '<p class="text-gray-500">ยังไม่มีประวัติคะแนนพิเศษ</p>';
                 if (userScores.length > 0) {
                     scoreHistoryHtml = userScores.map(score => {
                         const scoreDate = score.timestamp ? score.timestamp.toDate().toLocaleDateString('th-TH') : 'ไม่มีข้อมูลวันที่';
+                        const starColor = score.score < 0 ? 'text-red-500' : 'text-amber-500';
+                        const stars = '★'.repeat(Math.abs(score.score));
+                        
                         return `
                         <div class="p-3 bg-gray-50 rounded-lg flex justify-between items-center">
                             <div>
-                                <p class="font-semibold">${score.reason} <span class="text-amber-500">${'★'.repeat(score.score)}</span></p>
+                                <p class="font-semibold">${score.reason} <span class="${starColor}">${stars}</span></p>
                                 <p class="text-xs text-gray-500">โดย: ${score.awardedByName} - ${scoreDate}</p>
                                 ${score.notes ? `<p class="text-sm text-gray-600 italic mt-1">"${score.notes}"</p>` : ''}
                             </div>
@@ -2207,7 +2263,10 @@
                             <img src="${profilePic}" alt="Profile" class="w-24 h-24 rounded-full object-cover shadow-md">
                             <div>
                                 <h2 class="text-2xl font-bold">${user.firstName} ${user.lastName}</h2>
-                                <p class="text-lg text-amber-500 font-bold">คะแนนรวม: ${totalStars} ★</p>
+                                <p class="text-lg font-bold">
+                                    <span class="text-amber-500">คะแนนรวม: ${totalStars} ★</span>
+                                    ${blackStarsCount > 0 ? `<span class="text-red-500 ml-2">(หัก ${blackStarsCount} ★)</span>` : ''}
+                                </p>
                             </div>
                         </div>
                         <button id="add-score-btn" data-user-id="${user.id}" class="mt-4 sm:mt-0 px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow hover:bg-fuchsia-700">ให้คะแนนพิเศษ</button>
@@ -2245,7 +2304,9 @@
                 scoreForm.reset();
                 scoreForm.querySelector('#score-user-id').value = userId;
                 scoreForm.querySelector('#score-value').value = '';
-                document.querySelectorAll('#score-star-rating .star').forEach(s => s.classList.remove('selected'));
+                const starRatingDiv = scoreForm.querySelector('#score-star-rating');
+                starRatingDiv.classList.remove('deduction');
+                starRatingDiv.querySelectorAll('.star').forEach(s => s.classList.remove('selected'));
                 scoreModal.classList.remove('hidden');
                 scoreModal.classList.add('flex');
             }
@@ -2255,6 +2316,15 @@
                 scoreModal.classList.remove('flex');
             });
             
+            document.getElementById('score-reason').addEventListener('change', (e) => {
+                const starRatingDiv = document.getElementById('score-star-rating');
+                if (e.target.value === 'ทำงานผิดพลาด (หักคะแนน)') {
+                    starRatingDiv.classList.add('deduction');
+                } else {
+                    starRatingDiv.classList.remove('deduction');
+                }
+            });
+
             const stars = document.querySelectorAll('#score-star-rating .star');
             stars.forEach(star => {
                 star.addEventListener('click', () => {
@@ -2268,10 +2338,17 @@
 
             scoreForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                let scoreValue = parseInt(scoreForm.querySelector('#score-value').value);
+                const reason = scoreForm.querySelector('#score-reason').value;
+
+                if (reason === 'ทำงานผิดพลาด (หักคะแนน)') {
+                    scoreValue = -scoreValue;
+                }
+
                 const scoreData = {
                     userId: scoreForm.querySelector('#score-user-id').value,
-                    score: parseInt(scoreForm.querySelector('#score-value').value),
-                    reason: scoreForm.querySelector('#score-reason').value,
+                    score: scoreValue,
+                    reason: reason,
                     notes: scoreForm.querySelector('#score-notes').value,
                     awardedByUid: currentUser.uid,
                     awardedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
@@ -2456,4 +2533,4 @@
         });
     </script>
 </body>
-</html>
+</ht
