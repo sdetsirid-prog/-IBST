@@ -155,6 +155,25 @@
         </div>
     </div>
 
+    <!-- Backup/Restore Modal -->
+    <div id="backup-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-bold mb-4">สำรอง / กู้คืนข้อมูล</h3>
+            <div class="space-y-4">
+                <button id="backup-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Backup ข้อมูลทั้งหมด</button>
+                <hr>
+                <div>
+                    <label for="restore-file-input" class="block text-sm font-medium text-gray-700 mb-2">กู้คืนข้อมูลจากไฟล์</label>
+                    <input type="file" id="restore-file-input" accept=".json" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                </div>
+                <button id="restore-data-btn" class="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600" disabled>Restore ข้อมูล</button>
+            </div>
+            <div class="mt-6 text-right">
+                 <button type="button" id="backup-modal-cancel" class="px-4 py-2 bg-gray-200 rounded-lg">ปิด</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Main Application Container -->
     <div id="app-container">
@@ -316,6 +335,12 @@
                                 บันทึกการเปลี่ยนแปลง
                             </button>
                         </form>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-xl font-bold mb-6 text-gray-800">กิจกรรมล่าสุดของฉัน</h2>
+                        <div id="recent-activity-container" class="space-y-3">
+                            <p class="text-gray-500 text-center">ไม่มีกิจกรรมล่าสุด</p>
+                        </div>
                     </div>
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-xl font-bold mb-6 text-gray-800">เปลี่ยนรหัสผ่าน</h2>
@@ -588,7 +613,7 @@
                 </div>
                 <div id="statistics-report-container" class="bg-white rounded-2xl shadow-lg p-6">
                     <h2 id="report-title" class="text-2xl font-bold text-center mb-6">รายงานสรุปผล</h2>
-                    <div id="statistics-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <div id="statistics-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- Summary cards will be injected here -->
                     </div>
                     <div id="charts-container" class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -596,7 +621,10 @@
                     </div>
                     <div class="admin-only mt-12 pt-8 border-t-2 border-dashed border-red-300 text-center">
                         <h3 class="text-xl font-bold text-red-600 mb-4">ส่วนของผู้ดูแลระบบ</h3>
-                        <button id="delete-all-data-btn" class="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-red-700">ลบข้อมูลของเข้าทั้งหมด (เพื่อทดสอบ)</button>
+                        <div class="flex justify-center gap-4">
+                            <button id="backup-restore-btn" class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-gray-700">สำรอง / กู้คืนข้อมูล</button>
+                            <button id="delete-all-data-btn" class="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-red-700">ลบข้อมูลของเข้าทั้งหมด (เพื่อทดสอบ)</button>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -626,8 +654,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Your Gemini API Key
-        const geminiApiKey = "AIzaSyBNDp-YoQf1qC4VEYpKy5MGVWCpX1i2Sf0";
+        // Your Gemini API Key - Leave as an empty string, it will be handled by the environment.
+        const geminiApiKey = "";
 
         async function callGeminiAPI(prompt) {
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
@@ -719,6 +747,7 @@
             const profilePicUpload = document.getElementById('profile-pic-upload');
             const profilePicPreview = document.getElementById('profile-pic-preview');
             const defaultAvatarContainer = document.getElementById('default-avatar-container');
+            const backupModal = document.getElementById('backup-modal');
 
             let currentChartInstances = {};
             let isAdmin = false;
@@ -875,6 +904,7 @@
                     if (views.statistics.style.display === 'block') renderAdvancedStatistics();
                     if (views.todaysPlan.style.display === 'block') renderTodaysPlanView();
                     if (views.kpi.style.display === 'block') renderKpiView();
+                    if (views.profile.style.display === 'block') renderRecentActivity();
                     if (checkView.style.display === 'block' && currentTforData) {
                         const updatedData = allData.find(t => t.id === currentTforData.id);
                         if(updatedData) {
@@ -889,15 +919,16 @@
                     const newIssuesData = {};
                     snapshot.forEach(doc => {
                         const issue = { id: doc.id, ...doc.data() };
-                        (issue.issueTypes || []).forEach(type => {
-                            const category = Object.keys(newIssuesData).find(k => type.includes(k)) || 'อื่นๆ';
-                            if (!newIssuesData[category]) newIssuesData[category] = [];
-                            newIssuesData[category].push(issue);
+                        (issue.issueTypes || ['อื่นๆ']).forEach(type => {
+                            if (!newIssuesData[type]) newIssuesData[type] = [];
+                            newIssuesData[type].push(issue);
                         });
                     });
                     issuesData = newIssuesData;
                     updateMainMenuSummary();
                     if (issuesView.style.display === 'block') renderIssuesView();
+                    if (views.kpi.style.display === 'block') renderKpiView();
+                    if (views.profile.style.display === 'block') renderRecentActivity();
                 }, (error) => console.error("Issues listener error:", error));
 
                 const userRole = currentUserProfile?.role;
@@ -1101,8 +1132,17 @@
                             
                             const div = document.createElement('div');
                             div.className = 'relative group h-32 overflow-hidden rounded-lg shadow-md';
-                            div.innerHTML = `<img src="${resizedBase64}" class="w-full h-full object-cover">`;
+                            div.innerHTML = `<img src="${resizedBase64}" class="w-full h-full object-cover">
+                            <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">&times;</button>`;
                             previewContainer.appendChild(div);
+
+                            div.querySelector('button').addEventListener('click', () => {
+                                const index = imageArray.indexOf(resizedBase64);
+                                if (index > -1) {
+                                    imageArray.splice(index, 1);
+                                }
+                                div.remove();
+                            });
                         } catch (error) {
                             console.error("Image resizing failed:", error);
                             showNotification("เกิดข้อผิดพลาดในการปรับขนาดรูปภาพ", false);
@@ -1292,15 +1332,16 @@
                         if (itemForm.querySelector('.issue-type-cb-other:checked')) {
                             issueTypes.push(itemForm.querySelector('.issue-other-details').value || 'อื่นๆ');
                         }
+                        const imagesForThisItem = itemForm.issueImages || []; // Retrieve stored images
                         const newIssue = {
                             ...currentTforData,
                             transferId: currentTforData.id,
                             palletNumber: palletNum,
                             itemNumber: itemForm.querySelector('.issue-item-number').value,
                             quantity: itemForm.querySelector('.issue-quantity').value,
-                            issueTypes: issueTypes,
+                            issueTypes: issueTypes.length > 0 ? issueTypes : ['อื่นๆ'],
                             issueNotes: itemForm.querySelector('.issue-other-details').value,
-                            issueImages: [], // Placeholder
+                            issueImages: imagesForThisItem,
                             reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
                             reportedByUid: currentUser.uid,
                             reportedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
@@ -1409,6 +1450,19 @@
             document.getElementById('details-search').addEventListener('input', (e) => renderDetailsTable(e.target.value, document.getElementById('details-sort').value));
             document.getElementById('details-sort').addEventListener('change', (e) => renderDetailsTable(document.getElementById('details-search').value, e.target.value));
 
+            function calculateDueDate(startDate) {
+                let date = new Date(startDate);
+                let addedDays = 0;
+                while (addedDays < 3) {
+                    date.setDate(date.getDate() + 1);
+                    const dayOfWeek = date.getDay();
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
+                        addedDays++;
+                    }
+                }
+                return date;
+            }
+
             function renderCheckView() {
                 previousView = detailsView;
                 const detailsContainer = document.getElementById('check-details-container');
@@ -1419,8 +1473,7 @@
                 const arrivalDate = parseThaiDate(currentTforData.deliveryDate);
                 let dueDateString = 'N/A';
                 if (arrivalDate) {
-                    const dueDate = new Date(arrivalDate);
-                    dueDate.setDate(dueDate.getDate() + 3);
+                    const dueDate = calculateDueDate(arrivalDate);
                     dueDateString = dueDate.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
                 }
                 const imagesHTML = (currentTforData.images && currentTforData.images.length > 0) 
@@ -1481,9 +1534,12 @@
                 `;
                 issueFormsContainer.appendChild(formWrapper);
                 const itemsContainer = formWrapper.querySelector('.issue-items-container');
+                
                 function addIssueItem() {
+                    let issueImagesBase64 = []; // Create a dedicated array for this item form
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'issue-item-form bg-gray-50 p-4 rounded-lg border space-y-4 relative';
+                    itemDiv.issueImages = issueImagesBase64; // Attach the array to the element
                     itemDiv.innerHTML = `
                         <button type="button" class="remove-issue-item-btn absolute top-2 right-2 text-red-500 hover:text-red-700">&times;</button>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1493,7 +1549,7 @@
                         <div>
                             <label class="block text-sm font-medium">รูปรายละเอียดปัญหา</label>
                             <div class="issue-drag-drop mt-1 border-2 border-dashed rounded-md p-4 text-center cursor-pointer">ลากและวางไฟล์ หรือ คลิก</div>
-                            <input type="file" class="issue-file-input hidden" multiple>
+                            <input type="file" class="issue-file-input hidden" multiple accept="image/*">
                             <div class="issue-image-preview grid grid-cols-3 gap-2 mt-2"></div>
                         </div>
                         <div>
@@ -1513,12 +1569,13 @@
                     const fileInput = itemDiv.querySelector('.issue-file-input');
                     const preview = itemDiv.querySelector('.issue-image-preview');
                     dnd.addEventListener('click', () => fileInput.click());
-                    fileInput.addEventListener('change', (e) => handleFiles(e.target.files, preview, []));
+                    fileInput.addEventListener('change', (e) => handleFiles(e.target.files, preview, issueImagesBase64)); // Pass the dedicated array
                     itemDiv.querySelector('.issue-type-cb-other').addEventListener('change', (e) => {
                         itemDiv.querySelector('.issue-other-details').classList.toggle('hidden', !e.target.checked);
                     });
                     itemDiv.querySelector('.remove-issue-item-btn').addEventListener('click', () => itemDiv.remove());
                 }
+
                 addIssueItem();
                 formWrapper.querySelector('.add-issue-item-btn').addEventListener('click', addIssueItem);
                 formWrapper.querySelector('.save-pallet-issues-btn').addEventListener('click', () => savePalletIssues(palletNum, formWrapper));
@@ -1574,7 +1631,7 @@
             function renderIssuesView() {
                 const container = document.getElementById('issues-container');
                 container.innerHTML = '';
-                Object.keys(issuesData).forEach(category => {
+                Object.keys(issuesData).sort().forEach(category => {
                     if (issuesData[category]?.length > 0) {
                         const categoryDiv = document.createElement('div');
                         categoryDiv.className = 'bg-white rounded-lg shadow-md';
@@ -1588,7 +1645,8 @@
                         const issueList = categoryDiv.querySelector('.issue-list');
                         issuesData[category].forEach(issue => {
                             const issueItem = document.createElement('div');
-                            const imageThumb = (issue.issueImages && issue.issueImages.length > 0) ? `<img src="${issue.issueImages[0]}" class="w-12 h-12 object-cover rounded-md mr-4">` : (issue.images && issue.images.length > 0) ? `<img src="${issue.images[0]}" class="w-12 h-12 object-cover rounded-md mr-4">` : '';
+                            const allImages = [...(issue.issueImages || []), ...(issue.images || [])];
+                            const imageThumb = allImages.length > 0 ? `<img src="${allImages[0]}" class="w-12 h-12 object-cover rounded-md mr-4">` : '';
                             issueItem.className = 'p-2 hover:bg-gray-100 rounded-md flex justify-between items-center';
                             issueItem.innerHTML = `
                                 <div class="cursor-pointer flex-grow flex items-center">
@@ -1625,7 +1683,7 @@
                 } else {
                     const allImages = [...(item.images || []), ...(item.issueImages || [])];
                     const imagesHTML = allImages.length > 0 
-                        ? `<div class="grid grid-cols-2 gap-2">${allImages.map(img => `<img src="${img}" class="rounded-lg w-full h-auto">`).join('')}</div>`
+                        ? `<div class="grid grid-cols-2 gap-2">${allImages.map(img => `<a href="${img}" target="_blank"><img src="${img}" class="rounded-lg w-full h-auto"></a>`).join('')}</div>`
                         : 'ไม่มีรูปภาพ';
                     detailsModalContent.innerHTML += `
                         <h2 class="text-xl font-bold mb-4">รายละเอียด</h2>
@@ -1994,20 +2052,21 @@
                 const overdueItems = allTransfersData.filter(t => {
                     const tDate = parseThaiDate(t.deliveryDate);
                     if (!tDate) return false;
-                    const dueDate = new Date(tDate);
-                    dueDate.setDate(dueDate.getDate() + 3);
+                    const dueDate = calculateDueDate(tDate);
                     return dueDate < new Date();
                 });
                 const totalOverdue = overdueItems.length;
-
+                
+                // Adjusted card data to fit better in a 3-column layout for PDF
                 const cardsData = [
                     { title: 'ของเข้าทั้งหมด', value: totalInbound, color: 'bg-blue-100', textColor: 'text-blue-800', items: filteredData },
                     { title: 'เช็คเสร็จแล้ว', value: totalCompleted, color: 'bg-green-100', textColor: 'text-green-800', items: filteredData.filter(d => d.isCompleted) },
-                    { title: 'จำนวนพาเลททั้งหมด', value: totalPallets, color: 'bg-indigo-100', textColor: 'text-indigo-800', items: filteredData },
                     { title: 'คงค้าง (ล่าช้า)', value: totalOverdue, color: 'bg-red-100', textColor: 'text-red-800', items: overdueItems },
+                    { title: 'พาเลททั้งหมด', value: totalPallets, color: 'bg-indigo-100', textColor: 'text-indigo-800', items: filteredData },
                     { title: 'สินค้ามีปัญหา', value: totalIssues, color: 'bg-yellow-100', textColor: 'text-yellow-800', items: allIssues.filter(i => { const iDate = i.createdAt?.toDate ? i.createdAt.toDate() : parseThaiDate(i.reportDate); return iDate && iDate >= startDate; }) }
                 ];
 
+                container.innerHTML = ''; // Clear previous cards
                 cardsData.forEach(card => {
                     const cardEl = document.createElement('div');
                     cardEl.className = `p-6 rounded-2xl shadow-lg ${card.color} cursor-pointer hover:scale-105 transition-transform`;
@@ -2059,13 +2118,12 @@
                     listHtml = items.map(item => {
                         const transferId = item.id || item.transferId; 
                         let detailText = `ทะเบียน: ${item.licensePlate} | วันที่: ${item.deliveryDate || item.reportDate}`;
-                        if (title === 'จำนวนพาเลททั้งหมด') {
+                        if (title === 'พาเลททั้งหมด') {
                             detailText = `พาเลท: ${item.palletNumbers.join(', ')}`;
                         } else if (title === 'คงค้าง (ล่าช้า)') {
                             const tDate = parseThaiDate(item.deliveryDate);
                             if (tDate) {
-                                const dueDate = new Date(tDate);
-                                dueDate.setDate(dueDate.getDate() + 3);
+                                const dueDate = calculateDueDate(tDate);
                                 const overdueDays = Math.floor((new Date() - dueDate) / (1000 * 60 * 60 * 24));
                                 if (overdueDays > 0) {
                                     detailText += `<span class="text-red-600 font-bold ml-2">(ล่าช้า ${overdueDays} วัน)</span>`;
@@ -2081,7 +2139,7 @@
 
                 const modalHtml = `
                     <h3 class="text-xl font-bold mb-4">${title}</h3>
-                    <div class="space-y-2">${listHtml}</div>
+                    <div class="space-y-2 max-h-72 overflow-y-auto">${listHtml}</div>
                 `;
                 showDetailsModal(modalHtml, true);
             }
@@ -2097,11 +2155,11 @@
             document.getElementById('export-pdf-btn').addEventListener('click', () => {
                 const element = document.getElementById('statistics-report-container');
                 const opt = {
-                    margin:       0.5,
+                    margin:       [0.5, 0.2, 0.5, 0.2],
                     filename:     'inbound_report.pdf',
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { scale: 2, useCORS: true },
-                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
                 };
                 html2pdf().from(element).set(opt).save();
             });
@@ -2151,6 +2209,10 @@
                     const userScores = allScores.filter(s => s.userId === user.id);
                     const totalStars = userScores.reduce((sum, score) => sum + score.score, 0);
                     const profilePic = user.profilePictureUrl || 'https://placehold.co/80x80/e0e0e0/757575?text=?';
+                    // Calculate Performance Score: (Checked * 2) + Created - (Issues * 3) + Stars
+                    const performanceScore = (checkedCount * 2) + createdCount - (issuesCount * 3) + totalStars;
+                    const scoreColor = performanceScore > 10 ? 'text-green-500' : performanceScore > 0 ? 'text-blue-500' : 'text-red-500';
+
 
                     const card = document.createElement('div');
                     card.className = 'bg-white p-6 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow';
@@ -2163,9 +2225,9 @@
                             </div>
                         </div>
                         <div class="mt-4 flex justify-between items-center">
-                            <div class="text-amber-500 flex items-center">
-                                <span class="text-2xl font-bold">${totalStars}</span>
-                                <span class="text-2xl ml-1">★</span>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500">คะแนนประสิทธิภาพ</p>
+                                <p class="text-3xl font-bold ${scoreColor}">${performanceScore}</p>
                             </div>
                             <div class="grid grid-cols-3 gap-2 text-center text-xs">
                                 <div><p class="font-bold text-blue-500">${createdCount}</p><p>สร้าง</p></div>
@@ -2232,6 +2294,12 @@
                 const totalStars = userScores.reduce((sum, score) => sum + score.score, 0);
                 const blackStarsCount = userScores.filter(s => s.score < 0).reduce((sum, s) => sum + Math.abs(s.score), 0);
                 const profilePic = user.profilePictureUrl || 'https://placehold.co/128x128/e0e0e0/757575?text=?';
+                const allUserTransfers = [...allTransfersData, ...completedTransfersData];
+                const createdCount = allUserTransfers.filter(t => t.createdByUid === user.id).length;
+                const checkedCount = completedTransfersData.filter(t => t.lastCheckedByUid === user.id).length;
+                const issuesCount = Object.values(issuesData).flat().filter(i => i.reportedByUid === user.id).length;
+                const performanceScore = (checkedCount * 2) + createdCount - (issuesCount * 3) + totalStars;
+                const issueRate = checkedCount > 0 ? ((issuesCount / checkedCount) * 100).toFixed(1) : 0;
 
                 let scoreHistoryHtml = '<p class="text-gray-500">ยังไม่มีประวัติคะแนนพิเศษ</p>';
                 if (userScores.length > 0) {
@@ -2263,21 +2331,44 @@
                             <img src="${profilePic}" alt="Profile" class="w-24 h-24 rounded-full object-cover shadow-md">
                             <div>
                                 <h2 class="text-2xl font-bold">${user.firstName} ${user.lastName}</h2>
-                                <p class="text-lg font-bold">
-                                    <span class="text-amber-500">คะแนนรวม: ${totalStars} ★</span>
-                                    ${blackStarsCount > 0 ? `<span class="text-red-500 ml-2">(หัก ${blackStarsCount} ★)</span>` : ''}
-                                </p>
+                                <p class="text-lg font-bold">คะแนนประสิทธิภาพ: <span class="text-2xl ${performanceScore > 10 ? 'text-green-500' : performanceScore > 0 ? 'text-blue-500' : 'text-red-500'}">${performanceScore}</span></p>
+                                <p class="text-sm text-gray-600">อัตราการเกิดปัญหา: ${issueRate}%</p>
                             </div>
                         </div>
                         <button id="add-score-btn" data-user-id="${user.id}" class="mt-4 sm:mt-0 px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow hover:bg-fuchsia-700">ให้คะแนนพิเศษ</button>
                     </div>
-                    <h3 class="text-xl font-semibold mb-4">ประวัติคะแนน</h3>
-                    <div class="space-y-3 max-h-60 overflow-y-auto">${scoreHistoryHtml}</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                             <h3 class="text-xl font-semibold mb-4">ประวัติคะแนน</h3>
+                             <div class="space-y-3 max-h-60 overflow-y-auto">${scoreHistoryHtml}</div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">กราฟสรุปผลงาน</h3>
+                            <div class="relative h-60"><canvas id="kpi-user-chart"></canvas></div>
+                        </div>
+                    </div>
                 `;
                 container.classList.remove('hidden');
+
+                const kpiCtx = document.getElementById('kpi-user-chart').getContext('2d');
+                currentChartInstances.kpiChart = new Chart(kpiCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['สร้าง TFOR', 'เช็คเสร็จ', 'รายงานปัญหา'],
+                        datasets: [{
+                            label: 'จำนวนรายการ',
+                            data: [createdCount, checkedCount, issuesCount],
+                            backgroundColor: ['#3b82f6', '#22c55e', '#ef4444']
+                        }]
+                    },
+                    options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, responsive: true, maintainAspectRatio: false }
+                });
+
+
                 updateUIForRoles(); // Ensure delete buttons are visible for the right roles
                 document.getElementById('back-to-kpi-summary').addEventListener('click', () => {
                     container.classList.add('hidden');
+                    if(currentChartInstances.kpiChart) currentChartInstances.kpiChart.destroy();
                 });
                 document.getElementById('add-score-btn').addEventListener('click', (e) => {
                     showScoreModal(e.target.dataset.userId);
@@ -2378,6 +2469,7 @@
                     profilePicPreview.src = currentUserProfile.profilePictureUrl || 'https://placehold.co/128x128/e0e0e0/757575?text=รูป';
                     newProfilePicBase64 = null;
                     renderDefaultAvatars();
+                    renderRecentActivity();
                 }
             }
             
@@ -2461,6 +2553,43 @@
                 }
             });
 
+            function renderRecentActivity() {
+                const container = document.getElementById('recent-activity-container');
+                const allUserTransfers = [...allTransfersData, ...completedTransfersData];
+                const userActivity = allUserTransfers
+                    .filter(t => t.createdByUid === currentUser.uid || t.lastCheckedByUid === currentUser.uid)
+                    .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
+                    .slice(0, 5);
+
+                if (userActivity.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center">ไม่มีกิจกรรมล่าสุด</p>';
+                    return;
+                }
+
+                container.innerHTML = userActivity.map(item => {
+                    let actionText = '';
+                    let actionColor = '';
+                    if (item.lastCheckedByUid === currentUser.uid && item.isCompleted) {
+                        actionText = 'คุณเช็ค TFOR นี้เสร็จแล้ว';
+                        actionColor = 'text-green-600';
+                    } else if (item.createdByUid === currentUser.uid) {
+                        actionText = 'คุณสร้าง TFOR นี้';
+                        actionColor = 'text-blue-600';
+                    } else {
+                         actionText = 'คุณเช็ค TFOR นี้ล่าสุด';
+                         actionColor = 'text-yellow-600';
+                    }
+
+                    return `
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="font-semibold">TFOR: ...${item.tforNumber} (${item.branch})</p>
+                            <p class="text-sm ${actionColor}">${actionText} - ${formatDateAbbreviated(item.deliveryDate)}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+
             changePasswordForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const currentPassword = changePasswordForm.querySelector('#current-password').value;
@@ -2530,7 +2659,94 @@
                 );
             });
 
+            document.getElementById('backup-restore-btn')?.addEventListener('click', () => {
+                backupModal.classList.remove('hidden');
+                backupModal.classList.add('flex');
+            });
+            document.getElementById('backup-modal-cancel')?.addEventListener('click', () => {
+                backupModal.classList.add('hidden');
+                backupModal.classList.remove('flex');
+            });
+
+            document.getElementById('backup-data-btn').addEventListener('click', async () => {
+                const allData = {
+                    transfers: [...allTransfersData, ...completedTransfersData],
+                    issues: Object.values(issuesData).flat(),
+                    scores: allScores,
+                    users: allUsers
+                };
+                 const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData, null, 2));
+                 const downloadAnchorNode = document.createElement('a');
+                 downloadAnchorNode.setAttribute("href", dataStr);
+                 downloadAnchorNode.setAttribute("download", `inbound_backup_${new Date().toISOString().split('T')[0]}.json`);
+                 document.body.appendChild(downloadAnchorNode);
+                 downloadAnchorNode.click();
+                 downloadAnchorNode.remove();
+                 showNotification("กำลังดาวน์โหลดไฟล์ Backup...");
+            });
+            
+            const restoreFileInput = document.getElementById('restore-file-input');
+            const restoreDataBtn = document.getElementById('restore-data-btn');
+            let restoreFile = null;
+
+            restoreFileInput.addEventListener('change', (e) => {
+                restoreFile = e.target.files[0];
+                if (restoreFile) {
+                    restoreDataBtn.disabled = false;
+                } else {
+                    restoreDataBtn.disabled = true;
+                }
+            });
+
+            restoreDataBtn.addEventListener('click', () => {
+                if (!restoreFile) {
+                    showNotification("กรุณาเลือกไฟล์ Backup ก่อน", false);
+                    return;
+                }
+                showConfirmationModal("การกู้คืนข้อมูลจะเขียนทับข้อมูลที่มีอยู่ทั้งหมด คุณแน่ใจหรือไม่?", () => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            if (data.transfers && data.issues && data.scores && data.users) {
+                                restoreDataBtn.disabled = true;
+                                restoreDataBtn.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full inline-block mr-2"></div> กำลังกู้คืน...`;
+                                
+                                // This is a simplified restore. A real-world scenario would need more robust error handling and batching.
+                                const batch = writeBatch(db);
+                                data.transfers.forEach(item => {
+                                    const { id, ...itemData } = item; // Separate ID from data
+                                    batch.set(doc(db, "transfers", id), itemData);
+                                });
+                                data.issues.forEach(item => {
+                                     const { id, ...itemData } = item;
+                                    batch.set(doc(db, "issues", id), itemData);
+                                });
+                                data.scores.forEach(item => {
+                                     const { id, ...itemData } = item;
+                                    batch.set(doc(db, "scores", id), itemData);
+                                });
+                                await batch.commit();
+
+                                showNotification("กู้คืนข้อมูลสำเร็จ!");
+                                backupModal.classList.add('hidden');
+                            } else {
+                                throw new Error("Invalid backup file format.");
+                            }
+                        } catch (error) {
+                            console.error("Restore error:", error);
+                            showNotification("ไฟล์ Backup ไม่ถูกต้อง หรือเกิดข้อผิดพลาด", false);
+                        } finally {
+                            restoreDataBtn.disabled = false;
+                            restoreDataBtn.textContent = 'Restore ข้อมูล';
+                            restoreFileInput.value = '';
+                        }
+                    };
+                    reader.readAsText(restoreFile);
+                });
+            });
+
         });
     </script>
 </body>
-</ht
+</html>
