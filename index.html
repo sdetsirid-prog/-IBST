@@ -93,17 +93,209 @@
             font-family: 'Sarabun', sans-serif;
             color: #333;
             width: 100%;
+            font-size: 14px;
         }
-        #pdf-export-content h1 { font-size: 24px; font-weight: bold; margin-bottom: 16px; text-align: center; }
-        #pdf-export-content h2 { font-size: 18px; font-weight: bold; margin-top: 24px; margin-bottom: 12px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
-        #pdf-export-content table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        #pdf-export-content th, #pdf-export-content td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        #pdf-export-content th { background-color: #f2f2f2; }
-        #pdf-export-content .chart-image { max-width: 90%; height: auto; display: block; margin: 20px auto; }
-        #pdf-export-content .page-break { page-break-after: always; }
+        #pdf-export-content h1 { 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-bottom: 16px; 
+            text-align: center;
+            color: #4f46e5;
+        }
+        #pdf-export-content h2 { 
+            font-size: 18px; 
+            font-weight: bold; 
+            margin-top: 24px; 
+            margin-bottom: 12px; 
+            border-bottom: 1px solid #ccc; 
+            padding-bottom: 4px;
+            color: #4f46e5;
+        }
+        #pdf-export-content table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        #pdf-export-content th, #pdf-export-content td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left;
+        }
+        #pdf-export-content th { 
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        #pdf-export-content .chart-image { 
+            max-width: 90%; 
+            height: auto; 
+            display: block; 
+            margin: 20px auto;
+        }
+        #pdf-export-content .page-break { 
+            page-break-before: always;
+        }
+        #pdf-export-content .summary-card {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        #pdf-export-content .summary-card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        #pdf-export-content .summary-card p {
+            margin: 0;
+            font-size: 14px;
+        }
+        #pdf-export-content .summary-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        /* ปรับปรุงการแสดงผลตารางใน PDF */
+        #pdf-export-content table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #pdf-export-content .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        
+        /* Star System Styles */
+        .star-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .big-star {
+            color: #f59e0b;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        .small-star {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+        .star-counter {
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-weight: bold;
+        }
+        .star-button {
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .add-star-button {
+            background-color: #fbbf24;
+            color: #78350f;
+        }
+        .add-star-button:hover {
+            background-color: #f59e0b;
+            transform: scale(1.05);
+        }
+        .deduct-star-button {
+            background-color: #f87171;
+            color: #7f1d1d;
+        }
+        .deduct-star-button:hover {
+            background-color: #ef4444;
+            transform: scale(1.05);
+        }
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 20px;
+            padding: 5px 12px;
+            margin: 5px;
+            font-weight: bold;
+            color: #92400e;
+        }
+        .achievement-badge .big-star {
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
+        
+        /* Loading Container */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #a21caf;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Improved UI/UX */
+        .button-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        thead {
+            background-color: #f8fafc;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+        }
+        
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body class="text-gray-800">
+    <!-- Loading Container -->
+    <div id="loading-container" class="loading-container">
+        <div class="loading-spinner"></div>
+    </div>
+    
     <!-- Notification Toast -->
     <div id="notification-toast" class="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full z-50">
         <p id="notification-message"></p>
@@ -166,6 +358,54 @@
             </form>
         </div>
     </div>
+    
+    <!-- Star Points Modal -->
+    <div id="star-points-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-bold mb-4">ให้คะแนนดาว</h3>
+            <div class="star-display mb-6">
+                <div class="star-counter">
+                    <span class="small-star">★</span> 
+                    <span id="current-small-stars">0</span> ดาว
+                </div>
+                <div class="star-counter">
+                    <span class="big-star">★</span> 
+                    <span id="current-big-stars">0</span> ดาว
+                </div>
+            </div>
+            
+            <div class="flex justify-between gap-4 mb-6">
+                <button id="add-star-btn" class="star-button add-star-button flex-1">
+                    <span class="small-star">★</span> +1 ดาว
+                </button>
+                <button id="deduct-star-btn" class="star-button deduct-star-button flex-1">
+                    <span class="small-star" style="color: #ef4444;">★</span> -1 ดาว
+                </button>
+            </div>
+            
+            <div>
+                <label for="star-reason" class="block text-sm font-medium text-gray-700 mb-2">เหตุผล</label>
+                <select id="star-reason" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    <option>ทำงานรวดเร็วและมีประสิทธิภาพ</option>
+                    <option>ช่วยเหลือเพื่อนร่วมงาน</option>
+                    <option>มีความคิดริเริ่มสร้างสรรค์</option>
+                    <option>ทำงานผิดพลาด</option>
+                    <option>อื่นๆ</option>
+                </select>
+            </div>
+            
+            <div class="mt-4">
+                <label for="star-notes" class="block text-sm font-medium text-gray-700">หมายเหตุเพิ่มเติม</label>
+                <textarea id="star-notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+            </div>
+            
+            <div class="flex justify-end gap-4 mt-6">
+                <button id="star-modal-cancel" class="px-4 py-2 bg-gray-200 rounded-lg">ยกเลิก</button>
+                <button id="save-star-points" class="px-4 py-2 bg-fuchsia-600 text-white rounded-lg">บันทึก</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Backup/Restore Modal -->
     <div id="backup-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-overlay">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
@@ -184,11 +424,12 @@
             </div>
         </div>
     </div>
+    
     <!-- Hidden container for PDF export content -->
     <div id="pdf-export-container" class="hidden">
         <div id="pdf-export-content"></div>
     </div>
-
+    
     <!-- Main Application Container -->
     <div id="app-container">
         <!-- Login/Register View -->
@@ -237,6 +478,7 @@
                 </form>
             </div>
         </div>
+        
         <!-- Main Menu View -->
         <div id="main-menu-view" class="view">
             <header class="bg-white shadow-sm">
@@ -298,6 +540,7 @@
                 </div>
             </main>
         </div>
+        
         <!-- Profile View -->
         <div id="profile-view" class="view">
              <header class="bg-white shadow-sm">
@@ -348,18 +591,47 @@
                             </button>
                         </form>
                     </div>
+                    
+                    <!-- Star Points Section -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-xl font-bold mb-6 text-gray-800">คะแนนดาวของฉัน</h2>
+                        <div class="star-display justify-center mb-6">
+                            <div class="star-counter">
+                                <span class="small-star">★</span> 
+                                <span id="user-small-stars">0</span> ดาวเล็ก
+                            </div>
+                            <div class="star-counter">
+                                <span class="big-star">★</span> 
+                                <span id="user-big-stars">0</span> ดาวใหญ่
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-4">
+                            <p class="text-sm text-gray-600 mb-2">เก็บดาวเล็กครบ 10 ดวง เพื่อแลกรับดาวใหญ่ 1 ดวง!</p>
+                            <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+                                <div id="star-progress-bar" class="bg-yellow-400 h-4 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="user-achievements" class="flex flex-wrap justify-center">
+                            <!-- Achievement badges will be injected here -->
+                        </div>
+                    </div>
+                    
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-xl font-bold mb-6 text-gray-800">กิจกรรมล่าสุดของฉัน</h2>
                         <div id="recent-activity-container" class="space-y-3">
                             <p class="text-gray-500 text-center">ไม่มีกิจกรรมล่าสุด</p>
                         </div>
                     </div>
+                    
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-xl font-bold mb-6 text-gray-800">ประวัติคะแนน</h2>
                         <div id="profile-scores-container" class="space-y-3">
                             <p class="text-gray-500 text-center">ยังไม่มีการประเมินจากหัวหน้า</p>
                         </div>
                     </div>
+                    
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-xl font-bold mb-6 text-gray-800">เปลี่ยนรหัสผ่าน</h2>
                         <form id="change-password-form" class="space-y-6">
@@ -386,6 +658,7 @@
                 </div>
             </main>
         </div>
+        
         <!-- KPI View (Admin/Supervisor Only) -->
         <div id="kpi-view" class="view admin-supervisor-only">
             <header class="bg-white shadow-sm">
@@ -406,6 +679,7 @@
                 </div>
             </main>
         </div>
+        
         <!-- Today's Plan View -->
         <div id="todays-plan-view" class="view">
             <header class="bg-white shadow-sm">
@@ -424,6 +698,7 @@
                 <div id="todays-plan-container" class="space-y-6"></div>
             </main>
         </div>
+        
         <!-- AI Chat View -->
         <div id="ai-chat-view" class="view">
             <div class="flex flex-col h-screen">
@@ -450,6 +725,7 @@
                 </footer>
             </div>
         </div>
+        
         <!-- Transfers View -->
         <div id="transfers-view" class="view">
              <header class="bg-white shadow-sm">
@@ -598,6 +874,7 @@
                 <div id="calendar-container" class="bg-white p-6 rounded-2xl shadow-lg"></div>
             </main>
         </div>
+        
         <!-- Statistics View -->
         <div id="statistics-view" class="view">
              <header class="bg-white shadow-sm">
@@ -670,54 +947,79 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        // Your Gemini API Key - Leave as an empty string, it will be handled by the environment.
-        const geminiApiKey = "";
+        // Your Gemini API Key - Updated with the provided key
+        const geminiApiKey = "AIzaSyBNDp-YoQf1qC4VEYpKy5MGVWCpX1i2Sf0";
+        
         async function callGeminiAPI(prompt) {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
-            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`;
+            const payload = {
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                },
+                safetySettings: [
+                    {
+                        category: "HARM_CATEGORY_HARASSMENT",
+                        threshold: "BLOCK_NONE"
+                    },
+                    {
+                        category: "HARM_CATEGORY_HATE_SPEECH", 
+                        threshold: "BLOCK_NONE"
+                    },
+                    {
+                        category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                        threshold: "BLOCK_NONE"
+                    },
+                    {
+                        category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                        threshold: "BLOCK_NONE"
+                    }
+                ]
+            };
             
-            let retries = 0;
-            const maxRetries = 5;
-            let delay = 1000; // start with 1 second
-            while (retries < maxRetries) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (response.status === 429) {
-                        // Too Many Requests, wait and retry
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        delay *= 2; // Double the delay for the next retry
-                        retries++;
-                        continue; // Go to the next iteration of the loop
-                    }
-                    if (!response.ok) {
-                        throw new Error(`API request failed with status ${response.status}`);
-                    }
-                    const result = await response.json();
-                    if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                        return result.candidates[0].content.parts[0].text;
-                    } else {
-                        return "ขออภัยค่ะ ไม่สามารถประมวลผลคำตอบได้ในขณะนี้";
-                    }
-                } catch (error) {
-                    // Don't log retries as errors in the console
-                    if (retries >= maxRetries - 1) {
-                         console.error('Error calling Gemini API after max retries:', error);
-                         throw error; // If it's the last retry, throw the error
-                    }
-                    // Wait before the next attempt in case of other network errors
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                    retries++;
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Gemini API Error:", errorData);
+                    throw new Error(`API request failed with status ${response.status}: ${errorData.error?.message || 'Unknown error'}`);
                 }
+                
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Unexpected API response structure:", result);
+                    return "ขออภัยค่ะ ไม่สามารถประมวลผลคำตอบได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง";
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                throw error;
             }
-            // If all retries fail
-            throw new Error('Max retries reached for Gemini API call.');
         }
+        
         document.addEventListener('DOMContentLoaded', () => {
+            // Hide loading container when page is fully loaded
+            const loadingContainer = document.getElementById('loading-container');
+            if (loadingContainer) {
+                loadingContainer.style.display = 'none';
+            }
+            
             const views = {
                 loginRegister: document.getElementById('login-register-view'),
                 mainMenu: document.getElementById('main-menu-view'),
@@ -753,6 +1055,7 @@
             const profileForm = document.getElementById('profile-form');
             const changePasswordForm = document.getElementById('change-password-form');
             const scoreModal = document.getElementById('score-modal');
+            const starPointsModal = document.getElementById('star-points-modal');
             const scoreForm = document.getElementById('score-form');
             const profilePicUpload = document.getElementById('profile-pic-upload');
             const profilePicPreview = document.getElementById('profile-pic-preview');
@@ -764,10 +1067,12 @@
             let currentUserProfile = null;
             let allUsers = [];
             let allScores = [];
+            let allStarPoints = [];
             let unsubscribeUsers = null;
             let unsubscribeTransfers = null;
             let unsubscribeIssues = null;
             let unsubscribeScores = null;
+            let unsubscribeStarPoints = null;
             let allTransfersData = [];
             let completedTransfersData = [];
             let issuesData = {};
@@ -776,6 +1081,7 @@
             let confirmCallback = null;
             let uploadedImagesBase64 = [];
             let newProfilePicBase64 = null;
+            
             function showNotification(message, isSuccess = true) {
                 const toast = document.getElementById('notification-toast');
                 const messageP = document.getElementById('notification-message');
@@ -787,11 +1093,13 @@
                     toast.classList.add('translate-x-full');
                 }, 3000);
             }
+            
             function showMainView(viewToShow) {
                 Object.values(views).forEach(v => v.style.display = 'none');
                 if (viewToShow) viewToShow.style.display = 'block';
                 window.scrollTo(0, 0);
             }
+            
             function showAuthForm(formToShow) {
                 loginForm.classList.toggle('hidden', formToShow !== 'login');
                 registerForm.classList.toggle('hidden', formToShow !== 'register');
@@ -800,8 +1108,10 @@
                 registerTab.classList.toggle('bg-fuchsia-600', formToShow === 'register');
                 registerTab.classList.toggle('text-white', formToShow === 'register');
             }
+            
             loginTab.addEventListener('click', () => showAuthForm('login'));
             registerTab.addEventListener('click', () => showAuthForm('register'));
+            
             function updateUserDisplays(profile) {
                 const displayElements = document.querySelectorAll('.user-display');
                 const roleDisplay = document.getElementById('user-role-display');
@@ -855,7 +1165,7 @@
                     document.querySelectorAll('.edit-button').forEach(el => el.style.display = 'none');
                 }
             }
-
+            
             onAuthStateChanged(auth, async (user) => {
                 currentUser = user;
                 if (user) {
@@ -869,13 +1179,25 @@
                             email: user.email,
                             firstName: "ผู้ใช้",
                             lastName: "ใหม่",
-                            role: 'Officer' // Default role
+                            role: 'Officer', // Default role
+                            smallStars: 0,
+                            bigStars: 0
                         };
                     }
                     isAdmin = user.email === 'admin@admin.com';
                     if (isAdmin && currentUserProfile.role !== 'Admin') { // Assign Admin role if not set
                         currentUserProfile.role = 'Admin';
                         await setDoc(userDocRef, { role: 'Admin' }, { merge: true });
+                    }
+                    
+                    // Initialize star points if not exists
+                    if (currentUserProfile.smallStars === undefined) {
+                        currentUserProfile.smallStars = 0;
+                        await setDoc(userDocRef, { smallStars: 0 }, { merge: true });
+                    }
+                    if (currentUserProfile.bigStars === undefined) {
+                        currentUserProfile.bigStars = 0;
+                        await setDoc(userDocRef, { bigStars: 0 }, { merge: true });
                     }
                     
                     updateUserDisplays(currentUserProfile);
@@ -895,7 +1217,9 @@
                 if (unsubscribeIssues) unsubscribeIssues();
                 if (unsubscribeUsers) unsubscribeUsers();
                 if (unsubscribeScores) unsubscribeScores();
+                if (unsubscribeStarPoints) unsubscribeStarPoints();
             }
+            
             function setupFirestoreListeners() {
                 if (!currentUser) return;
                 detachFirestoreListeners();
@@ -923,6 +1247,7 @@
                     if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
                     if (views.profile && views.profile.style.display === 'block') renderRecentActivity();
                 }, (error) => console.error("Transfers listener error:", error));
+                
                 const issuesQuery = query(collection(db, "issues"));
                 unsubscribeIssues = onSnapshot(issuesQuery, (snapshot) => {
                     const newIssuesData = {};
@@ -939,6 +1264,7 @@
                     if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
                     if (views.profile && views.profile.style.display === 'block') renderRecentActivity();
                 }, (error) => console.error("Issues listener error:", error));
+                
                 const userRole = currentUserProfile?.role;
                 if (userRole === 'Admin' || userRole === 'Supervisor') {
                     const usersQuery = query(collection(db, "users"));
@@ -959,16 +1285,40 @@
                         }
                         if (views.profile && views.profile.style.display === 'block') renderProfileView();
                     });
+                    
+                    const starPointsQuery = query(collection(db, "starPoints"));
+                    unsubscribeStarPoints = onSnapshot(starPointsQuery, (snapshot) => {
+                        allStarPoints = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        if (views.profile && views.profile.style.display === 'block') renderProfileStarPoints();
+                    });
                 }
             }
+            
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
+                // Show loading spinner during login
+                const loadingContainer = document.getElementById('loading-container');
+                loadingContainer.style.display = 'flex';
+                
                 signInWithEmailAndPassword(auth, loginForm['login-email'].value, loginForm['login-password'].value)
-                    .then(() => showNotification('เข้าสู่ระบบสำเร็จ!'))
-                    .catch((error) => showNotification(`เข้าสู่ระบบไม่สำเร็จ: ${error.message}`, false));
+                    .then(() => {
+                        showNotification('เข้าสู่ระบบสำเร็จ!');
+                        // Hide loading spinner after successful login
+                        loadingContainer.style.display = 'none';
+                    })
+                    .catch((error) => {
+                        showNotification(`เข้าสู่ระบบไม่สำเร็จ: ${error.message}`, false);
+                        // Hide loading spinner after failed login
+                        loadingContainer.style.display = 'none';
+                    });
             });
+            
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                // Show loading spinner during registration
+                const loadingContainer = document.getElementById('loading-container');
+                loadingContainer.style.display = 'flex';
+                
                 const email = registerForm['register-email'].value;
                 const password = registerForm['register-password'].value;
                 const firstName = registerForm['register-firstname'].value;
@@ -980,14 +1330,21 @@
                         firstName,
                         lastName,
                         email,
-                        role: 'Officer' // Default role
+                        role: 'Officer', // Default role
+                        smallStars: 0,
+                        bigStars: 0
                     });
                     showNotification('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
                     showAuthForm('login');
+                    // Hide loading spinner after successful registration
+                    loadingContainer.style.display = 'none';
                 } catch (error) {
                     showNotification(`สมัครสมาชิกไม่สำเร็จ: ${error.message}`, false);
+                    // Hide loading spinner after failed registration
+                    loadingContainer.style.display = 'none';
                 }
             });
+            
             logoutButtonMain.addEventListener('click', () => signOut(auth));
             
             document.getElementById('go-to-transfers').addEventListener('click', () => showMainView(views.transfers));
@@ -1008,7 +1365,7 @@
                 renderProfileView();
                 showMainView(views.profile);
             });
-
+            
             document.querySelectorAll('.toggle-password').forEach(el => {
                 el.addEventListener('click', (e) => {
                     const input = e.target.closest('.password-container').querySelector('input');
@@ -1017,6 +1374,7 @@
                     e.target.textContent = type === 'password' ? '👁️' : ' ';
                 });
             });
+            
             function updateMainMenuSummary() {
                 const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
                 const pendingCount = allTransfersData.filter(t => !t.scheduledDate).length;
@@ -1029,11 +1387,13 @@
                 document.getElementById('summary-completed-today').textContent = completedTodayCount;
                 document.getElementById('summary-issues').textContent = issuesCount;
             }
+            
             function showSubView(viewToShow) {
                 [transfersMenuView, formView, detailsView, issuesView, completedView, checkView].forEach(v => v.classList.add('hidden'));
                 viewToShow.classList.remove('hidden');
                 window.scrollTo(0, 0);
             }
+            
             function initializeForm() {
                 inboundForm.reset();
                 document.getElementById('delivery-date').value = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1042,6 +1402,7 @@
                 document.getElementById('tfor-container').innerHTML = '';
                 addTforBlock();
             }
+            
             document.getElementById('summary-todays-plan-card').addEventListener('click', () => {
                 renderTodaysPlanView();
                 showMainView(views.todaysPlan);
@@ -1061,6 +1422,7 @@
                 renderIssuesView();
                 showSubView(issuesView);
             });
+            
             document.querySelectorAll('.back-to-main-menu').forEach(btn => btn.addEventListener('click', () => {
                 updateMainMenuSummary();
                 showMainView(views.mainMenu);
@@ -1074,6 +1436,7 @@
             backToPreviousViewButton.addEventListener('click', () => showSubView(previousView || detailsView));
             
             document.getElementById('lp-front').addEventListener('input', (e) => { if (e.target.value.length >= 4) document.getElementById('lp-back').focus(); });
+            
             async function resizeImage(file, maxWidth = 1280, maxHeight = 720, quality = 0.7) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -1107,6 +1470,7 @@
                     reader.onerror = (error) => reject(error);
                 });
             }
+            
             const fileInput = document.getElementById('file-input');
             const dragDropArea = document.getElementById('drag-drop-area');
             dragDropArea.addEventListener('click', () => fileInput.click());
@@ -1118,6 +1482,7 @@
                 handleFiles(e.dataTransfer.files, document.getElementById('image-preview'), uploadedImagesBase64);
             });
             fileInput.addEventListener('change', (e) => handleFiles(e.target.files, document.getElementById('image-preview'), uploadedImagesBase64));
+            
             async function handleFiles(files, previewContainer, imageArray) {
                 for (const file of files) {
                     if (file.type.startsWith('image/')) {
@@ -1144,7 +1509,9 @@
                     }
                 }
             }
+            
             const branches = ['WH.40 (NDC)', 'WH.61 Chiangmai', 'WH.62 Suratthani', 'WH.63 Nakhon Ratchasima', 'WH.64 Leamchabang', 'WH.65 Udon Thani', 'WH.66 Phitsanulok', 'WH.67 Ratchaburi', 'WH.68 Hat Yai'];
+            
             function addTforBlock() {
                 const year = new Date().getFullYear().toString().substr(-2);
                 const tforBlock = document.createElement('div');
@@ -1177,13 +1544,15 @@
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 font-semibold mb-2">หมายเหตุพาเลท (ถ้ามี)</label>
-                        <textarea rows="3" class="w-full rounded-lg border-gray-300 shadow-sm"></textarea>
+                        <textarea rows="3" class="w-full rounded-lg border-gray-300 shadow-sm pallet-notes"></textarea>
                     </div>
                 `;
                 document.getElementById('tfor-container').appendChild(tforBlock);
                 addTforBlockListeners(tforBlock);
             }
+            
             document.getElementById('add-tfor-button').addEventListener('click', addTforBlock);
+            
             function addTforBlockListeners(tforBlock) {
                 tforBlock.querySelectorAll('.pallet-button').forEach(button => {
                     button.addEventListener('click', () => {
@@ -1225,8 +1594,10 @@
                     showNotification('กรุณากรอกข้อมูล TFOR, สาขา, และเลือกพาเลทให้ครบทุกรายการ', false); return;
                 }
                 // --- END VALIDATION ---
+                
                 saveButton.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full mr-2"></div> กำลังบันทึก...`;
                 saveButton.disabled = true;
+                
                 try {
                     const deliveryDate = document.getElementById('delivery-date').value;
                     const licensePlate = `${document.getElementById('lp-front').value.trim()} ${document.getElementById('lp-back').value.trim()}`;
@@ -1234,6 +1605,7 @@
                     const batch = writeBatch(db);
                     for (const block of tforBlocks) {
                         const palletNumbers = block.querySelector('.pallet-count-input').value.split(',').filter(Boolean);
+                        const palletNotes = block.querySelector('.pallet-notes').value;
                         const tforData = {
                             deliveryDate, licensePlate,
                             images: uploadedImagesBase64,
@@ -1243,6 +1615,7 @@
                             branch: block.querySelector('select').value,
                             palletNumbers,
                             palletCount: palletNumbers.length,
+                            palletNotes: palletNotes,
                             checkedPallets: [],
                             isCompleted: false,
                             createdAt: serverTimestamp(),
@@ -1277,6 +1650,7 @@
                     saveButton.disabled = false;
                 }
             });
+            
             async function handlePalletCheck(palletNum, buttonElement) {
                 const isCurrentlyChecked = currentTforData.checkedPallets?.includes(palletNum);
                 if (buttonElement) {
@@ -1311,6 +1685,7 @@
                     showNotification('เกิดข้อผิดพลาดในการอัปเดต', false);
                 }
             }
+            
             async function savePalletIssues(palletNum, formWrapper) {
                 try {
                     const batch = writeBatch(db);
@@ -1345,6 +1720,7 @@
                     showNotification('เกิดข้อผิดพลาดในการบันทึกปัญหา', false);
                 }
             }
+            
             async function deleteTransfer(transferId) {
                 showConfirmationModal("คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้และปัญหาที่เกี่ยวข้องทั้งหมด?", async () => {
                     try {
@@ -1360,6 +1736,7 @@
                     }
                 });
             }
+            
             async function deleteIssue(issueId) {
                 showConfirmationModal("คุณแน่ใจหรือไม่ว่าต้องการลบปัญหานี้?", async () => {
                     try {
@@ -1371,6 +1748,7 @@
                     }
                 });
             }
+            
             function renderDetailsTable(filter = '', sortBy = 'date-desc') {
                 const container = document.getElementById('details-table-container');
                 let filteredData = allTransfersData.filter(d => !d.scheduledDate);
@@ -1396,6 +1774,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">สาขาต้นทาง</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ทะเบียนรถ</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">จำนวนพาเลท</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">หมายเหตุ</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase delete-permission">จัดการ</th>
                     </tr></thead>
                     <tbody class="bg-white divide-y divide-gray-200"></tbody>`;
@@ -1412,6 +1791,7 @@
                         <td class="px-6 py-4 text-sm">${data.branch}</td>
                         <td class="px-6 py-4 text-sm">${data.licensePlate}</td>
                         <td class="px-6 py-4 text-sm">${data.palletCount}</td>
+                        <td class="px-6 py-4 text-sm">${data.palletNotes || '-'}</td>
                         <td class="px-6 py-4 text-sm flex items-center space-x-2 delete-permission"></td>`;
                     row.addEventListener('click', () => {
                         currentTforData = data;
@@ -1419,7 +1799,7 @@
                         showSubView(checkView);
                     });
                     
-                    const adminCell = row.cells[6];
+                    const adminCell = row.cells[7];
                     const deleteButton = document.createElement('button');
                     deleteButton.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
                     deleteButton.className = 'text-red-500 hover:text-red-700';
@@ -1432,6 +1812,7 @@
             
             document.getElementById('details-search').addEventListener('input', (e) => renderDetailsTable(e.target.value, document.getElementById('details-sort').value));
             document.getElementById('details-sort').addEventListener('change', (e) => renderDetailsTable(document.getElementById('details-search').value, e.target.value));
+            
             function calculateDueDate(startDate) {
                 let date = new Date(startDate);
                 let addedDays = 0;
@@ -1444,6 +1825,7 @@
                 }
                 return date;
             }
+            
             function renderCheckView() {
                 previousView = detailsView;
                 const detailsContainer = document.getElementById('check-details-container');
@@ -1466,6 +1848,7 @@
                         <div><p class="text-sm font-semibold text-gray-500">สาขาต้นทาง</p><p class="text-lg font-bold">${currentTforData.branch}</p></div>
                         <div><p class="text-sm font-semibold text-gray-500">วันที่มาถึง</p><p class="text-lg font-bold">${currentTforData.deliveryDate}</p></div>
                         <div><p class="text-sm font-semibold text-red-500">ควรเช็คก่อนวันที่</p><p class="text-lg font-bold text-red-600">${dueDateString}</p></div>
+                        <div class="md:col-span-2"><p class="text-sm font-semibold text-gray-500">หมายเหตุพาเลท</p><p class="text-lg font-bold">${currentTforData.palletNotes || '-'}</p></div>
                     </div>
                     <div class="mt-4"><p class="text-sm font-semibold text-gray-500 mb-2">รูปภาพรวม</p>${imagesHTML}</div>
                 `;
@@ -1485,6 +1868,7 @@
                     }
                     checkBtn.addEventListener('click', (e) => handlePalletCheck(palletNum, e.currentTarget));
                     palletButtonsContainer.appendChild(checkBtn);
+                    
                     const issueBtn = document.createElement('button');
                     issueBtn.className = 'issue-pallet-button px-4 py-2 text-sm rounded-full transition-all transform hover:scale-105 bg-red-100 text-red-700';
                     issueBtn.textContent = `รายงานปัญหา พาเลทที่ ${palletNum}`;
@@ -1497,6 +1881,7 @@
                     issuePalletButtonsContainer.appendChild(issueBtn);
                 });
             }
+            
             function renderIssueFormForPallet(palletNum) {
                 const issueFormsContainer = document.getElementById('issue-forms-container');
                 issueFormsContainer.innerHTML = ''; 
@@ -1556,6 +1941,7 @@
                 formWrapper.querySelector('.add-issue-item-btn').addEventListener('click', addIssueItem);
                 formWrapper.querySelector('.save-pallet-issues-btn').addEventListener('click', () => savePalletIssues(palletNum, formWrapper));
             }
+            
             function renderCompletedView(filter = '') {
                 const container = document.getElementById('completed-container');
                 const filteredData = completedTransfersData.filter(d => 
@@ -1584,6 +1970,7 @@
                             <div><p class="text-sm text-gray-500">TFOR</p><p class="font-semibold">...${data.tforNumber}</p></div>
                             <div><p class="text-sm text-gray-500">สาขา</p><p class="font-semibold">${data.branch}</p></div>
                             <div><p class="text-sm text-gray-500">ผู้เช็คคนล่าสุด</p><p class="font-semibold">${data.lastCheckedByName || 'N/A'}</p></div>
+                            <div class="md:col-span-2"><p class="text-sm text-gray-500">หมายเหตุพาเลท</p><p class="font-semibold">${data.palletNotes || '-'}</p></div>
                         </div>
                         ${imagesHTML}
                     `;
@@ -1599,9 +1986,11 @@
                 });
                 updateUIForRoles();
             }
+            
             detailsModal.addEventListener('showDetails', (e) => showDetailsModal(e.detail.item));
             
             document.getElementById('completed-search').addEventListener('input', (e) => renderCompletedView(e.target.value));
+            
             function renderIssuesView() {
                 const container = document.getElementById('issues-container');
                 container.innerHTML = '';
@@ -1649,6 +2038,7 @@
                 if(container.innerHTML === '') container.innerHTML = `<p class="text-gray-500 text-center">ไม่พบรายการสินค้ามีปัญหา</p>`;
                 updateUIForRoles();
             }
+            
             function showDetailsModal(item, isHtml = false) {
                 detailsModalContent.innerHTML = `<button id="close-details-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>`;
                 if (isHtml) {
@@ -1669,6 +2059,7 @@
                             <p><strong>Item Number:</strong> ${item.itemNumber || '-'}</p>
                             <p><strong>จำนวนสินค้า:</strong> ${item.quantity || '-'}</p>
                             <p><strong>หมายเหตุ:</strong> ${item.issueNotes || item.notes || '-'}</p>
+                            <p><strong>หมายเหตุพาเลท:</strong> ${item.palletNotes || '-'}</p>
                             <p><strong>ผู้รายงาน:</strong> ${item.reportedByName || item.createdByName || 'N/A'}</p>
                             <p><strong>รูปภาพ:</strong></p>
                             ${imagesHTML}
@@ -1678,6 +2069,7 @@
                 detailsModal.classList.remove('hidden');
                 detailsModal.classList.add('flex');
             }
+            
             // MODAL CLOSE LOGIC (EVENT DELEGATION)
             detailsModal.addEventListener('click', (e) => {
                 if (e.target.id === 'close-details-modal' || e.target.id === 'details-modal') {
@@ -1715,11 +2107,12 @@
                     }
                 }
             });
-
+            
             const chatForm = document.getElementById('chat-form');
             const chatInput = document.getElementById('chat-input');
             const chatMessages = document.getElementById('chat-messages');
             let chatHistory = [];
+            
             function addChatMessage(message, sender) {
                 const bubble = document.createElement('div');
                 bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'ai-bubble');
@@ -1731,6 +2124,7 @@
             }
             
             addChatMessage('สวัสดีครับ ผม INBOUND-ASSISTANT ผู้ช่วย AI อารมณ์ดี พร้อมให้บริการครับ! ไม่ว่าจะเป็นการค้นหาข้อมูล TFOR, สรุปยอด, หรือขั้นตอนการใช้งานต่างๆ ถามมาได้เลยครับ!', 'ai');
+            
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const userMessage = chatInput.value.trim();
@@ -1759,9 +2153,10 @@
                     addChatMessage(aiResponse, 'ai');
                 } catch (error) {
                     thinkingBubble.textContent = 'ขออภัยค่ะ ระบบ AI กำลังมีผู้ใช้งานจำนวนมาก กรุณาลองใหม่อีกครั้งในภายหลัง';
-                    console.error("AI Error after retries:", error);
+                    console.error("AI Error:", error);
                 }
             });
+            
             document.querySelectorAll('.animated-icon').forEach(icon => {
                 icon.addEventListener('click', () => {
                     icon.classList.add('pulse');
@@ -1771,6 +2166,7 @@
             
             const thaiMonths = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             const thaiMonthMap = thaiMonths.reduce((map, month, i) => { map[month] = i; return map; }, {});
+            
             function parseThaiDate(thaiDateStr) {
                 if (!thaiDateStr) return null;
                 const parts = thaiDateStr.split(' ');
@@ -1781,6 +2177,7 @@
                 if (isNaN(day) || month === undefined || isNaN(year)) return null;
                 return new Date(year, month, day);
             }
+            
             function renderCalendar(dateToDisplay) {
                 const container = document.getElementById('calendar-container');
                 container.innerHTML = '';
@@ -1856,7 +2253,9 @@
                     hasContent = true;
                     modalHtml += '<h4 class="font-semibold mt-4 text-blue-600">TFORs ที่มาถึง</h4><div class="space-y-2 border-l-4 border-blue-200 pl-4 py-2">';
                     newEntriesOnDay.forEach(e => {
-                         modalHtml += `<div class="p-2 bg-blue-50 rounded-md hover:bg-blue-100 cursor-pointer calendar-task-item" data-id="${e.id}"><span><strong>TFOR:</strong> ...${e.tforNumber} (${e.branch})</span></div>`;
+                         modalHtml += `<div class="p-2 bg-blue-50 rounded-md hover:bg-blue-100 cursor-pointer calendar-task-item" data-id="${e.id}">
+                            <span><strong>TFOR:</strong> ...${e.tforNumber} (${e.branch})</span>
+                        </div>`;
                     });
                     modalHtml += '</div>';
                 }
@@ -1864,7 +2263,9 @@
                     hasContent = true;
                     modalHtml += '<h4 class="font-semibold mt-4 text-green-600">TFORs ที่เช็คเสร็จ</h4><div class="space-y-2 border-l-4 border-green-200 pl-4 py-2">';
                     completedOnDay.forEach(e => {
-                         modalHtml += `<div class="p-2 bg-green-50 rounded-md hover:bg-green-100 cursor-pointer calendar-task-item" data-id="${e.id}"><span><strong>TFOR:</strong> ...${e.tforNumber} (โดย ${e.lastCheckedByName || 'N/A'})</span></div>`;
+                         modalHtml += `<div class="p-2 bg-green-50 rounded-md hover:bg-green-100 cursor-pointer calendar-task-item" data-id="${e.id}">
+                            <span><strong>TFOR:</strong> ...${e.tforNumber} (โดย ${e.lastCheckedByName || 'N/A'})</span>
+                        </div>`;
                     });
                     modalHtml += '</div>';
                 }
@@ -1893,6 +2294,7 @@
                     });
                 });
             }
+            
             function showSchedulingModal(dateString) {
                 const pendingToSchedule = allTransfersData.filter(t => !t.scheduledDate);
                 let modalHtml = `
@@ -1941,6 +2343,7 @@
                     }
                 });
             }
+            
             function renderTodaysPlanView() {
                 const container = document.getElementById('todays-plan-container');
                 const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1967,6 +2370,7 @@
                     container.appendChild(card);
                 });
             }
+            
             function getStatsData(timeframe = 'month') {
                  const now = new Date();
                 let startDate;
@@ -2010,6 +2414,7 @@
                     totalOverdue
                 };
             }
+            
             function renderAdvancedStatistics(timeframe = 'month') {
                 const container = document.getElementById('statistics-container');
                 const chartsContainer = document.getElementById('charts-container');
@@ -2071,6 +2476,7 @@
                     options: { responsive: true, maintainAspectRatio: false }
                 });
             }
+            
             function showStatsDetailModal(title, items) {
                 let listHtml = '';
                 if (items.length === 0) {
@@ -2103,6 +2509,7 @@
                 `;
                 showDetailsModal(modalHtml, true);
             }
+            
             document.querySelectorAll('.timeframe-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('bg-fuchsia-600', 'text-white'));
@@ -2110,6 +2517,7 @@
                     renderAdvancedStatistics(e.target.dataset.frame);
                 });
             });
+            
             // --- NEW/IMPROVED EXPORT LOGIC ---
             
             async function generateAndExportPdf() {
@@ -2125,68 +2533,200 @@
                 const branchChartImg = currentChartInstances.branchChart ? currentChartInstances.branchChart.toBase64Image() : '';
                 const statusChartImg = currentChartInstances.statusChart ? currentChartInstances.statusChart.toBase64Image() : '';
                 
-                let html = `<h1>${reportTitle}</h1>`;
-                
-                // Summary Table
-                html += `<h2>สรุปข้อมูลภาพรวม</h2>
-                <table>
-                    <thead><tr><th>รายการ</th><th>จำนวน</th></tr></thead>
-                    <tbody>
-                        <tr><td>ของเข้าทั้งหมด (TFORs)</td><td>${stats.totalInbound}</td></tr>
-                        <tr><td>เช็คเสร็จแล้ว</td><td>${stats.totalCompleted}</td></tr>
-                        <tr><td>คงค้าง (ล่าช้า)</td><td>${stats.totalOverdue}</td></tr>
-                        <tr><td>พาเลททั้งหมด</td><td>${stats.totalPallets}</td></tr>
-                        <tr><td>สินค้ามีปัญหา</td><td>${stats.totalIssues}</td></tr>
-                    </tbody>
-                </table>`;
-                // Charts
-                html += `<h2>กราฟสรุปผล</h2>
-                         <img src="${branchChartImg}" class="chart-image">
-                         <img src="${statusChartImg}" class="chart-image">
-                         <div class="page-break"></div>`;
-                // Detailed Table
-                html += `<h2>รายละเอียดข้อมูล TFORs</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>วันที่มาถึง</th><th>ทะเบียนรถ</th><th>TFOR</th><th>สาขา</th>
-                            <th>จำนวนพาเลท</th><th>สถานะ</th><th>วันที่เช็คเสร็จ</th><th>ผู้เช็ค</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${stats.filteredData.map(d => `
+                let html = `<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${reportTitle}</title>
+                    <meta charset="utf-8">
+                    <style>
+                        body {
+                            font-family: 'Sarabun', sans-serif;
+                            color: #333;
+                            margin: 0;
+                            padding: 20px;
+                            font-size: 14px;
+                        }
+                        h1 { 
+                            font-size: 24px; 
+                            font-weight: bold; 
+                            margin-bottom: 16px; 
+                            text-align: center;
+                            color: #4f46e5;
+                        }
+                        h2 { 
+                            font-size: 18px; 
+                            font-weight: bold; 
+                            margin-top: 24px; 
+                            margin-bottom: 12px; 
+                            border-bottom: 1px solid #ccc; 
+                            padding-bottom: 4px;
+                            color: #4f46e5;
+                        }
+                        table { 
+                            width: 100%; 
+                            border-collapse: collapse; 
+                            font-size: 12px;
+                            margin-bottom: 20px;
+                        }
+                        th, td { 
+                            border: 1px solid #ddd; 
+                            padding: 8px; 
+                            text-align: left;
+                        }
+                        th { 
+                            background-color: #f2f2f2;
+                            font-weight: bold;
+                        }
+                        .chart-image { 
+                            max-width: 90%; 
+                            height: auto; 
+                            display: block; 
+                            margin: 20px auto;
+                        }
+                        .page-break { 
+                            page-break-before: always;
+                        }
+                        .summary-card {
+                            background-color: #f9fafb;
+                            border-radius: 8px;
+                            padding: 12px;
+                            margin-bottom: 16px;
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                        }
+                        .summary-card h3 {
+                            margin-top: 0;
+                            margin-bottom: 8px;
+                            font-size: 16px;
+                        }
+                        .summary-card p {
+                            margin: 0;
+                            font-size: 14px;
+                        }
+                        .summary-value {
+                            font-size: 20px;
+                            font-weight: bold;
+                            color: #4f46e5;
+                        }
+                        .summary-cards-grid {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 16px;
+                            margin-bottom: 24px;
+                        }
+                        table tr:nth-child(even) {
+                            background-color: #f9f9f9;
+                        }
+                        .table-container {
+                            overflow-x: auto;
+                            margin-bottom: 20px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>${reportTitle}</h1>
+                    
+                    <div class="summary-cards-grid">
+                        <div class="summary-card">
+                            <h3>ของเข้าทั้งหมด (TFORs)</h3>
+                            <p class="summary-value">${stats.totalInbound}</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3>เช็คเสร็จแล้ว</h3>
+                            <p class="summary-value">${stats.totalCompleted}</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3>คงค้าง (ล่าช้า)</h3>
+                            <p class="summary-value">${stats.totalOverdue}</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3>พาเลททั้งหมด</h3>
+                            <p class="summary-value">${stats.totalPallets}</p>
+                        </div>
+                        <div class="summary-card" style="grid-column: span 2;">
+                            <h3>สินค้ามีปัญหา</h3>
+                            <p class="summary-value">${stats.totalIssues}</p>
+                        </div>
+                    </div>
+                    
+                    <h2>กราฟสรุปผล</h2>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 24px;">
+                        <div style="width: 48%; margin-bottom: 16px;">
+                            <img src="${branchChartImg}" class="chart-image">
+                        </div>
+                        <div style="width: 48%; margin-bottom: 16px;">
+                            <img src="${statusChartImg}" class="chart-image">
+                        </div>
+                    </div>
+                    <div class="page-break"></div>
+                    
+                    <h2>รายละเอียดข้อมูล TFORs</h2>
+                    <div class="table-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>${d.deliveryDate || 'N/A'}</td>
-                                <td>${d.licensePlate || 'N/A'}</td>
-                                <td>...${d.tforNumber || 'N/A'}</td>
-                                <td>${d.branch || 'N/A'}</td>
-                                <td>${d.palletCount || 0}</td>
-                                <td>${d.isCompleted ? 'เช็คเสร็จแล้ว' : 'รอดำเนินการ'}</td>
-                                <td>${d.completionDate || '-'}</td>
-                                <td>${d.lastCheckedByName || '-'}</td>
+                                <th>วันที่มาถึง</th><th>ทะเบียนรถ</th><th>TFOR</th><th>สาขาต้นทาง</th>
+                                <th>จำนวนพาเลท</th><th>สถานะ</th><th>วันที่เช็คเสร็จ</th><th>ผู้เช็ค</th>
+                                <th>หมายเหตุ</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>`;
+                        </thead>
+                        <tbody>
+                            ${stats.filteredData.map(d => `
+                                <tr>
+                                    <td>${d.deliveryDate || 'N/A'}</td>
+                                    <td>${d.licensePlate || 'N/A'}</td>
+                                    <td>...${d.tforNumber || 'N/A'}</td>
+                                    <td>${d.branch || 'N/A'}</td>
+                                    <td>${d.palletCount || 0}</td>
+                                    <td>${d.isCompleted ? 'เช็คเสร็จแล้ว' : 'รอดำเนินการ'}</td>
+                                    <td>${d.completionDate || '-'}</td>
+                                    <td>${d.lastCheckedByName || '-'}</td>
+                                    <td>${d.palletNotes || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    </div>
+                </body>
+                </html>`;
+                
                 exportContent.innerHTML = html;
+                
                 const opt = {
-                    margin:       [0.5, 0.5, 0.5, 0.5],
-                    filename:     `inbound_report_${timeframe}_${new Date().toISOString().split('T')[0]}.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true },
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                    margin: 10,
+                    filename: `inbound_report_${timeframe}_${new Date().toISOString().split('T')[0]}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        letterRendering: true
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait'
+                    }
                 };
-                await html2pdf().from(exportContent).set(opt).save();
-                button.disabled = false;
-                button.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Export PDF`;
+                
+                try {
+                    await html2pdf().from(exportContent).set(opt).save();
+                    showNotification('ส่งออก PDF สำเร็จแล้ว');
+                } catch (error) {
+                    console.error('PDF export error:', error);
+                    showNotification('เกิดข้อผิดพลาดในการส่งออก PDF: ' + error.message, false);
+                } finally {
+                    button.disabled = false;
+                    button.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Export PDF`;
+                }
             }
+            
             function exportToCsv() {
                 const button = document.getElementById('export-excel-btn');
                 button.disabled = true;
                 button.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full inline-block mr-2"></div> กำลังสร้าง...`;
                 const timeframe = document.querySelector('.timeframe-btn.bg-fuchsia-600').dataset.frame;
                 const { filteredData } = getStatsData(timeframe);
-                const headers = ["วันที่มาถึง", "ทะเบียนรถ", "TFOR", "สาขาต้นทาง", "จำนวนพาเลท", "สถานะ", "วันที่เช็คเสร็จ", "ผู้เช็คล่าสุด", "ผู้นำเข้าข้อมูล"];
+                const headers = ["วันที่มาถึง", "ทะเบียนรถ", "TFOR", "สาขาต้นทาง", "จำนวนพาเลท", "สถานะ", "วันที่เช็คเสร็จ", "ผู้เช็คล่าสุด", "ผู้นำเข้าข้อมูล", "หมายเหตุ"];
                 const rows = filteredData.map(row => [
                     row.deliveryDate || '',
                     row.licensePlate || '',
@@ -2196,7 +2736,8 @@
                     row.isCompleted ? 'เช็คเสร็จแล้ว' : 'รอดำเนินการ',
                     row.completionDate || '',
                     row.lastCheckedByName || '',
-                    row.createdByName || ''
+                    row.createdByName || '',
+                    row.palletNotes || ''
                 ]);
                 let csvContent = "data:text/csv;charset=utf-8,\uFEFF" // \uFEFF for BOM to handle Thai characters in Excel
                     + headers.join(",") + "\n" 
@@ -2212,9 +2753,10 @@
                 button.disabled = false;
                 button.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Export Excel`;
             }
+            
             document.getElementById('export-pdf-btn').addEventListener('click', generateAndExportPdf);
             document.getElementById('export-excel-btn').addEventListener('click', exportToCsv);
-
+            
             function formatDateAbbreviated(dateString) {
                 const date = parseThaiDate(dateString);
                 if (!date) return dateString;
@@ -2223,23 +2765,27 @@
                 const year = (date.getFullYear() + 543).toString().slice(-2);
                 return `${day} ${month} ${year}`;
             }
+            
             function showConfirmationModal(message, onConfirm) {
                 confirmationMessage.textContent = message;
                 confirmCallback = onConfirm;
                 confirmationModal.classList.remove('hidden');
                 confirmationModal.classList.add('flex');
             }
+            
             confirmCancelBtn.addEventListener('click', () => {
                 confirmationModal.classList.add('hidden');
                 confirmationModal.classList.remove('flex');
                 confirmCallback = null;
             });
+            
             confirmOkBtn.addEventListener('click', () => {
                 if (confirmCallback) confirmCallback();
                 confirmationModal.classList.add('hidden');
                 confirmationModal.classList.remove('flex');
                 confirmCallback = null;
             });
+            
             // --- KPI View Logic ---
             function renderKpiView() {
                 const summaryContainer = document.getElementById('kpi-summary-container');
@@ -2281,12 +2827,26 @@
                                 <div><p class="font-bold text-red-500">${issuesCount}</p><p>ปัญหา</p></div>
                             </div>
                         </div>
+                        <div class="mt-4 admin-supervisor-only">
+                            <button class="give-star-points-btn w-full py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200" data-user-id="${user.id}">
+                                <span class="small-star">★</span> ให้คะแนนดาว
+                            </button>
+                        </div>
                     `;
                     card.addEventListener('click', () => renderKpiDetails(user));
                     summaryContainer.appendChild(card);
                 });
                 renderUserManagement();
+                
+                // Add event listeners to star points buttons
+                document.querySelectorAll('.give-star-points-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showStarPointsModal(e.target.dataset.userId);
+                    });
+                });
             }
+            
             function renderUserManagement() {
                 const container = document.getElementById('user-list-container');
                 container.innerHTML = '';
@@ -2331,6 +2891,7 @@
                     });
                 });
             }
+            
             function getMillis(timestamp) {
                 if (!timestamp) return 0;
                 if (typeof timestamp.toMillis === 'function') {
@@ -2344,6 +2905,7 @@
                 }
                 return 0;
             }
+            
             function renderKpiDetails(user) {
                 const container = document.getElementById('kpi-details-container');
                 container.dataset.userId = user.id;
@@ -2392,7 +2954,12 @@
                                 </p>
                             </div>
                         </div>
-                        <button id="add-score-btn" data-user-id="${user.id}" class="mt-4 sm:mt-0 px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow hover:bg-fuchsia-700">ให้คะแนนพิเศษ</button>
+                        <div class="admin-supervisor-only mt-4 sm:mt-0 flex gap-2">
+                            <button id="add-score-btn" data-user-id="${user.id}" class="px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow hover:bg-fuchsia-700">ให้คะแนนพิเศษ</button>
+                            <button id="add-star-points-btn" data-user-id="${user.id}" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg shadow hover:bg-yellow-200">
+                                <span class="small-star">★</span> ให้คะแนนดาว
+                            </button>
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -2419,7 +2986,6 @@
                     },
                     options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, responsive: true, maintainAspectRatio: false }
                 });
-
                 updateUIForRoles(); // Ensure delete buttons are visible for the right roles
                 document.getElementById('back-to-kpi-summary').addEventListener('click', () => {
                     container.classList.add('hidden');
@@ -2427,6 +2993,9 @@
                 });
                 document.getElementById('add-score-btn').addEventListener('click', (e) => {
                     showScoreModal(e.target.dataset.userId);
+                });
+                document.getElementById('add-star-points-btn').addEventListener('click', (e) => {
+                    showStarPointsModal(e.target.dataset.userId);
                 });
                 container.querySelectorAll('.delete-score-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -2445,6 +3014,7 @@
                     console.error("Error deleting score:", error);
                 }
             }
+            
             function showScoreModal(userId) {
                 scoreForm.reset();
                 scoreForm.querySelector('#score-user-id').value = userId;
@@ -2455,6 +3025,121 @@
                 scoreModal.classList.remove('hidden');
                 scoreModal.classList.add('flex');
             }
+            
+            // Star Points Modal Functions
+            function showStarPointsModal(userId) {
+                const user = allUsers.find(u => u.id === userId);
+                if (!user) return;
+                
+                // Get current star counts
+                const smallStars = user.smallStars || 0;
+                const bigStars = user.bigStars || 0;
+                
+                // Update modal display
+                document.getElementById('current-small-stars').textContent = smallStars;
+                document.getElementById('current-big-stars').textContent = bigStars;
+                
+                // Update progress bar
+                const progressPercent = (smallStars % 10) * 10; // 10% per star
+                document.getElementById('star-progress-bar').style.width = `${progressPercent}%`;
+                
+                // Store user ID for saving
+                starPointsModal.dataset.userId = userId;
+                
+                // Reset form
+                document.getElementById('star-reason').value = 'ทำงานรวดเร็วและมีประสิทธิภาพ';
+                document.getElementById('star-notes').value = '';
+                
+                starPointsModal.classList.remove('hidden');
+                starPointsModal.classList.add('flex');
+            }
+            
+            document.getElementById('star-modal-cancel').addEventListener('click', () => {
+                starPointsModal.classList.add('hidden');
+                starPointsModal.classList.remove('flex');
+            });
+            
+            document.getElementById('add-star-btn').addEventListener('click', () => {
+                const currentSmallStars = parseInt(document.getElementById('current-small-stars').textContent);
+                document.getElementById('current-small-stars').textContent = currentSmallStars + 1;
+                updateStarProgress();
+            });
+            
+            document.getElementById('deduct-star-btn').addEventListener('click', () => {
+                const currentSmallStars = parseInt(document.getElementById('current-small-stars').textContent);
+                if (currentSmallStars > 0) {
+                    document.getElementById('current-small-stars').textContent = currentSmallStars - 1;
+                    updateStarProgress();
+                }
+            });
+            
+            function updateStarProgress() {
+                const smallStars = parseInt(document.getElementById('current-small-stars').textContent);
+                const bigStars = parseInt(document.getElementById('current-big-stars').textContent);
+                
+                // Update progress bar
+                const progressPercent = (smallStars % 10) * 10; // 10% per star
+                document.getElementById('star-progress-bar').style.width = `${progressPercent}%`;
+                
+                // Check if user earned a big star
+                if (smallStars >= 10) {
+                    const newBigStars = bigStars + Math.floor(smallStars / 10);
+                    const remainingSmallStars = smallStars % 10;
+                    
+                    document.getElementById('current-small-stars').textContent = remainingSmallStars;
+                    document.getElementById('current-big-stars').textContent = newBigStars;
+                    
+                    showNotification('ยินดีด้วย! คุณได้รับดาวใหญ่ 1 ดวง!');
+                }
+            }
+            
+            document.getElementById('save-star-points').addEventListener('click', async () => {
+                const userId = starPointsModal.dataset.userId;
+                const smallStars = parseInt(document.getElementById('current-small-stars').textContent);
+                const bigStars = parseInt(document.getElementById('current-big-stars').textContent);
+                const reason = document.getElementById('star-reason').value;
+                const notes = document.getElementById('star-notes').value;
+                
+                try {
+                    // Update user's star counts
+                    await updateDoc(doc(db, "users", userId), {
+                        smallStars: smallStars,
+                        bigStars: bigStars
+                    });
+                    
+                    // Save star points transaction
+                    await addDoc(collection(db, "starPoints"), {
+                        userId: userId,
+                        smallStars: smallStars,
+                        bigStars: bigStars,
+                        reason: reason,
+                        notes: notes,
+                        awardedByUid: currentUser.uid,
+                        awardedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                        timestamp: serverTimestamp()
+                    });
+                    
+                    // Update local user data
+                    const userIndex = allUsers.findIndex(u => u.id === userId);
+                    if (userIndex !== -1) {
+                        allUsers[userIndex].smallStars = smallStars;
+                        allUsers[userIndex].bigStars = bigStars;
+                    }
+                    
+                    showNotification('บันทึกคะแนนดาวสำเร็จ!');
+                    starPointsModal.classList.add('hidden');
+                    starPointsModal.classList.remove('flex');
+                    
+                    // If we're in profile view, update the display
+                    if (views.profile.style.display === 'block' && currentUser.id === userId) {
+                        renderProfileStarPoints();
+                    }
+                } catch (error) {
+                    showNotification('เกิดข้อผิดพลาด', false);
+                    console.error("Error saving star points:", error);
+                }
+            });
+            
             document.getElementById('score-modal-cancel').addEventListener('click', () => {
                 scoreModal.classList.add('hidden');
                 scoreModal.classList.remove('flex');
@@ -2468,6 +3153,7 @@
                     starRatingDiv.classList.remove('deduction');
                 }
             });
+            
             const stars = document.querySelectorAll('#score-star-rating .star');
             stars.forEach(star => {
                 star.addEventListener('click', () => {
@@ -2478,6 +3164,7 @@
                     });
                 });
             });
+            
             scoreForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 let scoreValue = parseInt(scoreForm.querySelector('#score-value').value);
@@ -2507,6 +3194,7 @@
                     console.error("Error saving score:", error);
                 }
             });
+            
             // --- Profile View Logic ---
             function renderProfileView() {
                 if (currentUserProfile) {
@@ -2519,6 +3207,42 @@
                     renderDefaultAvatars();
                     renderRecentActivity();
                     renderProfileScores();
+                    renderProfileStarPoints();
+                }
+            }
+            
+            function renderProfileStarPoints() {
+                if (!currentUserProfile) return;
+                
+                const smallStars = currentUserProfile.smallStars || 0;
+                const bigStars = currentUserProfile.bigStars || 0;
+                
+                // Update star display
+                document.getElementById('user-small-stars').textContent = smallStars;
+                document.getElementById('user-big-stars').textContent = bigStars;
+                
+                // Update progress bar
+                const progressPercent = (smallStars % 10) * 10; // 10% per star
+                document.getElementById('star-progress-bar').style.width = `${progressPercent}%`;
+                
+                // Render achievement badges
+                const achievementsContainer = document.getElementById('user-achievements');
+                achievementsContainer.innerHTML = '';
+                
+                // Add big star achievement badges
+                for (let i = 0; i < bigStars; i++) {
+                    const badge = document.createElement('div');
+                    badge.className = 'achievement-badge';
+                    badge.innerHTML = `<span class="big-star">★</span> ดาวใหญ่`;
+                    achievementsContainer.appendChild(badge);
+                }
+                
+                // Add next big star progress if user has some small stars but not enough for a big star
+                if (smallStars > 0 && smallStars < 10) {
+                    const badge = document.createElement('div');
+                    badge.className = 'achievement-badge opacity-50';
+                    badge.innerHTML = `<span class="big-star" style="color: #d1d5db;">★</span> ดาวใหญ่ (${smallStars}/10)`;
+                    achievementsContainer.appendChild(badge);
                 }
             }
             
@@ -2540,6 +3264,7 @@
                     defaultAvatarContainer.appendChild(img);
                 });
             }
+            
             defaultAvatarContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('default-avatar')) {
                     const url = e.target.dataset.url;
@@ -2551,6 +3276,7 @@
                     e.target.classList.add('selected');
                 }
             });
+            
             profilePicUpload.addEventListener('change', async (e) => {
                 const file = e.target.files[0];
                 if (file && file.type.startsWith('image/')) {
@@ -2565,6 +3291,7 @@
                     }
                 }
             });
+            
             profileForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const button = e.target.querySelector('button[type="submit"]');
@@ -2594,6 +3321,7 @@
                     button.textContent = 'บันทึกการเปลี่ยนแปลง';
                 }
             });
+            
             function renderRecentActivity() {
                 const container = document.getElementById('recent-activity-container');
                 const allUserTransfers = [...allTransfersData, ...completedTransfersData];
@@ -2662,7 +3390,7 @@
                     `;
                 }).join('');
             }
-
+            
             changePasswordForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const currentPassword = changePasswordForm.querySelector('#current-password').value;
@@ -2719,26 +3447,31 @@
                      button.textContent = 'ลบข้อมูลของเข้าทั้งหมด (เพื่อทดสอบ)';
                 }
             }
+            
             document.getElementById('delete-all-data-btn')?.addEventListener('click', () => {
                 showConfirmationModal(
                     'คำเตือน! การกระทำนี้จะลบข้อมูล "ของเข้าทั้งหมด" และ "สินค้ามีปัญหา" ทั้งหมดออกจากระบบอย่างถาวร ไม่สามารถกู้คืนได้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
                     deleteAllInboundData
                 );
             });
+            
             document.getElementById('backup-restore-btn')?.addEventListener('click', () => {
                 backupModal.classList.remove('hidden');
                 backupModal.classList.add('flex');
             });
+            
             document.getElementById('backup-modal-cancel')?.addEventListener('click', () => {
                 backupModal.classList.add('hidden');
                 backupModal.classList.remove('flex');
             });
+            
             document.getElementById('backup-data-btn').addEventListener('click', async () => {
                 const allData = {
                     transfers: [...allTransfersData, ...completedTransfersData],
                     issues: Object.values(issuesData).flat(),
                     scores: allScores,
-                    users: allUsers
+                    users: allUsers,
+                    starPoints: allStarPoints
                 };
                  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData, null, 2));
                  const downloadAnchorNode = document.createElement('a');
@@ -2753,6 +3486,7 @@
             const restoreFileInput = document.getElementById('restore-file-input');
             const restoreDataBtn = document.getElementById('restore-data-btn');
             let restoreFile = null;
+            
             restoreFileInput.addEventListener('change', (e) => {
                 restoreFile = e.target.files[0];
                 if (restoreFile) {
@@ -2761,6 +3495,7 @@
                     restoreDataBtn.disabled = true;
                 }
             });
+            
             restoreDataBtn.addEventListener('click', () => {
                 if (!restoreFile) {
                     showNotification("กรุณาเลือกไฟล์ Backup ก่อน", false);
@@ -2771,7 +3506,7 @@
                     reader.onload = async (e) => {
                         try {
                             const data = JSON.parse(e.target.result);
-                            if (data.transfers && data.issues && data.scores && data.users) {
+                            if (data.transfers && data.issues && data.scores && data.users && data.starPoints) {
                                 restoreDataBtn.disabled = true;
                                 restoreDataBtn.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full inline-block mr-2"></div> กำลังกู้คืน...`;
                                 
@@ -2788,6 +3523,10 @@
                                 data.scores.forEach(item => {
                                      const { id, ...itemData } = item;
                                     batch.set(doc(db, "scores", id), itemData);
+                                });
+                                data.starPoints.forEach(item => {
+                                     const { id, ...itemData } = item;
+                                    batch.set(doc(db, "starPoints", id), itemData);
                                 });
                                 await batch.commit();
                                 showNotification("กู้คืนข้อมูลสำเร็จ!");
@@ -2806,6 +3545,37 @@
                     };
                     reader.readAsText(restoreFile);
                 });
+            });
+            
+            // Add search functionality for transfers
+            function addTransfersSearch() {
+                const searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.id = 'transfers-search';
+                searchInput.placeholder = 'ค้นหา TFOR, ทะเบียนรถ, สาขา...';
+                searchInput.className = 'w-full p-2 border rounded-lg mb-4';
+                
+                const detailsView = document.getElementById('details-view');
+                if (detailsView && !document.getElementById('transfers-search')) {
+                    detailsView.insertBefore(searchInput, detailsView.firstChild);
+                    
+                    searchInput.addEventListener('input', (e) => {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const rows = document.querySelectorAll('#details-table-container tbody tr');
+                        
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(searchTerm) ? '' : 'none';
+                        });
+                    });
+                }
+            }
+            
+            // Call addTransfersSearch when details view is shown
+            document.getElementById('menu-2').addEventListener('click', () => {
+                renderDetailsTable();
+                showSubView(detailsView);
+                addTransfersSearch(); // Add search functionality
             });
         });
     </script>
