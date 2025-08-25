@@ -60,7 +60,7 @@
         .event-dot-purple { background-color: #8b5cf6; } /* Scheduled */
         
         /* Role-based visibility classes */
-        .admin-only, .supervisor-only, .senior-only, .officer-only,
+        .admin-only, .supervisor-only, .senior-only, .officer-only, .viewer-only,
         .admin-supervisor-only, .senior-and-up, .delete-permission {
             display: none;
         }
@@ -104,7 +104,6 @@
     </style>
 </head>
 <body class="text-gray-800">
-
     <!-- Notification Toast -->
     <div id="notification-toast" class="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full z-50">
         <p id="notification-message"></p>
@@ -167,7 +166,6 @@
             </form>
         </div>
     </div>
-
     <!-- Backup/Restore Modal -->
     <div id="backup-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-overlay">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
@@ -186,12 +184,10 @@
             </div>
         </div>
     </div>
-
     <!-- Hidden container for PDF export content -->
     <div id="pdf-export-container" class="hidden">
         <div id="pdf-export-content"></div>
     </div>
-
 
     <!-- Main Application Container -->
     <div id="app-container">
@@ -241,7 +237,6 @@
                 </form>
             </div>
         </div>
-
         <!-- Main Menu View -->
         <div id="main-menu-view" class="view">
             <header class="bg-white shadow-sm">
@@ -303,7 +298,6 @@
                 </div>
             </main>
         </div>
-
         <!-- Profile View -->
         <div id="profile-view" class="view">
              <header class="bg-white shadow-sm">
@@ -349,7 +343,7 @@
                                 <label for="profile-lastname" class="block text-sm font-medium text-gray-700">นามสกุล</label>
                                 <input type="text" id="profile-lastname" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                             </div>
-                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-fuchsia-600 hover:bg-fuchsia-700">
+                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-fuchsia-600 hover:bg-fuchsia-700 edit-button">
                                 บันทึกการเปลี่ยนแปลง
                             </button>
                         </form>
@@ -358,6 +352,12 @@
                         <h2 class="text-xl font-bold mb-6 text-gray-800">กิจกรรมล่าสุดของฉัน</h2>
                         <div id="recent-activity-container" class="space-y-3">
                             <p class="text-gray-500 text-center">ไม่มีกิจกรรมล่าสุด</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-xl font-bold mb-6 text-gray-800">ประวัติคะแนน</h2>
+                        <div id="profile-scores-container" class="space-y-3">
+                            <p class="text-gray-500 text-center">ยังไม่มีการประเมินจากหัวหน้า</p>
                         </div>
                     </div>
                     <div class="bg-white rounded-2xl shadow-lg p-8">
@@ -386,7 +386,6 @@
                 </div>
             </main>
         </div>
-
         <!-- KPI View (Admin/Supervisor Only) -->
         <div id="kpi-view" class="view admin-supervisor-only">
             <header class="bg-white shadow-sm">
@@ -407,7 +406,6 @@
                 </div>
             </main>
         </div>
-
         <!-- Today's Plan View -->
         <div id="todays-plan-view" class="view">
             <header class="bg-white shadow-sm">
@@ -426,7 +424,6 @@
                 <div id="todays-plan-container" class="space-y-6"></div>
             </main>
         </div>
-
         <!-- AI Chat View -->
         <div id="ai-chat-view" class="view">
             <div class="flex flex-col h-screen">
@@ -453,7 +450,6 @@
                 </footer>
             </div>
         </div>
-
         <!-- Transfers View -->
         <div id="transfers-view" class="view">
              <header class="bg-white shadow-sm">
@@ -525,10 +521,10 @@
                             <div class="mb-6">
                                 <h3 class="text-xl font-bold text-gray-800 mb-4">รายละเอียดพาเลท (TFOR)</h3>
                                 <div id="tfor-container" class="space-y-6"></div>
-                                <button type="button" id="add-tfor-button" class="mt-4 px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow-md hover:bg-fuchsia-700">เพิ่ม TFOR</button>
+                                <button type="button" id="add-tfor-button" class="mt-4 px-4 py-2 bg-fuchsia-600 text-white rounded-lg shadow-md hover:bg-fuchsia-700 edit-button">เพิ่ม TFOR</button>
                             </div>
                             <div class="mt-8 text-center">
-                                <button type="submit" id="save-button" class="w-full md:w-auto px-10 py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:bg-indigo-700 flex items-center justify-center mx-auto">บันทึกข้อมูล</button>
+                                <button type="submit" id="save-button" class="w-full md:w-auto px-10 py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow-lg hover:bg-indigo-700 flex items-center justify-center mx-auto edit-button">บันทึกข้อมูล</button>
                             </div>
                         </form>
                     </div>
@@ -602,7 +598,6 @@
                 <div id="calendar-container" class="bg-white p-6 rounded-2xl shadow-lg"></div>
             </main>
         </div>
-
         <!-- Statistics View -->
         <div id="statistics-view" class="view">
              <header class="bg-white shadow-sm">
@@ -653,7 +648,6 @@
                 </div>
             </main>
         </div>
-
     </div>
     
     <script type="module">
@@ -672,15 +666,12 @@
           messagingSenderId: "1080446836155",
           appId: "1:1080446836155:web:da8d3f12f76d83b408389e"
         };
-
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-
         // Your Gemini API Key - Leave as an empty string, it will be handled by the environment.
         const geminiApiKey = "";
-
         async function callGeminiAPI(prompt) {
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
             const payload = { contents: [{ parts: [{ text: prompt }] }] };
@@ -688,7 +679,6 @@
             let retries = 0;
             const maxRetries = 5;
             let delay = 1000; // start with 1 second
-
             while (retries < maxRetries) {
                 try {
                     const response = await fetch(apiUrl, {
@@ -696,7 +686,6 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-
                     if (response.status === 429) {
                         // Too Many Requests, wait and retry
                         await new Promise(resolve => setTimeout(resolve, delay));
@@ -704,11 +693,9 @@
                         retries++;
                         continue; // Go to the next iteration of the loop
                     }
-
                     if (!response.ok) {
                         throw new Error(`API request failed with status ${response.status}`);
                     }
-
                     const result = await response.json();
                     if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
                         return result.candidates[0].content.parts[0].text;
@@ -730,7 +717,6 @@
             // If all retries fail
             throw new Error('Max retries reached for Gemini API call.');
         }
-
         document.addEventListener('DOMContentLoaded', () => {
             const views = {
                 loginRegister: document.getElementById('login-register-view'),
@@ -772,7 +758,6 @@
             const profilePicPreview = document.getElementById('profile-pic-preview');
             const defaultAvatarContainer = document.getElementById('default-avatar-container');
             const backupModal = document.getElementById('backup-modal');
-
             let currentChartInstances = {};
             let isAdmin = false;
             let currentUser = null;
@@ -783,7 +768,6 @@
             let unsubscribeTransfers = null;
             let unsubscribeIssues = null;
             let unsubscribeScores = null;
-
             let allTransfersData = [];
             let completedTransfersData = [];
             let issuesData = {};
@@ -792,7 +776,6 @@
             let confirmCallback = null;
             let uploadedImagesBase64 = [];
             let newProfilePicBase64 = null;
-
             function showNotification(message, isSuccess = true) {
                 const toast = document.getElementById('notification-toast');
                 const messageP = document.getElementById('notification-message');
@@ -804,13 +787,11 @@
                     toast.classList.add('translate-x-full');
                 }, 3000);
             }
-
             function showMainView(viewToShow) {
                 Object.values(views).forEach(v => v.style.display = 'none');
                 if (viewToShow) viewToShow.style.display = 'block';
                 window.scrollTo(0, 0);
             }
-
             function showAuthForm(formToShow) {
                 loginForm.classList.toggle('hidden', formToShow !== 'login');
                 registerForm.classList.toggle('hidden', formToShow !== 'register');
@@ -819,14 +800,11 @@
                 registerTab.classList.toggle('bg-fuchsia-600', formToShow === 'register');
                 registerTab.classList.toggle('text-white', formToShow === 'register');
             }
-
             loginTab.addEventListener('click', () => showAuthForm('login'));
             registerTab.addEventListener('click', () => showAuthForm('register'));
-
             function updateUserDisplays(profile) {
                 const displayElements = document.querySelectorAll('.user-display');
                 const roleDisplay = document.getElementById('user-role-display');
-
                 if (profile) {
                     const fullName = `${profile.firstName} ${profile.lastName}`;
                     displayElements.forEach(el => {
@@ -845,15 +823,14 @@
             
             function updateUIForRoles() {
                 if (!currentUserProfile) return;
-
                 const role = currentUserProfile.role || 'Officer';
                 const roles = {
                     'Admin': ['admin-only', 'admin-supervisor-only', 'senior-and-up', 'delete-permission'],
                     'Supervisor': ['admin-supervisor-only', 'senior-and-up', 'delete-permission'],
                     'Senior': ['senior-and-up'],
-                    'Officer': []
+                    'Officer': [],
+                    'Viewer': ['admin-supervisor-only', 'senior-and-up']
                 };
-
                 // Hide all role-based elements first
                 document.querySelectorAll('.admin-only, .admin-supervisor-only, .senior-and-up, .delete-permission, .plan-work-permission').forEach(el => el.style.display = 'none');
                 
@@ -864,16 +841,20 @@
                     });
                 }
                  // Special handling for planning permission
-                if (role !== 'Officer') {
+                if (role !== 'Officer' && role !== 'Viewer') {
                      document.querySelectorAll('.plan-work-permission').forEach(el => el.style.display = 'block');
                 }
                 
-                // Handle delete permissions specifically for senior role
-                if (role === 'Senior') {
+                // Handle delete permissions specifically for senior and viewer roles
+                if (role === 'Senior' || role === 'Viewer') {
                     document.querySelectorAll('.delete-permission').forEach(el => el.style.display = 'none');
                 }
+                
+                // For Viewer role, hide all edit buttons
+                if (role === 'Viewer') {
+                    document.querySelectorAll('.edit-button').forEach(el => el.style.display = 'none');
+                }
             }
-
 
             onAuthStateChanged(auth, async (user) => {
                 currentUser = user;
@@ -891,7 +872,6 @@
                             role: 'Officer' // Default role
                         };
                     }
-
                     isAdmin = user.email === 'admin@admin.com';
                     if (isAdmin && currentUserProfile.role !== 'Admin') { // Assign Admin role if not set
                         currentUserProfile.role = 'Admin';
@@ -916,11 +896,9 @@
                 if (unsubscribeUsers) unsubscribeUsers();
                 if (unsubscribeScores) unsubscribeScores();
             }
-
             function setupFirestoreListeners() {
                 if (!currentUser) return;
                 detachFirestoreListeners();
-
                 const transfersQuery = query(collection(db, "transfers"));
                 unsubscribeTransfers = onSnapshot(transfersQuery, (snapshot) => {
                     const allData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -945,7 +923,6 @@
                     if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
                     if (views.profile && views.profile.style.display === 'block') renderRecentActivity();
                 }, (error) => console.error("Transfers listener error:", error));
-
                 const issuesQuery = query(collection(db, "issues"));
                 unsubscribeIssues = onSnapshot(issuesQuery, (snapshot) => {
                     const newIssuesData = {};
@@ -962,7 +939,6 @@
                     if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
                     if (views.profile && views.profile.style.display === 'block') renderRecentActivity();
                 }, (error) => console.error("Issues listener error:", error));
-
                 const userRole = currentUserProfile?.role;
                 if (userRole === 'Admin' || userRole === 'Supervisor') {
                     const usersQuery = query(collection(db, "users"));
@@ -985,14 +961,12 @@
                     });
                 }
             }
-
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 signInWithEmailAndPassword(auth, loginForm['login-email'].value, loginForm['login-password'].value)
                     .then(() => showNotification('เข้าสู่ระบบสำเร็จ!'))
                     .catch((error) => showNotification(`เข้าสู่ระบบไม่สำเร็จ: ${error.message}`, false));
             });
-
             registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = registerForm['register-email'].value;
@@ -1014,7 +988,6 @@
                     showNotification(`สมัครสมาชิกไม่สำเร็จ: ${error.message}`, false);
                 }
             });
-
             logoutButtonMain.addEventListener('click', () => signOut(auth));
             
             document.getElementById('go-to-transfers').addEventListener('click', () => showMainView(views.transfers));
@@ -1036,16 +1009,14 @@
                 showMainView(views.profile);
             });
 
-
             document.querySelectorAll('.toggle-password').forEach(el => {
                 el.addEventListener('click', (e) => {
                     const input = e.target.closest('.password-container').querySelector('input');
                     const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
                     input.setAttribute('type', type);
-                    e.target.textContent = type === 'password' ? '👁️' : '�';
+                    e.target.textContent = type === 'password' ? '👁️' : ' ';
                 });
             });
-
             function updateMainMenuSummary() {
                 const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
                 const pendingCount = allTransfersData.filter(t => !t.scheduledDate).length;
@@ -1058,13 +1029,11 @@
                 document.getElementById('summary-completed-today').textContent = completedTodayCount;
                 document.getElementById('summary-issues').textContent = issuesCount;
             }
-
             function showSubView(viewToShow) {
                 [transfersMenuView, formView, detailsView, issuesView, completedView, checkView].forEach(v => v.classList.add('hidden'));
                 viewToShow.classList.remove('hidden');
                 window.scrollTo(0, 0);
             }
-
             function initializeForm() {
                 inboundForm.reset();
                 document.getElementById('delivery-date').value = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1073,7 +1042,6 @@
                 document.getElementById('tfor-container').innerHTML = '';
                 addTforBlock();
             }
-
             document.getElementById('summary-todays-plan-card').addEventListener('click', () => {
                 renderTodaysPlanView();
                 showMainView(views.todaysPlan);
@@ -1093,7 +1061,6 @@
                 renderIssuesView();
                 showSubView(issuesView);
             });
-
             document.querySelectorAll('.back-to-main-menu').forEach(btn => btn.addEventListener('click', () => {
                 updateMainMenuSummary();
                 showMainView(views.mainMenu);
@@ -1107,7 +1074,6 @@
             backToPreviousViewButton.addEventListener('click', () => showSubView(previousView || detailsView));
             
             document.getElementById('lp-front').addEventListener('input', (e) => { if (e.target.value.length >= 4) document.getElementById('lp-back').focus(); });
-
             async function resizeImage(file, maxWidth = 1280, maxHeight = 720, quality = 0.7) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -1118,7 +1084,6 @@
                         img.onload = () => {
                             let width = img.width;
                             let height = img.height;
-
                             if (width > height) {
                                 if (width > maxWidth) {
                                     height *= maxWidth / width;
@@ -1130,7 +1095,6 @@
                                     height = maxHeight;
                                 }
                             }
-
                             const canvas = document.createElement('canvas');
                             canvas.width = width;
                             canvas.height = height;
@@ -1143,7 +1107,6 @@
                     reader.onerror = (error) => reject(error);
                 });
             }
-
             const fileInput = document.getElementById('file-input');
             const dragDropArea = document.getElementById('drag-drop-area');
             dragDropArea.addEventListener('click', () => fileInput.click());
@@ -1155,7 +1118,6 @@
                 handleFiles(e.dataTransfer.files, document.getElementById('image-preview'), uploadedImagesBase64);
             });
             fileInput.addEventListener('change', (e) => handleFiles(e.target.files, document.getElementById('image-preview'), uploadedImagesBase64));
-
             async function handleFiles(files, previewContainer, imageArray) {
                 for (const file of files) {
                     if (file.type.startsWith('image/')) {
@@ -1168,7 +1130,6 @@
                             div.innerHTML = `<img src="${resizedBase64}" class="w-full h-full object-cover">
                             <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">&times;</button>`;
                             previewContainer.appendChild(div);
-
                             div.querySelector('button').addEventListener('click', () => {
                                 const index = imageArray.indexOf(resizedBase64);
                                 if (index > -1) {
@@ -1183,7 +1144,6 @@
                     }
                 }
             }
-
             const branches = ['WH.40 (NDC)', 'WH.61 Chiangmai', 'WH.62 Suratthani', 'WH.63 Nakhon Ratchasima', 'WH.64 Leamchabang', 'WH.65 Udon Thani', 'WH.66 Phitsanulok', 'WH.67 Ratchaburi', 'WH.68 Hat Yai'];
             function addTforBlock() {
                 const year = new Date().getFullYear().toString().substr(-2);
@@ -1211,7 +1171,7 @@
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 font-semibold mb-2">เลือกหมายเลขพาเลท</label>
-                        <div class="flex flex-wrap gap-2">${Array.from({ length: 10 }, (_, i) => `<button type="button" class="pallet-button px-4 py-2 text-sm rounded-full bg-gray-200" data-value="${i + 1}">${i + 1}</button>`).join('')}</div>
+                        <div class="flex flex-wrap gap-2">${Array.from({ length: 20 }, (_, i) => `<button type="button" class="pallet-button px-4 py-2 text-sm rounded-full bg-gray-200" data-value="${i + 1}">${i + 1}</button>`).join('')}</div>
                         <input type="hidden" class="pallet-count-input">
                         <div class="mt-2 text-sm text-gray-600 font-semibold pallet-status">ยังไม่ได้เลือกพาเลท</div>
                     </div>
@@ -1224,7 +1184,6 @@
                 addTforBlockListeners(tforBlock);
             }
             document.getElementById('add-tfor-button').addEventListener('click', addTforBlock);
-
             function addTforBlockListeners(tforBlock) {
                 tforBlock.querySelectorAll('.pallet-button').forEach(button => {
                     button.addEventListener('click', () => {
@@ -1266,7 +1225,6 @@
                     showNotification('กรุณากรอกข้อมูล TFOR, สาขา, และเลือกพาเลทให้ครบทุกรายการ', false); return;
                 }
                 // --- END VALIDATION ---
-
                 saveButton.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full mr-2"></div> กำลังบันทึก...`;
                 saveButton.disabled = true;
                 try {
@@ -1293,7 +1251,6 @@
                         };
                         const newTransferRef = doc(collection(db, "transfers"));
                         batch.set(newTransferRef, tforData);
-
                         if (tforData.isNoTFOR || tforData.isNoLabel) {
                             const issueTypes = [];
                             if (tforData.isNoTFOR) issueTypes.push('สินค้าไม่ติดเลข TFOR');
@@ -1320,7 +1277,6 @@
                     saveButton.disabled = false;
                 }
             });
-
             async function handlePalletCheck(palletNum, buttonElement) {
                 const isCurrentlyChecked = currentTforData.checkedPallets?.includes(palletNum);
                 if (buttonElement) {
@@ -1333,7 +1289,6 @@
                 if (index > -1) checkedPallets.splice(index, 1);
                 else checkedPallets.push(palletNum);
                 currentTforData.checkedPallets = checkedPallets; 
-
                 const transferDocRef = doc(db, "transfers", currentTforData.id);
                 const isNowCompleted = checkedPallets.length === currentTforData.palletNumbers.length;
                 const checkLog = currentTforData.checkLog || [];
@@ -1356,7 +1311,6 @@
                     showNotification('เกิดข้อผิดพลาดในการอัปเดต', false);
                 }
             }
-
             async function savePalletIssues(palletNum, formWrapper) {
                 try {
                     const batch = writeBatch(db);
@@ -1391,7 +1345,6 @@
                     showNotification('เกิดข้อผิดพลาดในการบันทึกปัญหา', false);
                 }
             }
-
             async function deleteTransfer(transferId) {
                 showConfirmationModal("คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้และปัญหาที่เกี่ยวข้องทั้งหมด?", async () => {
                     try {
@@ -1407,7 +1360,6 @@
                     }
                 });
             }
-
             async function deleteIssue(issueId) {
                 showConfirmationModal("คุณแน่ใจหรือไม่ว่าต้องการลบปัญหานี้?", async () => {
                     try {
@@ -1419,7 +1371,6 @@
                     }
                 });
             }
-
             function renderDetailsTable(filter = '', sortBy = 'date-desc') {
                 const container = document.getElementById('details-table-container');
                 let filteredData = allTransfersData.filter(d => !d.scheduledDate);
@@ -1435,7 +1386,6 @@
                 else if (sortBy === 'branch-asc') filteredData.sort((a, b) => (a.branch || '').localeCompare(b.branch || ''));
                 container.innerHTML = filteredData.length === 0 ? `<p class="text-gray-500 text-center">ไม่พบข้อมูล</p>` : '';
                 if(filteredData.length === 0) return;
-
                 const table = document.createElement('table');
                 table.className = 'min-w-full bg-white rounded-lg shadow';
                 table.innerHTML = `
@@ -1482,7 +1432,6 @@
             
             document.getElementById('details-search').addEventListener('input', (e) => renderDetailsTable(e.target.value, document.getElementById('details-sort').value));
             document.getElementById('details-sort').addEventListener('change', (e) => renderDetailsTable(document.getElementById('details-search').value, e.target.value));
-
             function calculateDueDate(startDate) {
                 let date = new Date(startDate);
                 let addedDays = 0;
@@ -1495,7 +1444,6 @@
                 }
                 return date;
             }
-
             function renderCheckView() {
                 previousView = detailsView;
                 const detailsContainer = document.getElementById('check-details-container');
@@ -1512,7 +1460,6 @@
                 const imagesHTML = (currentTforData.images && currentTforData.images.length > 0) 
                     ? `<div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">${currentTforData.images.map(img => `<a href="${img}" target="_blank"><img src="${img}" class="h-32 w-full object-cover rounded-lg shadow-md"></a>`).join('')}</div>`
                     : '<p class="text-sm text-gray-500 mt-2">ไม่มีรูปภาพ</p>';
-
                 detailsContainer.innerHTML = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                         <div><p class="text-sm font-semibold text-gray-500">TFOR / ทะเบียนรถ</p><p class="text-lg font-bold">...${currentTforData.tforNumber} / ${currentTforData.licensePlate}</p></div>
@@ -1526,7 +1473,6 @@
                 palletButtonsContainer.innerHTML = '';
                 issuePalletButtonsContainer.innerHTML = '';
                 issueFormsContainer.innerHTML = '';
-
                 (currentTforData.palletNumbers || []).forEach(palletNum => {
                     const checkBtn = document.createElement('button');
                     checkBtn.className = 'pallet-check-button px-4 py-2 text-sm rounded-full transition-all transform hover:scale-105';
@@ -1539,7 +1485,6 @@
                     }
                     checkBtn.addEventListener('click', (e) => handlePalletCheck(palletNum, e.currentTarget));
                     palletButtonsContainer.appendChild(checkBtn);
-
                     const issueBtn = document.createElement('button');
                     issueBtn.className = 'issue-pallet-button px-4 py-2 text-sm rounded-full transition-all transform hover:scale-105 bg-red-100 text-red-700';
                     issueBtn.textContent = `รายงานปัญหา พาเลทที่ ${palletNum}`;
@@ -1552,7 +1497,6 @@
                     issuePalletButtonsContainer.appendChild(issueBtn);
                 });
             }
-
             function renderIssueFormForPallet(palletNum) {
                 const issueFormsContainer = document.getElementById('issue-forms-container');
                 issueFormsContainer.innerHTML = ''; 
@@ -1608,12 +1552,10 @@
                     });
                     itemDiv.querySelector('.remove-issue-item-btn').addEventListener('click', () => itemDiv.remove());
                 }
-
                 addIssueItem();
                 formWrapper.querySelector('.add-issue-item-btn').addEventListener('click', addIssueItem);
                 formWrapper.querySelector('.save-pallet-issues-btn').addEventListener('click', () => savePalletIssues(palletNum, formWrapper));
             }
-
             function renderCompletedView(filter = '') {
                 const container = document.getElementById('completed-container');
                 const filteredData = completedTransfersData.filter(d => 
@@ -1660,7 +1602,6 @@
             detailsModal.addEventListener('showDetails', (e) => showDetailsModal(e.detail.item));
             
             document.getElementById('completed-search').addEventListener('input', (e) => renderCompletedView(e.target.value));
-
             function renderIssuesView() {
                 const container = document.getElementById('issues-container');
                 container.innerHTML = '';
@@ -1708,7 +1649,6 @@
                 if(container.innerHTML === '') container.innerHTML = `<p class="text-gray-500 text-center">ไม่พบรายการสินค้ามีปัญหา</p>`;
                 updateUIForRoles();
             }
-
             function showDetailsModal(item, isHtml = false) {
                 detailsModalContent.innerHTML = `<button id="close-details-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>`;
                 if (isHtml) {
@@ -1738,7 +1678,6 @@
                 detailsModal.classList.remove('hidden');
                 detailsModal.classList.add('flex');
             }
-
             // MODAL CLOSE LOGIC (EVENT DELEGATION)
             detailsModal.addEventListener('click', (e) => {
                 if (e.target.id === 'close-details-modal' || e.target.id === 'details-modal') {
@@ -1777,12 +1716,10 @@
                 }
             });
 
-
             const chatForm = document.getElementById('chat-form');
             const chatInput = document.getElementById('chat-input');
             const chatMessages = document.getElementById('chat-messages');
             let chatHistory = [];
-
             function addChatMessage(message, sender) {
                 const bubble = document.createElement('div');
                 bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'ai-bubble');
@@ -1794,7 +1731,6 @@
             }
             
             addChatMessage('สวัสดีครับ ผม INBOUND-ASSISTANT ผู้ช่วย AI อารมณ์ดี พร้อมให้บริการครับ! ไม่ว่าจะเป็นการค้นหาข้อมูล TFOR, สรุปยอด, หรือขั้นตอนการใช้งานต่างๆ ถามมาได้เลยครับ!', 'ai');
-
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const userMessage = chatInput.value.trim();
@@ -1826,7 +1762,6 @@
                     console.error("AI Error after retries:", error);
                 }
             });
-
             document.querySelectorAll('.animated-icon').forEach(icon => {
                 icon.addEventListener('click', () => {
                     icon.classList.add('pulse');
@@ -1836,7 +1771,6 @@
             
             const thaiMonths = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             const thaiMonthMap = thaiMonths.reduce((map, month, i) => { map[month] = i; return map; }, {});
-
             function parseThaiDate(thaiDateStr) {
                 if (!thaiDateStr) return null;
                 const parts = thaiDateStr.split(' ');
@@ -1847,7 +1781,6 @@
                 if (isNaN(day) || month === undefined || isNaN(year)) return null;
                 return new Date(year, month, day);
             }
-
             function renderCalendar(dateToDisplay) {
                 const container = document.getElementById('calendar-container');
                 container.innerHTML = '';
@@ -1891,7 +1824,6 @@
                     if (scheduledOnDay.length > 0) dotsContainer.innerHTML += '<div class="event-dot event-dot-purple"></div>';
                     if (completedOnDay.length > 0) dotsContainer.innerHTML += '<div class="event-dot event-dot-green"></div>';
                     dayEl.appendChild(dotsContainer);
-
                     dayEl.addEventListener('click', () => showDayDetailsModal(currentDateString));
                     grid.appendChild(dayEl);
                 }
@@ -1903,14 +1835,11 @@
                 const newEntriesOnDay = allTransfersData.filter(t => parseThaiDate(t.deliveryDate)?.toDateString() === dateObj?.toDateString());
                 const scheduledOnDay = allTransfersData.filter(t => t.scheduledDate === dateString);
                 const completedOnDay = completedTransfersData.filter(t => parseThaiDate(t.completionDate)?.toDateString() === dateObj?.toDateString());
-
                 let modalHtml = `
                     <button id="close-details-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
                     <h3 class="text-lg font-bold mb-3">รายละเอียดวันที่ ${dateString}</h3>
                 `;
-
                 let hasContent = false;
-
                 if (scheduledOnDay.length > 0) {
                     hasContent = true;
                     modalHtml += '<h4 class="font-semibold mt-4 text-purple-600">งานที่วางแผนไว้</h4><div class="space-y-2 border-l-4 border-purple-200 pl-4 py-2">';
@@ -1931,7 +1860,6 @@
                     });
                     modalHtml += '</div>';
                 }
-
                 if (completedOnDay.length > 0) {
                     hasContent = true;
                     modalHtml += '<h4 class="font-semibold mt-4 text-green-600">TFORs ที่เช็คเสร็จ</h4><div class="space-y-2 border-l-4 border-green-200 pl-4 py-2">';
@@ -1940,11 +1868,9 @@
                     });
                     modalHtml += '</div>';
                 }
-
                 if (!hasContent) {
                     modalHtml += '<p class="text-gray-500 mt-4">ไม่มีกิจกรรมสำหรับวันนี้</p>';
                 }
-
                 modalHtml += `<div class="mt-6 text-center plan-work-permission">
                     <button id="open-scheduler-btn" class="px-6 py-2 bg-fuchsia-600 text-white rounded-lg hover:bg-fuchsia-700">วางแผนงานสำหรับวันนี้</button>
                 </div>`;
@@ -1967,7 +1893,6 @@
                     });
                 });
             }
-
             function showSchedulingModal(dateString) {
                 const pendingToSchedule = allTransfersData.filter(t => !t.scheduledDate);
                 let modalHtml = `
@@ -2016,7 +1941,6 @@
                     }
                 });
             }
-
             function renderTodaysPlanView() {
                 const container = document.getElementById('todays-plan-container');
                 const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -2043,7 +1967,6 @@
                     container.appendChild(card);
                 });
             }
-
             function getStatsData(timeframe = 'month') {
                  const now = new Date();
                 let startDate;
@@ -2055,7 +1978,6 @@
                     startDate = new Date(now.getFullYear(), 0, 1);
                 }
                 startDate.setHours(0, 0, 0, 0);
-
                 const allData = [...allTransfersData, ...completedTransfersData];
                 const filteredData = allData.filter(d => {
                     const dDate = d.createdAt?.toDate ? d.createdAt.toDate() : parseThaiDate(d.deliveryDate);
@@ -2078,7 +2000,6 @@
                     return dueDate < new Date();
                 });
                 const totalOverdue = overdueItems.length;
-
                 return {
                     filteredData,
                     totalInbound,
@@ -2089,7 +2010,6 @@
                     totalOverdue
                 };
             }
-
             function renderAdvancedStatistics(timeframe = 'month') {
                 const container = document.getElementById('statistics-container');
                 const chartsContainer = document.getElementById('charts-container');
@@ -2098,9 +2018,7 @@
                 chartsContainer.innerHTML = '';
                 Object.values(currentChartInstances).forEach(chart => chart.destroy());
                 currentChartInstances = {};
-
                 const stats = getStatsData(timeframe);
-
                 if (timeframe === 'week') reportTitle.textContent = 'รายงานสรุปผลประจำสัปดาห์';
                 else if (timeframe === 'month') reportTitle.textContent = 'รายงานสรุปผลประจำเดือน';
                 else reportTitle.textContent = 'รายงานสรุปผลประจำปี';
@@ -2112,7 +2030,6 @@
                     { title: 'พาเลททั้งหมด', value: stats.totalPallets, color: 'bg-indigo-100', textColor: 'text-indigo-800', items: stats.filteredData },
                     { title: 'สินค้ามีปัญหา', value: stats.totalIssues, color: 'bg-yellow-100', textColor: 'text-yellow-800', items: Object.values(issuesData).flat().filter(i => { const iDate = i.createdAt?.toDate ? i.createdAt.toDate() : parseThaiDate(i.reportDate); return iDate && iDate >= new Date(new Date().getFullYear(), 0, 1);}) }
                 ];
-
                 container.innerHTML = ''; // Clear previous cards
                 cardsData.forEach(card => {
                     const cardEl = document.createElement('div');
@@ -2121,7 +2038,6 @@
                     cardEl.addEventListener('click', () => showStatsDetailModal(card.title, card.items));
                     container.appendChild(cardEl);
                 });
-
                 // Chart 1: Inbound by Branch
                 const branchChartContainer = document.createElement('div');
                 branchChartContainer.className = 'p-6 bg-white rounded-2xl shadow-inner';
@@ -2137,7 +2053,6 @@
                     data: { labels: Object.keys(branchCounts), datasets: [{ label: 'จำนวน TFORs', data: Object.values(branchCounts), backgroundColor: '#a855f7' }] },
                     options: { scales: { y: { beginAtZero: true } }, responsive: true, maintainAspectRatio: false }
                 });
-
                 // Chart 2: Completed vs Pending
                 const statusChartContainer = document.createElement('div');
                 statusChartContainer.className = 'p-6 bg-white rounded-2xl shadow-inner';
@@ -2156,7 +2071,6 @@
                     options: { responsive: true, maintainAspectRatio: false }
                 });
             }
-
             function showStatsDetailModal(title, items) {
                 let listHtml = '';
                 if (items.length === 0) {
@@ -2183,14 +2097,12 @@
                                 </div>`;
                     }).join('');
                 }
-
                 const modalHtml = `
                     <h3 class="text-xl font-bold mb-4">${title}</h3>
                     <div class="space-y-2 max-h-72 overflow-y-auto">${listHtml}</div>
                 `;
                 showDetailsModal(modalHtml, true);
             }
-
             document.querySelectorAll('.timeframe-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('bg-fuchsia-600', 'text-white'));
@@ -2198,7 +2110,6 @@
                     renderAdvancedStatistics(e.target.dataset.frame);
                 });
             });
-
             // --- NEW/IMPROVED EXPORT LOGIC ---
             
             async function generateAndExportPdf() {
@@ -2228,13 +2139,11 @@
                         <tr><td>สินค้ามีปัญหา</td><td>${stats.totalIssues}</td></tr>
                     </tbody>
                 </table>`;
-
                 // Charts
                 html += `<h2>กราฟสรุปผล</h2>
                          <img src="${branchChartImg}" class="chart-image">
                          <img src="${statusChartImg}" class="chart-image">
                          <div class="page-break"></div>`;
-
                 // Detailed Table
                 html += `<h2>รายละเอียดข้อมูล TFORs</h2>
                 <table>
@@ -2259,9 +2168,7 @@
                         `).join('')}
                     </tbody>
                 </table>`;
-
                 exportContent.innerHTML = html;
-
                 const opt = {
                     margin:       [0.5, 0.5, 0.5, 0.5],
                     filename:     `inbound_report_${timeframe}_${new Date().toISOString().split('T')[0]}.pdf`,
@@ -2269,21 +2176,16 @@
                     html2canvas:  { scale: 2, useCORS: true },
                     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
                 };
-
                 await html2pdf().from(exportContent).set(opt).save();
-
                 button.disabled = false;
                 button.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Export PDF`;
             }
-
             function exportToCsv() {
                 const button = document.getElementById('export-excel-btn');
                 button.disabled = true;
                 button.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full inline-block mr-2"></div> กำลังสร้าง...`;
-
                 const timeframe = document.querySelector('.timeframe-btn.bg-fuchsia-600').dataset.frame;
                 const { filteredData } = getStatsData(timeframe);
-
                 const headers = ["วันที่มาถึง", "ทะเบียนรถ", "TFOR", "สาขาต้นทาง", "จำนวนพาเลท", "สถานะ", "วันที่เช็คเสร็จ", "ผู้เช็คล่าสุด", "ผู้นำเข้าข้อมูล"];
                 const rows = filteredData.map(row => [
                     row.deliveryDate || '',
@@ -2296,11 +2198,9 @@
                     row.lastCheckedByName || '',
                     row.createdByName || ''
                 ]);
-
                 let csvContent = "data:text/csv;charset=utf-8,\uFEFF" // \uFEFF for BOM to handle Thai characters in Excel
                     + headers.join(",") + "\n" 
                     + rows.map(e => e.map(cell => `"${cell}"`).join(",")).join("\n");
-
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement("a");
                 link.setAttribute("href", encodedUri);
@@ -2312,10 +2212,8 @@
                 button.disabled = false;
                 button.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Export Excel`;
             }
-
             document.getElementById('export-pdf-btn').addEventListener('click', generateAndExportPdf);
             document.getElementById('export-excel-btn').addEventListener('click', exportToCsv);
-
 
             function formatDateAbbreviated(dateString) {
                 const date = parseThaiDate(dateString);
@@ -2325,27 +2223,23 @@
                 const year = (date.getFullYear() + 543).toString().slice(-2);
                 return `${day} ${month} ${year}`;
             }
-
             function showConfirmationModal(message, onConfirm) {
                 confirmationMessage.textContent = message;
                 confirmCallback = onConfirm;
                 confirmationModal.classList.remove('hidden');
                 confirmationModal.classList.add('flex');
             }
-
             confirmCancelBtn.addEventListener('click', () => {
                 confirmationModal.classList.add('hidden');
                 confirmationModal.classList.remove('flex');
                 confirmCallback = null;
             });
-
             confirmOkBtn.addEventListener('click', () => {
                 if (confirmCallback) confirmCallback();
                 confirmationModal.classList.add('hidden');
                 confirmationModal.classList.remove('flex');
                 confirmCallback = null;
             });
-
             // --- KPI View Logic ---
             function renderKpiView() {
                 const summaryContainer = document.getElementById('kpi-summary-container');
@@ -2366,7 +2260,6 @@
                     // KPI Calculation: Checked + Created + (Found Issues) + Stars
                     const kpiScore = checkedCount + createdCount + issuesCount + totalStars;
                     const scoreColor = kpiScore > 10 ? 'text-green-500' : kpiScore > 0 ? 'text-blue-500' : 'text-red-500';
-
                     const card = document.createElement('div');
                     card.className = 'bg-white p-6 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow';
                     card.innerHTML = `
@@ -2394,7 +2287,6 @@
                 });
                 renderUserManagement();
             }
-
             function renderUserManagement() {
                 const container = document.getElementById('user-list-container');
                 container.innerHTML = '';
@@ -2420,12 +2312,12 @@
                                 <option value="Supervisor" ${user.role === 'Supervisor' ? 'selected' : ''}>Supervisor</option>
                                 <option value="Senior" ${user.role === 'Senior' ? 'selected' : ''}>Senior</option>
                                 <option value="Officer" ${!user.role || user.role === 'Officer' ? 'selected' : ''}>Officer</option>
+                                <option value="Viewer" ${user.role === 'Viewer' ? 'selected' : ''}>Viewer</option>
                             </select>
                         </td>
                     `;
                 });
                 container.appendChild(table);
-
                 document.querySelectorAll('.role-select').forEach(select => {
                     select.addEventListener('change', async (e) => {
                         const newRole = e.target.value;
@@ -2439,7 +2331,6 @@
                     });
                 });
             }
-
             function getMillis(timestamp) {
                 if (!timestamp) return 0;
                 if (typeof timestamp.toMillis === 'function') {
@@ -2453,7 +2344,6 @@
                 }
                 return 0;
             }
-
             function renderKpiDetails(user) {
                 const container = document.getElementById('kpi-details-container');
                 container.dataset.userId = user.id;
@@ -2467,7 +2357,6 @@
                 const issuesCount = Object.values(issuesData).flat().filter(i => i.reportedByUid === user.id).length;
                 const performanceScore = checkedCount + createdCount + issuesCount + totalStars;
                 const issueRate = checkedCount > 0 ? ((issuesCount / checkedCount) * 100).toFixed(1) : 0;
-
                 let scoreHistoryHtml = '<p class="text-gray-500">ยังไม่มีประวัติคะแนนพิเศษ</p>';
                 if (userScores.length > 0) {
                     scoreHistoryHtml = userScores.map(score => {
@@ -2490,7 +2379,6 @@
                         </div>
                     `}).join('');
                 }
-
                 container.innerHTML = `
                     <button id="back-to-kpi-summary" class="mb-6 px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">← กลับไปที่สรุป</button>
                     <div class="flex flex-col sm:flex-row items-center justify-between mb-6">
@@ -2518,7 +2406,6 @@
                     </div>
                 `;
                 container.classList.remove('hidden');
-
                 const kpiCtx = document.getElementById('kpi-user-chart').getContext('2d');
                 currentChartInstances.kpiChart = new Chart(kpiCtx, {
                     type: 'bar',
@@ -2532,7 +2419,6 @@
                     },
                     options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, responsive: true, maintainAspectRatio: false }
                 });
-
 
                 updateUIForRoles(); // Ensure delete buttons are visible for the right roles
                 document.getElementById('back-to-kpi-summary').addEventListener('click', () => {
@@ -2559,7 +2445,6 @@
                     console.error("Error deleting score:", error);
                 }
             }
-
             function showScoreModal(userId) {
                 scoreForm.reset();
                 scoreForm.querySelector('#score-user-id').value = userId;
@@ -2570,7 +2455,6 @@
                 scoreModal.classList.remove('hidden');
                 scoreModal.classList.add('flex');
             }
-
             document.getElementById('score-modal-cancel').addEventListener('click', () => {
                 scoreModal.classList.add('hidden');
                 scoreModal.classList.remove('flex');
@@ -2584,7 +2468,6 @@
                     starRatingDiv.classList.remove('deduction');
                 }
             });
-
             const stars = document.querySelectorAll('#score-star-rating .star');
             stars.forEach(star => {
                 star.addEventListener('click', () => {
@@ -2595,16 +2478,13 @@
                     });
                 });
             });
-
             scoreForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 let scoreValue = parseInt(scoreForm.querySelector('#score-value').value);
                 const reason = scoreForm.querySelector('#score-reason').value;
-
                 if (reason === 'ทำงานผิดพลาด (หักคะแนน)') {
                     scoreValue = -scoreValue;
                 }
-
                 const scoreData = {
                     userId: scoreForm.querySelector('#score-user-id').value,
                     score: scoreValue,
@@ -2627,7 +2507,6 @@
                     console.error("Error saving score:", error);
                 }
             });
-
             // --- Profile View Logic ---
             function renderProfileView() {
                 if (currentUserProfile) {
@@ -2661,7 +2540,6 @@
                     defaultAvatarContainer.appendChild(img);
                 });
             }
-
             defaultAvatarContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('default-avatar')) {
                     const url = e.target.dataset.url;
@@ -2673,7 +2551,6 @@
                     e.target.classList.add('selected');
                 }
             });
-
             profilePicUpload.addEventListener('change', async (e) => {
                 const file = e.target.files[0];
                 if (file && file.type.startsWith('image/')) {
@@ -2688,29 +2565,24 @@
                     }
                 }
             });
-
             profileForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const button = e.target.querySelector('button[type="submit"]');
                 button.disabled = true;
                 button.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full mx-auto"></div>`;
-
                 const updateData = {
                     firstName: profileForm.querySelector('#profile-firstname').value,
                     lastName: profileForm.querySelector('#profile-lastname').value
                 };
-
                 if (newProfilePicBase64) {
                     updateData.profilePictureUrl = newProfilePicBase64;
                 }
-
                 try {
                     const userDocRef = doc(db, "users", currentUser.uid);
                     await updateDoc(userDocRef, updateData);
                     
                     // Update local profile object
                     Object.assign(currentUserProfile, updateData);
-
                     updateUserDisplays(currentUserProfile);
                     showNotification('อัปเดตโปรไฟล์สำเร็จ!');
                     showMainView(views.mainMenu);
@@ -2722,7 +2594,6 @@
                     button.textContent = 'บันทึกการเปลี่ยนแปลง';
                 }
             });
-
             function renderRecentActivity() {
                 const container = document.getElementById('recent-activity-container');
                 const allUserTransfers = [...allTransfersData, ...completedTransfersData];
@@ -2735,20 +2606,16 @@
                 const checkedActivity = completedTransfersData
                     .filter(t => t.lastCheckedByUid === currentUser.uid)
                     .map(t => ({...t, type: 'เช็คเสร็จ', timestamp: t.createdAt})); // Note: using createdAt for sorting consistency
-
                 const issueActivity = allUserIssues
                     .filter(i => i.reportedByUid === currentUser.uid)
                     .map(i => ({...i, type: 'รายงานปัญหา', timestamp: i.createdAt}));
-
                 const userActivity = [...createdActivity, ...checkedActivity, ...issueActivity]
                     .sort((a, b) => getMillis(b.timestamp) - getMillis(a.timestamp))
                     .slice(0, 5);
-
                 if (userActivity.length === 0) {
                     container.innerHTML = '<p class="text-gray-500 text-center">ไม่มีกิจกรรมล่าสุด</p>';
                     return;
                 }
-
                 container.innerHTML = userActivity.map(item => {
                     let actionText = '';
                     let actionColor = '';
@@ -2762,7 +2629,6 @@
                         actionText = 'คุณรายงานปัญหา';
                         actionColor = 'text-red-600';
                     }
-
                     return `
                         <div class="p-3 bg-gray-50 rounded-lg">
                             <p class="font-semibold">TFOR: ...${item.tforNumber} (${item.branch})</p>
@@ -2773,14 +2639,14 @@
             }
             
             function renderProfileScores() {
-                const profileScoresContainer = document.getElementById('profile-scores-container');
-                if (!profileScoresContainer) return;
+                const container = document.getElementById('profile-scores-container');
+                if (!container) return;
                 const userScores = allScores.filter(s => s.userId === currentUser.uid).sort((a, b) => getMillis(b.timestamp) - getMillis(a.timestamp));
                 if (userScores.length === 0) {
-                    profileScoresContainer.innerHTML = '<p class="text-gray-500 text-center">ยังไม่มีการประเมินจากหัวหน้า</p>';
+                    container.innerHTML = '<p class="text-gray-500 text-center">ยังไม่มีการประเมินจากหัวหน้า</p>';
                     return;
                 }
-                profileScoresContainer.innerHTML = userScores.map(score => {
+                container.innerHTML = userScores.map(score => {
                     const scoreDate = score.timestamp ? new Date(getMillis(score.timestamp)).toLocaleDateString('th-TH') : 'ไม่มีข้อมูลวันที่';
                     const starColor = score.score < 0 ? 'text-red-500' : 'text-amber-500';
                     const stars = '★'.repeat(Math.abs(score.score));
@@ -2797,13 +2663,11 @@
                 }).join('');
             }
 
-
             changePasswordForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const currentPassword = changePasswordForm.querySelector('#current-password').value;
                 const newPassword = changePasswordForm.querySelector('#new-password').value;
                 const confirmPassword = changePasswordForm.querySelector('#confirm-password').value;
-
                 if (newPassword !== confirmPassword) {
                     showNotification('รหัสผ่านใหม่ไม่ตรงกัน', false);
                     return;
@@ -2812,7 +2676,6 @@
                     showNotification('รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร', false);
                     return;
                 }
-
                 try {
                     const user = auth.currentUser;
                     const credential = EmailAuthProvider.credential(user.email, currentPassword);
@@ -2830,7 +2693,6 @@
                 const button = document.getElementById('delete-all-data-btn');
                 button.disabled = true;
                 button.innerHTML = `<div class="loading-spinner w-5 h-5 border-white border-t-transparent rounded-full inline-block mr-2"></div> กำลังลบ...`;
-
                 try {
                     // Firestore batches are limited to 500 operations.
                     // This function will process documents in chunks of 400 to be safe.
@@ -2845,12 +2707,10 @@
                             querySnapshot = await getDocs(query(collectionRef)); // Re-fetch to see if any remain
                         }
                     };
-
                     await deleteCollection(collection(db, "transfers"));
                     await deleteCollection(collection(db, "issues"));
                     
                     showNotification("ลบข้อมูลของเข้าและปัญหาทั้งหมดสำเร็จ");
-
                 } catch (error) {
                     console.error("Error deleting all data:", error);
                     showNotification("เกิดข้อผิดพลาดในการลบข้อมูล", false);
@@ -2859,14 +2719,12 @@
                      button.textContent = 'ลบข้อมูลของเข้าทั้งหมด (เพื่อทดสอบ)';
                 }
             }
-
             document.getElementById('delete-all-data-btn')?.addEventListener('click', () => {
                 showConfirmationModal(
                     'คำเตือน! การกระทำนี้จะลบข้อมูล "ของเข้าทั้งหมด" และ "สินค้ามีปัญหา" ทั้งหมดออกจากระบบอย่างถาวร ไม่สามารถกู้คืนได้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
                     deleteAllInboundData
                 );
             });
-
             document.getElementById('backup-restore-btn')?.addEventListener('click', () => {
                 backupModal.classList.remove('hidden');
                 backupModal.classList.add('flex');
@@ -2875,7 +2733,6 @@
                 backupModal.classList.add('hidden');
                 backupModal.classList.remove('flex');
             });
-
             document.getElementById('backup-data-btn').addEventListener('click', async () => {
                 const allData = {
                     transfers: [...allTransfersData, ...completedTransfersData],
@@ -2896,7 +2753,6 @@
             const restoreFileInput = document.getElementById('restore-file-input');
             const restoreDataBtn = document.getElementById('restore-data-btn');
             let restoreFile = null;
-
             restoreFileInput.addEventListener('change', (e) => {
                 restoreFile = e.target.files[0];
                 if (restoreFile) {
@@ -2905,7 +2761,6 @@
                     restoreDataBtn.disabled = true;
                 }
             });
-
             restoreDataBtn.addEventListener('click', () => {
                 if (!restoreFile) {
                     showNotification("กรุณาเลือกไฟล์ Backup ก่อน", false);
@@ -2935,7 +2790,6 @@
                                     batch.set(doc(db, "scores", id), itemData);
                                 });
                                 await batch.commit();
-
                                 showNotification("กู้คืนข้อมูลสำเร็จ!");
                                 backupModal.classList.add('hidden');
                             } else {
@@ -2953,9 +2807,7 @@
                     reader.readAsText(restoreFile);
                 });
             });
-
         });
     </script>
 </body>
 </html>
-�
