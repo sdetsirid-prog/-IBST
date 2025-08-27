@@ -54,10 +54,10 @@
             gap: 4px;
         }
         .event-dot { width: 6px; height: 6px; border-radius: 50%; }
-        .event-dot-blue { background-color: #3b82f6; } /* New Entry */
-        .event-dot-green { background-color: #22c55e; } /* Completed */
-        .event-dot-red { background-color: #ef4444; } /* Issue */
-        .event-dot-purple { background-color: #8b5cf6; } /* Scheduled */
+        .event-dot-blue { background-color: #3b82f6; }
+        .event-dot-green { background-color: #22c55e; }
+        .event-dot-red { background-color: #ef4444; }
+        .event-dot-purple { background-color: #8b5cf6; }
         
         /* Role-based visibility classes */
         .admin-only, .supervisor-only, .senior-only, .officer-only, .viewer-only,
@@ -65,16 +65,16 @@
             display: none;
         }
         .star-rating .star {
-            color: #d1d5db; /* gray-300 */
+            color: #d1d5db;
             cursor: pointer;
             font-size: 2rem;
             transition: color 0.2s;
         }
         .star-rating .star.selected, .star-rating .star:hover {
-            color: #f59e0b; /* amber-500 */
+            color: #f59e0b;
         }
         .star-rating.deduction .star.selected, .star-rating.deduction .star:hover {
-            color: #ef4444; /* red-500 */
+            color: #ef4444;
         }
         .default-avatar {
             cursor: pointer;
@@ -88,7 +88,8 @@
             border-color: #a21caf;
             box-shadow: 0 0 10px rgba(162, 28, 175, 0.5);
         }
-        /* Styles for PDF Export Content */
+        
+        /* PDF Export Styles */
         #pdf-export-content {
             font-family: 'Sarabun', sans-serif;
             color: #333;
@@ -156,7 +157,6 @@
             font-weight: bold;
             color: #4f46e5;
         }
-        /* ปรับปรุงการแสดงผลตารางใน PDF */
         #pdf-export-content table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
@@ -301,6 +301,153 @@
             font-size: 0.75rem;
             font-weight: 600;
             color: #b91c1c;
+        }
+        
+        /* Ranking System Styles */
+        .ranking-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 16px;
+            margin-top: 20px;
+        }
+        
+        .ranking-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #4f46e5;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            transition: background-color 0.2s;
+        }
+        
+        .ranking-item:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .ranking-position {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #4f46e5;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .ranking-position.gold {
+            color: #f59e0b;
+        }
+        
+        .ranking-position.silver {
+            color: #9ca3af;
+        }
+        
+        .ranking-position.bronze {
+            color: #b45309;
+        }
+        
+        .ranking-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 12px;
+            object-fit: cover;
+        }
+        
+        .ranking-info {
+            flex-grow: 1;
+        }
+        
+        .ranking-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .ranking-role {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .ranking-score {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        
+        /* Activity Log Styles */
+        .activity-log-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 16px;
+            margin-top: 20px;
+        }
+        
+        .log-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #4f46e5;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            transition: background-color 0.2s;
+        }
+        
+        .log-item:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .log-icon {
+            margin-right: 12px;
+            color: #4f46e5;
+        }
+        
+        .log-content {
+            flex-grow: 1;
+        }
+        
+        .log-action {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .log-details {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .log-time {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -558,6 +705,22 @@
                         <h3 class="font-semibold">KPI พนักงาน</h3>
                     </div>
                 </div>
+                
+                <!-- Ranking Section -->
+                <div class="ranking-container mt-8">
+                    <h3 class="ranking-title">อันดับคะแนนพนักงาน</h3>
+                    <div id="ranking-list" class="ranking-list">
+                        <!-- Rankings will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Activity Log Section -->
+                <div class="activity-log-container mt-8">
+                    <h3 class="log-title">บันทึกกิจกรรมล่าสุด</h3>
+                    <div id="activity-log-list" class="log-list">
+                        <!-- Activity logs will be populated here -->
+                    </div>
+                </div>
             </main>
         </div>
         
@@ -789,7 +952,7 @@
                         <h2 class="text-3xl font-bold text-gray-900 mb-8">เมนูสำหรับ TRANFERS</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
                             <div id="menu-1" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-                                <svg class="w-16 h-16 text-fuchsia-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2-10H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2z"></path></svg>
+                                <svg class="w-16 h-16 text-fuchsia-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2-10H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2z"></path></svg>
                                 <h3 class="text-xl font-semibold">แบบฟอร์มลงข้อมูล</h3>
                             </div>
                             <div id="menu-2" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
@@ -980,7 +1143,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         // Firestore Database
-        import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, collection, onSnapshot, serverTimestamp, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, collection, onSnapshot, serverTimestamp, query, where, getDocs, writeBatch, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -1118,11 +1281,13 @@
             let allUsers = [];
             let allScores = [];
             let allStarPoints = [];
+            let allActivityLogs = [];
             let unsubscribeUsers = null;
             let unsubscribeTransfers = null;
             let unsubscribeIssues = null;
             let unsubscribeScores = null;
             let unsubscribeStarPoints = null;
+            let unsubscribeActivityLogs = null;
             let allTransfersData = [];
             let completedTransfersData = [];
             let issuesData = {};
@@ -1268,6 +1433,7 @@
                 if (unsubscribeUsers) unsubscribeUsers();
                 if (unsubscribeScores) unsubscribeScores();
                 if (unsubscribeStarPoints) unsubscribeStarPoints();
+                if (unsubscribeActivityLogs) unsubscribeActivityLogs();
             }
             
             function setupFirestoreListeners() {
@@ -1324,6 +1490,7 @@
                     unsubscribeUsers = onSnapshot(usersQuery, (snapshot) => {
                         allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
+                        if (views.mainMenu && views.mainMenu.style.display === 'block') renderRankings();
                     });
                     
                     const scoresQuery = query(collection(db, "scores"));
@@ -1345,6 +1512,13 @@
                         if (views.profile && views.profile.style.display === 'block') renderProfileStarPoints();
                     });
                 }
+                
+                // Activity logs listener
+                const activityLogsQuery = query(collection(db, "activityLogs"), orderBy("timestamp", "desc"), limit(20));
+                unsubscribeActivityLogs = onSnapshot(activityLogsQuery, (snapshot) => {
+                    allActivityLogs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    if (views.mainMenu && views.mainMenu.style.display === 'block') renderActivityLogs();
+                });
             }
             
             loginForm.addEventListener('submit', (e) => {
@@ -1701,6 +1875,18 @@
                             };
                             batch.set(doc(collection(db, "issues")), issue);
                         }
+                        
+                        // Log the add action
+                        const logData = {
+                            action: 'เพิ่ม',
+                            actionType: 'transfer',
+                            userId: currentUser.uid,
+                            userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                            details: `เพิ่ม TFOR ${tforData.tforNumber} จาก ${tforData.branch}`,
+                            transferId: newTransferRef.id,
+                            timestamp: serverTimestamp()
+                        };
+                        batch.set(doc(collection(db, "activityLogs")), logData);
                     }
                     await batch.commit();
                     showNotification('บันทึกข้อมูลสำเร็จแล้ว!');
@@ -1739,6 +1925,18 @@
                         lastCheckedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
                         checkLog: checkLog
                     });
+                    
+                    // Log the check action
+                    await addDoc(collection(db, "activityLogs"), {
+                        action: 'เช็ค',
+                        actionType: 'pallet',
+                        userId: currentUser.uid,
+                        userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                        details: `เช็คพาเลทที่ ${palletNum} ของ TFOR ${currentTforData.tforNumber}`,
+                        transferId: currentTforData.id,
+                        timestamp: serverTimestamp()
+                    });
+                    
                     if (isNowCompleted) {
                         showNotification('เช็คสินค้าครบถ้วนแล้ว!');
                     }
@@ -1776,6 +1974,17 @@
                         receiveLog: receiveLog
                     });
                     
+                    // Log the receive action
+                    await addDoc(collection(db, "activityLogs"), {
+                        action: 'รับ',
+                        actionType: 'pallet',
+                        userId: currentUser.uid,
+                        userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                        details: `รับสินค้าพาเลทที่ ${palletNum} ของ TFOR ${currentTforData.tforNumber}`,
+                        transferId: currentTforData.id,
+                        timestamp: serverTimestamp()
+                    });
+                    
                     if (isAllReceived) {
                         showNotification('รับสินค้าครบถ้วนแล้ว!');
                     }
@@ -1808,6 +2017,17 @@
                         lastReceivedByUid: currentUser.uid,
                         lastReceivedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
                         receiveLog: receiveLog
+                    });
+                    
+                    // Log the receive all action
+                    await addDoc(collection(db, "activityLogs"), {
+                        action: 'รับ',
+                        actionType: 'all',
+                        userId: currentUser.uid,
+                        userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                        details: `รับสินค้าทั้งหมดของ TFOR ${currentTforData.tforNumber}`,
+                        transferId: currentTforData.id,
+                        timestamp: serverTimestamp()
                     });
                     
                     showNotification('รับสินค้าครบถ้วนแล้ว!');
@@ -1843,6 +2063,18 @@
                         };
                         delete newIssue.id;
                         batch.set(doc(collection(db, "issues")), newIssue);
+                        
+                        // Log the report issue action
+                        const issueLogRef = doc(collection(db, "activityLogs"));
+                        batch.set(issueLogRef, {
+                            action: 'แจ้ง',
+                            actionType: 'issue',
+                            userId: currentUser.uid,
+                            userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                            details: `แจ้งปัญหา ${issueTypes.join(', ')} สำหรับพาเลทที่ ${palletNum} ของ TFOR ${currentTforData.tforNumber}`,
+                            transferId: currentTforData.id,
+                            timestamp: serverTimestamp()
+                        });
                     }
                     await batch.commit();
                     showNotification(`บันทึกปัญหาสำหรับพาเลทที่ ${palletNum} เรียบร้อยแล้ว!`);
@@ -1858,9 +2090,26 @@
                 showConfirmationModal("คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้และปัญหาที่เกี่ยวข้องทั้งหมด?", async () => {
                     try {
                         const batch = writeBatch(db);
+                        
+                        // Get transfer data before deletion for logging
+                        const transferDoc = await getDoc(doc(db, "transfers", transferId));
+                        const transferData = transferDoc.data();
+                        
                         batch.delete(doc(db, "transfers", transferId));
                         const issuesSnapshot = await getDocs(query(collection(db, "issues"), where("transferId", "==", transferId)));
                         issuesSnapshot.forEach(doc => batch.delete(doc.ref));
+                        
+                        // Log the delete action
+                        await addDoc(collection(db, "activityLogs"), {
+                            action: 'ลบ',
+                            actionType: 'transfer',
+                            userId: currentUser.uid,
+                            userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                            details: `ลบ TFOR ${transferData.tforNumber} จาก ${transferData.branch}`,
+                            transferId: transferId,
+                            timestamp: serverTimestamp()
+                        });
+                        
                         await batch.commit();
                         showNotification("ลบรายการสำเร็จ");
                     } catch (error) {
@@ -1873,7 +2122,23 @@
             async function deleteIssue(issueId) {
                 showConfirmationModal("คุณแน่ใจหรือไม่ว่าต้องการลบปัญหานี้?", async () => {
                     try {
+                        // Get issue data before deletion for logging
+                        const issueDoc = await getDoc(doc(db, "issues", issueId));
+                        const issueData = issueDoc.data();
+                        
                         await deleteDoc(doc(db, "issues", issueId));
+                        
+                        // Log the delete action
+                        await addDoc(collection(db, "activityLogs"), {
+                            action: 'ลบ',
+                            actionType: 'issue',
+                            userId: currentUser.uid,
+                            userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                            details: `ลบปัญหา ${issueData.issueTypes.join(', ')} ของ TFOR ${issueData.tforNumber}`,
+                            transferId: issueData.transferId,
+                            timestamp: serverTimestamp()
+                        });
+                        
                         showNotification("ลบปัญหาสำเร็จ");
                     } catch (error) {
                         console.error("Error deleting issue:", error);
@@ -2070,8 +2335,8 @@
                                     ${(currentTforData.palletNumbers || []).map(p => `<option value="${p}">พาเลทที่ ${p}</option>`).join('')}
                                 </select>
                             </div>
-                            <div><label class="block text-sm font-medium">ITEM NUMBER</label><input type="text" class="issue-item-number mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
-                            <div><label class="block text-sm font-medium">จำนวน</label><input type="number" class="issue-quantity mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                            <div><label class="block text-sm font-medium">ITEM NUMBER</label><input type="text" class="issue-item-number mt-1 block w-full rounded-md border-gray-300 shadow-sm"></input></div>
+                            <div><label class="block text-sm font-medium">จำนวน</label><input type="number" class="issue-quantity mt-1 block w-full rounded-md border-gray-300 shadow-sm"></input></div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">รูปรายละเอียดปัญหา</label>
@@ -2133,6 +2398,18 @@
                         };
                         delete newIssue.id;
                         batch.set(doc(collection(db, "issues")), newIssue);
+                        
+                        // Log the report issue action
+                        const issueLogRef = doc(collection(db, "activityLogs"));
+                        batch.set(issueLogRef, {
+                            action: 'แจ้ง',
+                            actionType: 'issue',
+                            userId: currentUser.uid,
+                            userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                            details: `แจ้งปัญหา ${issueTypes.join(', ')} สำหรับพาเลทที่ ${newIssue.palletNumber} ของ TFOR ${currentTforData.tforNumber}`,
+                            transferId: currentTforData.id,
+                            timestamp: serverTimestamp()
+                        });
                     }
                     await batch.commit();
                     showNotification(`บันทึกปัญหาสำหรับ TFOR ...${currentTforData.tforNumber} เรียบร้อยแล้ว!`);
@@ -2215,7 +2492,7 @@
                         const issueList = categoryDiv.querySelector('.issue-list');
                         issuesData[category].forEach(issue => {
                             const issueItem = document.createElement('div');
-                            const allImages = [...(issue.issueImages || []), ...(issue.images || [])];
+                            const allImages = [...(issue.images || []), ...(issue.issueImages || [])];
                             const imageThumb = allImages.length > 0 ? `<img src="${allImages[0]}" class="w-12 h-12 object-cover rounded-md mr-4">` : '';
                             
                             // Display both checker and reporter information
@@ -2554,6 +2831,18 @@
                                 scheduledDate: dateString, 
                                 scheduledByUid: currentUser.uid,
                                 scheduledByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                            });
+                            
+                            // Log the plan action
+                            const logRef = doc(collection(db, "activityLogs"));
+                            batch.set(logRef, {
+                                action: 'วางแผน',
+                                actionType: 'schedule',
+                                userId: currentUser.uid,
+                                userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                                details: `วางแผนงานสำหรับวันที่ ${dateString}`,
+                                transferId: id,
+                                timestamp: serverTimestamp()
                             });
                         });
                         await batch.commit();
@@ -3302,7 +3591,7 @@
                         <h3 class="text-lg font-semibold mb-2">รายละเอียดคะแนน KPI</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <div><p class="text-sm text-gray-600">สร้าง TFOR</p><p class="text-xl font-bold">${createdCount} คะแนน</p></div>
-                            <div><p class="text-sm text-gray-600">เช็คสินค้า</p><p class="text-xl font-bold">${checkedCount} คะแนน</p></div>
+                            <div><p class="text-sm text-gray-600">เช็คเสร็จ</p><p class="text-xl font-bold">${checkedCount} คะแนน</p></div>
                             <div><p class="text-sm text-gray-600">พบปัญหา</p><p class="text-xl font-bold">${foundIssuesCount} คะแนน</p></div>
                             <div><p class="text-sm text-gray-600">รายงานปัญหา</p><p class="text-xl font-bold">${reportedIssuesCount} คะแนน</p></div>
                             <div><p class="text-sm text-gray-600">รับสินค้า</p><p class="text-xl font-bold">${receivedCount} คะแนน</p></div>
@@ -3899,6 +4188,124 @@
                     reader.readAsText(restoreFile);
                 });
             });
+            
+            // --- Ranking System ---
+            function renderRankings() {
+                const rankingList = document.getElementById('ranking-list');
+                rankingList.innerHTML = '';
+                
+                // Calculate user rankings
+                const userRankings = allUsers
+                    .filter(user => user.role !== 'Admin') // Exclude admin users
+                    .map(user => {
+                        const allUserTransfers = [...allTransfersData, ...completedTransfersData];
+                        const allIssues = Object.values(issuesData).flat();
+                        
+                        const createdCount = allUserTransfers.filter(t => t.createdByUid === user.id).length;
+                        const checkedCount = completedTransfersData.filter(t => t.lastCheckedByUid === user.id).length;
+                        const receivedCount = completedTransfersData.filter(t => t.lastReceivedByUid === user.id).length;
+                        const reportedIssuesCount = allIssues.filter(i => i.reportedByUid === user.id).length;
+                        const foundIssuesCount = allIssues.filter(i => i.checkerUid === user.id).length;
+                        
+                        const userScores = allScores.filter(s => s.userId === user.id);
+                        const totalStars = userScores.reduce((sum, score) => sum + (score.score || 0), 0);
+                        
+                        // Calculate total score
+                        const totalScore = createdCount + checkedCount + receivedCount + 
+                                        reportedIssuesCount + foundIssuesCount + totalStars;
+                        
+                        return {
+                            user,
+                            totalScore,
+                            createdCount,
+                            checkedCount,
+                            receivedCount,
+                            reportedIssuesCount,
+                            foundIssuesCount,
+                            totalStars
+                        };
+                    })
+                    .sort((a, b) => b.totalScore - a.totalScore) // Sort by score descending
+                    .slice(0, 10); // Get top 10 users
+                
+                // Render ranking items
+                userRankings.forEach((ranking, index) => {
+                    const position = index + 1;
+                    const positionClass = position === 1 ? 'gold' : 
+                                        position === 2 ? 'silver' : 
+                                        position === 3 ? 'bronze' : '';
+                    
+                    const rankingItem = document.createElement('div');
+                    rankingItem.className = 'ranking-item';
+                    rankingItem.innerHTML = `
+                        <div class="ranking-position ${positionClass}">${position}</div>
+                        <img src="${ranking.user.profilePictureUrl || 'https://placehold.co/40x40/e0e0e0/757575?text=?'}" 
+                             alt="${ranking.user.firstName}" class="ranking-avatar">
+                        <div class="ranking-info">
+                            <div class="ranking-name">${ranking.user.firstName} ${ranking.user.lastName}</div>
+                            <div class="ranking-role">${ranking.user.role || 'Officer'}</div>
+                        </div>
+                        <div class="ranking-score">${ranking.totalScore}</div>
+                    `;
+                    
+                    rankingList.appendChild(rankingItem);
+                });
+                
+                // If no users found
+                if (userRankings.length === 0) {
+                    rankingList.innerHTML = '<p class="text-gray-500 text-center">ไม่มีข้อมูลการจัดอันดับ</p>';
+                }
+            }
+            
+            // --- Activity Log System ---
+            function renderActivityLogs() {
+                const logList = document.getElementById('activity-log-list');
+                logList.innerHTML = '';
+                
+                // Get the latest 20 activity logs
+                const recentLogs = allActivityLogs.slice(0, 20);
+                
+                if (recentLogs.length === 0) {
+                    logList.innerHTML = '<p class="text-gray-500 text-center">ไม่มีข้อมูลกิจกรรม</p>';
+                    return;
+                }
+                
+                // Render log items
+                recentLogs.forEach(log => {
+                    const logItem = document.createElement('div');
+                    logItem.className = 'log-item';
+                    
+                    // Format timestamp
+                    const timestamp = log.timestamp ? 
+                        new Date(log.timestamp.toDate()).toLocaleString('th-TH', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) : 'ไม่มีข้อมูลเวลา';
+                    
+                    // Get action icon
+                    let actionIcon = '📝';
+                    if (log.action === 'เพิ่ม') actionIcon = '➕';
+                    else if (log.action === 'ลบ') actionIcon = '🗑️';
+                    else if (log.action === 'วางแผน') actionIcon = '📅';
+                    else if (log.action === 'เช็ค') actionIcon = '✅';
+                    else if (log.action === 'รับ') actionIcon = '📦';
+                    else if (log.action === 'แจ้ง') actionIcon = '⚠️';
+                    
+                    logItem.innerHTML = `
+                        <div class="log-icon">${actionIcon}</div>
+                        <div class="log-content">
+                            <div class="log-action">${log.userName} ${log.action} ${log.actionType === 'all' ? 'สินค้าทั้งหมด' : log.actionType === 'pallet' ? 'พาเลท' : log.actionType === 'transfer' ? 'TFOR' : log.actionType === 'issue' ? 'ปัญหา' : log.actionType === 'schedule' ? 'แผนงาน' : ''}</div>
+                            <div class="log-details">${log.details}</div>
+                        </div>
+                        <div class="log-time">${timestamp}</div>
+                    `;
+                    
+                    logList.appendChild(logItem);
+                });
+            }
         });
     </script>
 </body>
