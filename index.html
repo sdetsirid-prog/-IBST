@@ -310,9 +310,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             padding: 16px;
             margin-top: 20px;
-            width: 100%;
-            box-sizing: border-box;
-            overflow-x: auto;
         }
         
         .ranking-title {
@@ -327,7 +324,6 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            min-width: 300px;
         }
         
         .ranking-item {
@@ -337,7 +333,6 @@
             border-radius: 8px;
             background-color: #f9fafb;
             transition: background-color 0.2s;
-            min-width: 280px;
         }
         
         .ranking-item:hover {
@@ -350,7 +345,6 @@
             color: #4f46e5;
             width: 30px;
             text-align: center;
-            flex-shrink: 0;
         }
         
         .ranking-position.gold {
@@ -371,35 +365,26 @@
             border-radius: 50%;
             margin: 0 12px;
             object-fit: cover;
-            flex-shrink: 0;
         }
         
         .ranking-info {
             flex-grow: 1;
-            min-width: 0;
         }
         
         .ranking-name {
             font-weight: 600;
             color: #1f2937;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         
         .ranking-role {
             font-size: 0.75rem;
             color: #6b7280;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         
         .ranking-score {
             font-size: 1.25rem;
             font-weight: bold;
             color: #4f46e5;
-            flex-shrink: 0;
         }
         
         /* Activity Log Styles */
@@ -409,9 +394,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             padding: 16px;
             margin-top: 20px;
-            width: 100%;
-            box-sizing: border-box;
-            overflow-x: auto;
         }
         
         .log-title {
@@ -428,7 +410,6 @@
             gap: 8px;
             max-height: 300px;
             overflow-y: auto;
-            min-width: 300px;
         }
         
         .log-item {
@@ -438,7 +419,6 @@
             border-radius: 8px;
             background-color: #f9fafb;
             transition: background-color 0.2s;
-            min-width: 280px;
         }
         
         .log-item:hover {
@@ -448,70 +428,26 @@
         .log-icon {
             margin-right: 12px;
             color: #4f46e5;
-            flex-shrink: 0;
         }
         
         .log-content {
             flex-grow: 1;
-            min-width: 0;
         }
         
         .log-action {
             font-weight: 600;
             color: #1f2937;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         
         .log-details {
             font-size: 0.875rem;
             color: #6b7280;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         
         .log-time {
             font-size: 0.75rem;
             color: #9ca3af;
             white-space: nowrap;
-            flex-shrink: 0;
-        }
-        
-        /* Mobile Responsive Styles */
-        @media (max-width: 640px) {
-            .ranking-container, .activity-log-container {
-                padding: 12px;
-                margin-top: 16px;
-            }
-            
-            .ranking-item, .log-item {
-                padding: 6px 8px;
-            }
-            
-            .ranking-position {
-                font-size: 1rem;
-                width: 24px;
-            }
-            
-            .ranking-avatar {
-                width: 32px;
-                height: 32px;
-                margin: 0 8px;
-            }
-            
-            .ranking-score {
-                font-size: 1rem;
-            }
-            
-            .log-icon {
-                margin-right: 8px;
-            }
-            
-            .log-time {
-                font-size: 0.65rem;
-            }
         }
     </style>
 </head>
@@ -1245,7 +1181,7 @@
                         threshold: "BLOCK_NONE"
                     },
                     {
-                        category: "HATE_SPEECH", 
+                        category: "HARM_CATEGORY_HATE_SPEECH", 
                         threshold: "BLOCK_NONE"
                     },
                     {
@@ -1375,15 +1311,7 @@
             
             function showMainView(viewToShow) {
                 Object.values(views).forEach(v => v.style.display = 'none');
-                if (viewToShow) {
-                    viewToShow.style.display = 'block';
-                    
-                    // เพิ่มการเรียก renderRankings() เมื่อแสดงหน้าหลัก
-                    if (viewToShow === views.mainMenu) {
-                        renderRankings();
-                        renderActivityLogs();
-                    }
-                }
+                if (viewToShow) viewToShow.style.display = 'block';
                 window.scrollTo(0, 0);
             }
             
@@ -1395,6 +1323,9 @@
                 registerTab.classList.toggle('bg-fuchsia-600', formToShow === 'register');
                 registerTab.classList.toggle('text-white', formToShow === 'register');
             }
+            
+            loginTab.addEventListener('click', () => showAuthForm('login'));
+            registerTab.addEventListener('click', () => showAuthForm('register'));
             
             function updateUserDisplays(profile) {
                 const displayElements = document.querySelectorAll('.user-display');
@@ -1487,8 +1418,6 @@
                     updateUserDisplays(currentUserProfile);
                     updateUIForRoles();
                     setupFirestoreListeners();
-                    renderRankings(); // เพิ่มบรรทัดนี้เพื่อแสดงอันดับเมื่อโหลด
-                    updateMainMenuSummary();
                     showMainView(views.mainMenu);
                 } else {
                     detachFirestoreListeners();
@@ -1562,7 +1491,7 @@
                         allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         if (views.kpi && views.kpi.style.display === 'block') renderKpiView();
                         if (views.mainMenu && views.mainMenu.style.display === 'block') renderRankings();
-                    }, (error) => console.error("Users listener error:", error));
+                    });
                     
                     const scoresQuery = query(collection(db, "scores"));
                     unsubscribeScores = onSnapshot(scoresQuery, (snapshot) => {
@@ -1575,13 +1504,13 @@
                             }
                         }
                         if (views.profile && views.profile.style.display === 'block') renderProfileView();
-                    }, (error) => console.error("Scores listener error:", error));
+                    });
                     
                     const starPointsQuery = query(collection(db, "starPoints"));
                     unsubscribeStarPoints = onSnapshot(starPointsQuery, (snapshot) => {
                         allStarPoints = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         if (views.profile && views.profile.style.display === 'block') renderProfileStarPoints();
-                    }, (error) => console.error("StarPoints listener error:", error));
+                    });
                 }
                 
                 // Activity logs listener
@@ -1589,7 +1518,7 @@
                 unsubscribeActivityLogs = onSnapshot(activityLogsQuery, (snapshot) => {
                     allActivityLogs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     if (views.mainMenu && views.mainMenu.style.display === 'block') renderActivityLogs();
-                }, (error) => console.error("ActivityLogs listener error:", error));
+                });
             }
             
             loginForm.addEventListener('submit', (e) => {
@@ -4264,12 +4193,6 @@
             function renderRankings() {
                 const rankingList = document.getElementById('ranking-list');
                 rankingList.innerHTML = '';
-                
-                // ตรวจสอบว่ามีข้อมูลผู้ใช้หรือไม่
-                if (!allUsers || allUsers.length === 0) {
-                    rankingList.innerHTML = '<p class="text-gray-500 text-center">กำลังโหลดข้อมูล...</p>';
-                    return;
-                }
                 
                 // Calculate user rankings
                 const userRankings = allUsers
