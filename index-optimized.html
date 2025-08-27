@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INBOUND SYSTEM</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Notification Toast -->
+    <div id="notification-toast" class="fixed top-4 right-4 z-50 px-6 py-3 rounded-lg text-white font-semibold transform translate-x-full transition-transform duration-500 bg-green-500"></div>
+
+    <!-- Loading Container -->
+    <div id="loading-container" class="loading-container hidden">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+                <h3 class="text-xl font-bold mb-4 text-gray-900">ยืนยันการดำเนินการ</h3>
+                <p id="confirmation-message" class="text-gray-600 mb-6"></p>
+                <div class="flex space-x-4">
+                    <button id="confirm-yes" class="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">ยืนยัน</button>
+                    <button id="confirm-no" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login View -->
+    <div id="login-view" class="view active-view">
+        <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-fuchsia-500 to-indigo-600">
+            <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">INBOUND SYSTEM</h1>
+                    <p class="text-gray-600">เข้าสู่ระบบเพื่อเริ่มต้นใช้งาน</p>
+                </div>
+                
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                        <input type="email" id="login-email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="password-container">
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+                        <input type="password" id="login-password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent">
+                        <span class="toggle-password">👁️</span>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-fuchsia-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-fuchsia-700 transition-colors">
+                        เข้าสู่ระบบ
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <button id="create-account-btn" class="text-fuchsia-600 hover:text-fuchsia-700 font-medium">
+                        สร้างบัญชีใหม่
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Account View -->
+    <div id="create-account-view" class="view">
+        <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-fuchsia-500 to-indigo-600">
+            <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">สร้างบัญชีใหม่</h1>
+                    <p class="text-gray-600">กรอกข้อมูลเพื่อสร้างบัญชีผู้ใช้</p>
+                </div>
+                
+                <form id="create-account-form" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="create-firstname" class="block text-sm font-medium text-gray-700 mb-2">ชื่อจริง</label>
+                            <input type="text" id="create-firstname" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="create-lastname" class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label>
+                            <input type="text" id="create-lastname" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="create-email" class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                        <input type="email" id="create-email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="password-container">
+                        <label for="create-password" class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+                        <input type="password" id="create-password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent">
+                        <span class="toggle-password">👁️</span>
+                    </div>
+                    
+                    <div class="password-container">
+                        <label for="create-confirm-password" class="block text-sm font-medium text-gray-700 mb-2">ยืนยันรหัสผ่าน</label>
+                        <input type="password" id="create-confirm-password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent">
+                        <span class="toggle-password">👁️</span>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-fuchsia-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-fuchsia-700 transition-colors">
+                        สร้างบัญชี
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <button id="back-to-login-btn" class="text-fuchsia-600 hover:text-fuchsia-700 font-medium">
+                        กลับไปหน้าเข้าสู่ระบบ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu View -->
+    <div id="main-menu-view" class="view">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="font-bold text-xl text-fuchsia-600">INBOUND SYSTEM</h1>
+                    <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                    <span id="user-role-display" class="hidden px-3 py-1 text-xs font-bold text-white bg-fuchsia-500 rounded-full"></span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="profile-button" class="px-4 py-2 text-sm bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">โปรไฟล์</button>
+                    <button id="logout-button-main" class="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600">ออกจากระบบ</button>
+                </div>
+            </div>
+        </header>
+        
+        <main class="container mx-auto px-4 py-8">
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 text-center">
+                <div id="summary-todays-plan-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
+                    <h4 class="font-semibold text-gray-600">งานประจำวันนี้</h4>
+                    <p id="summary-todays-plan" class="text-4xl font-bold text-purple-500 mt-1">0</p>
+                </div>
+                <div id="summary-pending-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
+                    <h4 class="font-semibold text-gray-600">TFORs รอดำเนินการ</h4>
+                    <p id="summary-pending" class="text-4xl font-bold text-yellow-500 mt-1">0</p>
+                </div>
+                <div id="summary-completed-today-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
+                    <h4 class="font-semibold text-gray-600">เช็คเสร็จวันนี้</h4>
+                    <p id="summary-completed-today" class="text-4xl font-bold text-green-500 mt-1">0</p>
+                </div>
+                <div id="summary-issues-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
+                    <h4 class="font-semibold text-gray-600">รายการมีปัญหา</h4>
+                    <p id="summary-issues" class="text-4xl font-bold text-red-500 mt-1">0</p>
+                </div>
+            </div>
+
+            <!-- Main Action Buttons -->
+            <div id="go-to-ai-chat" class="animated-icon p-6 bg-gradient-to-r from-fuchsia-500 to-indigo-600 rounded-3xl shadow-lg hover:shadow-2xl transition-all cursor-pointer text-white text-center mb-8 flex flex-col sm:flex-row items-center justify-center">
+                <svg class="w-20 h-20 sm:w-24 sm:h-24 mb-4 sm:mb-0 sm:mr-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <div>
+                    <h2 class="text-4xl font-bold">INBOUND-ASSISTANT</h2>
+                    <p class="mt-1 text-lg opacity-90">สอบถามข้อมูลกับผู้ช่วย AI</p>
+                </div>
+            </div>
+
+            <div id="go-to-check-product" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer text-center mb-8 flex items-center justify-center">
+                <svg class="w-10 h-10 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h2 class="text-4xl font-bold">เช็คสินค้า</h2>
+            </div>
+
+            <div id="go-to-transfers" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer text-center mb-8 flex items-center justify-center">
+                <svg class="w-10 h-10 text-fuchsia-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                </svg>
+                <h2 class="text-4xl font-bold">TRANFERS</h2>
+            </div>
+
+            <!-- Feature Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div id="go-to-calendar" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                    <svg class="w-16 h-16 text-blue-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3 class="font-semibold">ปฏิทินวางแผนงาน</h3>
+                </div>
+                <div id="go-to-statistics" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                    <svg class="w-16 h-16 text-green-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <h3 class="font-semibold">สถิติ</h3>
+                </div>
+                <div id="go-to-kpi" class="admin-supervisor-only animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                    <svg class="w-16 h-16 text-red-500 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636l-1.414-1.414m15.152 15.152l-1.414-1.414M19.778 5.636l-1.414 1.414m-12.728 12.728l-1.414 1.414" />
+                    </svg>
+                    <h3 class="font-semibold">KPI พนักงาน</h3>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Check Product View -->
+    <div id="check-product-view" class="view">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="font-bold text-xl text-fuchsia-600">เช็คสินค้า</h1>
+                    <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                </div>
+                <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    กลับหน้าหลัก
+                </button>
+            </div>
+        </header>
+        <main class="container mx-auto px-4 py-8">
+            <div id="check-product-container" class="space-y-6"></div>
+        </main>
+    </div>
+
+    <!-- Profile View -->
+    <div id="profile-view" class="view">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="font-bold text-xl text-fuchsia-600">โปรไฟล์ของฉัน</h1>
+                <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    กลับหน้าหลัก
+                </button>
+            </div>
+        </header>
+        <main class="container mx-auto px-4 py-8">
+            <div class="max-w-md mx-auto space-y-8">
+                <!-- Personal Information -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-xl font-bold mb-6 text-gray-800">ข้อมูลส่วนตัว</h2>
+                    <form id="profile-form" class="space-y-6">
+                        <div class="text-center">
+                            <img id="profile-pic-preview" src="https://placehold.co/128x128/e0e0e0/757575?text=รูป" alt="Profile Picture" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-md">
+                            <label for="profile-pic-upload" class="cursor-pointer bg-fuchsia-100 text-fuchsia-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-fuchsia-200">
+                                อัปโหลดรูป
+                            </label>
+                            <input type="file" id="profile-pic-upload" class="hidden" accept="image/*">
+                        </div>
+                        <div>
+                            <p class="text-center text-sm text-gray-600 mb-4">หรือเลือกรูปโปรไฟล์พื้นฐาน</p>
+                            <div id="default-avatar-container" class="flex justify-center flex-wrap gap-4"></div>
+                        </div>
+                        <div>
+                            <label for="profile-email" class="block text-sm font-medium text-gray-700">อีเมล</label>
+                            <input type="email" id="profile-email" class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm" readonly>
+                        </div>
+                        <div>
+                            <label for="profile-role" class="block text-sm font-medium text-gray-700">ตำแหน่ง</label>
+                            <input type="text" id="profile-role" class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm" readonly>
+                        </div>
+                        <div>
+                            <label for="profile-firstname" class="block text-sm font-medium text-gray-700">ชื่อจริง</label>
+                            <input type="text" id="profile-firstname" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="profile-lastname" class="block text-sm font-medium text-gray-700">นามสกุล</label>
+                            <input type="text" id="profile-lastname" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-fuchsia-600 hover:bg-fuchsia-700 edit-button">
+                            บันทึกการเปลี่ยนแปลง
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Star Points Section -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-xl font-bold mb-6 text-gray-800">คะแนนดาวของฉัน</h2>
+                    <div class="star-display justify-center mb-6">
+                        <div class="star-counter">
+                            <span class="small-star">★</span> 
+                            <span id="user-small-stars">0</span> ดาวเล็ก
+                        </div>
+                        <div class="star-counter">
+                            <span class="big-star">★</span> 
+                            <span id="user-big-stars">0</span> ดาวใหญ่
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <p class="text-sm text-gray-600 mb-2">เก็บดาวเล็กครบ 10 ดวง เพื่อแลกรับดาวใหญ่ 1 ดวง!</p>
+                        <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+                            <div id="star-progress-bar" class="bg-yellow-400 h-4 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="user-achievements" class="flex flex-wrap justify-center"></div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-xl font-bold mb-6 text-gray-800">กิจกรรมล่าสุดของฉัน</h2>
+                    <div id="recent-activity-container" class="space-y-3">
+                        <p class="text-gray-500 text-center">ไม่มีกิจกรรมล่าสุด</p>
+                    </div>
+                </div>
+
+                <!-- Score History -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-xl font-bold mb-6 text-gray-800">ประวัติคะแนน</h2>
+                    <div id="profile-scores-container" class="space-y-3">
+                        <p class="text-gray-500 text-center">ยังไม่มีการประเมินจากหัวหน้า</p>
+                    </div>
+                </div>
+
+                <!-- Change Password -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-xl font-bold mb-6 text-gray-800">เปลี่ยนรหัสผ่าน</h2>
+                    <form id="change-password-form" class="space-y-6">
+                        <div class="password-container">
+                            <label for="current-password" class="block text-sm font-medium text-gray-700">รหัสผ่านปัจจุบัน</label>
+                            <input type="password" id="current-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <span class="toggle-password">👁️</span>
+                        </div>
+                        <div class="password-container">
+                            <label for="new-password" class="block text-sm font-medium text-gray-700">รหัสผ่านใหม่</label>
+                            <input type="password" id="new-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <span class="toggle-password">👁️</span>
+                        </div>
+                        <div class="password-container">
+                            <label for="confirm-password" class="block text-sm font-medium text-gray-700">ยืนยันรหัสผ่านใหม่</label>
+                            <input type="password" id="confirm-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <span class="toggle-password">👁️</span>
+                        </div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                            ยืนยันการเปลี่ยนรหัสผ่าน
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- KPI View -->
+    <div id="kpi-view" class="view admin-supervisor-only">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="font-bold text-xl text-fuchsia-600">KPI พนักงาน</h1>
+                <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    กลับหน้าหลัก
+                </button>
+            </div>
+        </header>
+        <main class="container mx-auto px-4 py-8">
+            <div id="kpi-summary-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="kpi-details-container" class="mt-8 hidden bg-white rounded-2xl shadow-lg p-8"></div>
+            <div id="user-management-container" class="admin-only mt-12">
+                <h2 class="text-2xl font-bold mb-4 text-center">จัดการตำแหน่งผู้ใช้งาน</h2>
+                <div id="user-list-container" class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Today's Plan View -->
+    <div id="todays-plan-view" class="view">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="font-bold text-xl text-fuchsia-600">แผนงานประจำวันนี้</h1>
+                    <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                </div>
+                <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    กลับหน้าหลัก
+                </button>
+            </div>
+        </header>
+        <main class="container mx-auto px-4 py-8">
+            <div id="todays-plan-container" class="space-y-6"></div>
+        </main>
+    </div>
+
+    <!-- AI Chat View -->
+    <div id="ai-chat-view" class="view">
+        <div class="flex flex-col h-screen">
+            <header class="bg-white shadow-sm">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="font-bold text-xl text-fuchsia-600">INBOUND Assistant</h1>
+                        <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                    </div>
+                    <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        กลับหน้าหลัก
+                    </button>
+                </div>
+            </header>
+            <main id="chat-messages" class="flex-1 overflow-y-auto p-4 container mx-auto chat-message-container"></main>
+            <footer class="bg-white border-t">
+                <form id="chat-form" class="container mx-auto p-4 flex items-center">
+                    <input type="text" id="chat-input" placeholder="พิมพ์คำถามของคุณที่นี่..." class="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-fuchsia-500">
+                    <button type="submit" class="ml-4 p-3 bg-fuchsia-600 text-white rounded-full hover:bg-fuchsia-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </button>
+                </form>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Transfers View -->
+    <div id="transfers-view" class="view">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="font-bold text-xl text-fuchsia-600">Transfers</h1>
+                    <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
+                </div>
+                <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    กลับหน้าหลัก
+                </button>
+            </div>
+        </header>
+        <main class="container mx-auto px-4 py-8 md:py-12">
+            <div id="transfers-menu-view"></div>
+        </main>
+    </div>
+
+    <!-- Calendar View -->
+    <div id="calendar-view" class="view">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="font-bold text-xl text-fuchsia-600">ปฏิทินวางแผนงาน</h1>
+                <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    กลับหน้าหลัก
+                </button>
+            </div>
+        </header>
+        <main class="container mx-auto px-4 py-8">
+            <div id="calendar-container" class="space-y-6"></div>
+        </main>
+    </div>
+
+    <!-- Statistics View -->
+    <div id="statistics-view" class="view">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="font-bold text-xl text-fuchsia-600">สถิติ</h1>
+                <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    กลับหน้าหลัก
+                </button>
+            </div>
+        </header>
+        <main class="container mx-auto px-4 py-8">
+            <div id="statistics-container" class="space-y-6"></div>
+        </main>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, addDoc, writeBatch, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef123456"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally
+        window.auth = auth;
+        window.db = db;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut = signOut;
+        window.EmailAuthProvider = EmailAuthProvider;
+        window.reauthenticateWithCredential = reauthenticateWithCredential;
+        window.updatePassword = updatePassword;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.updateDoc = updateDoc;
+        window.collection = collection;
+        window.getDocs = getDocs;
+        window.addDoc = addDoc;
+        window.writeBatch = writeBatch;
+        window.serverTimestamp = serverTimestamp;
+
+        // Load custom JavaScript
+        const script = document.createElement('script');
+        script.src = 'app.js';
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
