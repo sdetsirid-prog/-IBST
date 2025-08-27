@@ -288,6 +288,20 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
+        
+        /* KPI Issue Indicator */
+        .kpi-issue-indicator {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 2px 8px;
+            margin-left: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #b91c1c;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -716,7 +730,9 @@
                         <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
                     </div>
                     <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
                         กลับหน้าหลัก
                     </button>
                 </div>
@@ -1677,7 +1693,11 @@
                                 issueTypes,
                                 issueNotes: "สร้างจากหน้าฟอร์มหลัก",
                                 issueImages: uploadedImagesBase64,
-                                reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
+                                reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+                                reportedByUid: currentUser.uid,
+                                reportedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                                checkerUid: currentUser.uid,
+                                checkerName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
                             };
                             batch.set(doc(collection(db, "issues")), issue);
                         }
@@ -1817,7 +1837,9 @@
                             issueImages: imagesForThisItem,
                             reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
                             reportedByUid: currentUser.uid,
-                            reportedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                            reportedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                            checkerUid: currentTforData.lastCheckedByUid || null,
+                            checkerName: currentTforData.lastCheckedByName || null
                         };
                         delete newIssue.id;
                         batch.set(doc(collection(db, "issues")), newIssue);
@@ -2105,7 +2127,9 @@
                             issueImages: imagesForThisItem,
                             reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
                             reportedByUid: currentUser.uid,
-                            reportedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                            reportedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                            checkerUid: currentTforData.lastCheckedByUid || null,
+                            checkerName: currentTforData.lastCheckedByName || null
                         };
                         delete newIssue.id;
                         batch.set(doc(collection(db, "issues")), newIssue);
@@ -2193,6 +2217,13 @@
                             const issueItem = document.createElement('div');
                             const allImages = [...(issue.issueImages || []), ...(issue.images || [])];
                             const imageThumb = allImages.length > 0 ? `<img src="${allImages[0]}" class="w-12 h-12 object-cover rounded-md mr-4">` : '';
+                            
+                            // Display both checker and reporter information
+                            let userDisplay = `<div class="text-sm text-gray-600">ผู้รายงาน: ${issue.reportedByName || 'N/A'}</div>`;
+                            if (issue.checkerName && issue.checkerName !== issue.reportedByName) {
+                                userDisplay += `<div class="text-sm text-blue-600">ผู้เช็ค: ${issue.checkerName}</div>`;
+                            }
+                            
                             issueItem.className = 'p-2 hover:bg-gray-100 rounded-md flex justify-between items-center';
                             issueItem.innerHTML = `
                                 <div class="cursor-pointer flex-grow flex items-center">
@@ -2200,6 +2231,7 @@
                                     <div>
                                         <p>${issue.deliveryDate} | ${issue.licensePlate} | ...${issue.tforNumber}</p>
                                         <p class="text-sm text-red-600">${issue.issueTypes.join(', ')}</p>
+                                        ${userDisplay}
                                     </div>
                                 </div>`;
                             issueItem.querySelector('div').addEventListener('click', () => showDetailsModal(issue));
@@ -2231,6 +2263,13 @@
                     const imagesHTML = allImages.length > 0 
                         ? `<div class="grid grid-cols-2 gap-2">${allImages.map(img => `<a href="${img}" target="_blank"><img src="${img}" class="rounded-lg w-full h-auto"></a>`).join('')}</div>`
                         : 'ไม่มีรูปภาพ';
+                    
+                    // Display both checker and reporter information
+                    let userDisplay = `<p><strong>ผู้รายงาน:</strong> ${item.reportedByName || 'N/A'}</p>`;
+                    if (item.checkerName && item.checkerName !== item.reportedByName) {
+                        userDisplay += `<p><strong>ผู้เช็ค:</strong> ${item.checkerName}</p>`;
+                    }
+                    
                     detailsModalContent.innerHTML += `
                         <h2 class="text-xl font-bold mb-4">รายละเอียด</h2>
                         <div class="space-y-3">
@@ -2243,7 +2282,7 @@
                             <p><strong>จำนวนสินค้า:</strong> ${item.quantity || '-'}</p>
                             <p><strong>หมายเหตุ:</strong> ${item.issueNotes || item.notes || '-'}</p>
                             <p><strong>หมายเหตุพาเลท:</strong> ${item.palletNotes || '-'}</p>
-                            <p><strong>ผู้รายงาน:</strong> ${item.reportedByName || item.createdByName || 'N/A'}</p>
+                            ${userDisplay}
                             <p><strong>รูปภาพ:</strong></p>
                             ${imagesHTML}
                         </div>
@@ -3024,13 +3063,19 @@
                     const createdCount = [...allTransfersData, ...completedTransfersData].filter(t => t.createdByUid === user.id).length;
                     const checkedCount = completedTransfersData.filter(t => t.lastCheckedByUid === user.id).length;
                     const receivedCount = completedTransfersData.filter(t => t.lastReceivedByUid === user.id).length;
-                    const issuesCount = allIssues.filter(i => i.reportedByUid === user.id).length;
+                    
+                    // Count issues reported by this user
+                    const reportedIssuesCount = allIssues.filter(i => i.reportedByUid === user.id).length;
+                    
+                    // Count issues found by this user (where they were the checker)
+                    const foundIssuesCount = allIssues.filter(i => i.checkerUid === user.id).length;
+                    
                     const userScores = allScores.filter(s => s.userId === user.id);
                     const totalStars = userScores.reduce((sum, score) => sum + (score.score || 0), 0);
                     const profilePic = user.profilePictureUrl || 'https://placehold.co/80x80/e0e0e0/757575?text=?';
                     
-                    // KPI Calculation: Checked + Created + (Found Issues) + Received + Stars
-                    const kpiScore = checkedCount + createdCount + issuesCount + receivedCount + totalStars;
+                    // KPI Calculation: Checked + Created + Found Issues + Reported Issues + Received + Stars
+                    const kpiScore = checkedCount + createdCount + foundIssuesCount + reportedIssuesCount + receivedCount + totalStars;
                     const scoreColor = kpiScore > 10 ? 'text-green-500' : kpiScore > 0 ? 'text-blue-500' : 'text-red-500';
                     const card = document.createElement('div');
                     card.className = 'bg-white p-6 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow';
@@ -3051,8 +3096,11 @@
                                 <div><p class="font-bold text-blue-500">${createdCount}</p><p>สร้าง</p></div>
                                 <div><p class="font-bold text-green-500">${checkedCount}</p><p>เช็ค</p></div>
                                 <div><p class="font-bold text-purple-500">${receivedCount}</p><p>รับ</p></div>
-                                <div><p class="font-bold text-red-500">${issuesCount}</p><p>ปัญหา</p></div>
+                                <div><p class="font-bold text-red-500">${reportedIssuesCount}</p><p>รายงาน</p></div>
                             </div>
+                        </div>
+                        <div class="mt-2 text-center text-sm text-gray-600">
+                            <p>พบปัญหา: ${foundIssuesCount} รายการ</p>
                         </div>
                         <div class="mt-4 admin-supervisor-only">
                             <button class="give-star-points-btn w-full py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200" data-user-id="${user.id}">
@@ -3188,9 +3236,16 @@
                 const createdCount = allUserTransfers.filter(t => t.createdByUid === user.id).length;
                 const checkedCount = completedTransfersData.filter(t => t.lastCheckedByUid === user.id).length;
                 const receivedCount = completedTransfersData.filter(t => t.lastReceivedByUid === user.id).length;
-                const issuesCount = Object.values(issuesData).flat().filter(i => i.reportedByUid === user.id).length;
-                const performanceScore = checkedCount + createdCount + issuesCount + receivedCount + totalStars;
-                const issueRate = checkedCount > 0 ? ((issuesCount / checkedCount) * 100).toFixed(1) : 0;
+                
+                // Count issues reported by this user
+                const allIssues = Object.values(issuesData).flat();
+                const reportedIssuesCount = allIssues.filter(i => i.reportedByUid === user.id).length;
+                
+                // Count issues found by this user (where they were the checker)
+                const foundIssuesCount = allIssues.filter(i => i.checkerUid === user.id).length;
+                
+                const performanceScore = checkedCount + createdCount + foundIssuesCount + reportedIssuesCount + receivedCount + totalStars;
+                const issueRate = checkedCount > 0 ? ((reportedIssuesCount / checkedCount) * 100).toFixed(1) : 0;
                 let scoreHistoryHtml = '<p class="text-gray-500">ยังไม่มีประวัติคะแนนพิเศษ</p>';
                 if (userScores.length > 0) {
                     scoreHistoryHtml = userScores.map(score => {
@@ -3243,17 +3298,31 @@
                             <div class="relative h-60"><canvas id="kpi-user-chart"></canvas></div>
                         </div>
                     </div>
+                    <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-2">รายละเอียดคะแนน KPI</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><p class="text-sm text-gray-600">สร้าง TFOR</p><p class="text-xl font-bold">${createdCount} คะแนน</p></div>
+                            <div><p class="text-sm text-gray-600">เช็คสินค้า</p><p class="text-xl font-bold">${checkedCount} คะแนน</p></div>
+                            <div><p class="text-sm text-gray-600">พบปัญหา</p><p class="text-xl font-bold">${foundIssuesCount} คะแนน</p></div>
+                            <div><p class="text-sm text-gray-600">รายงานปัญหา</p><p class="text-xl font-bold">${reportedIssuesCount} คะแนน</p></div>
+                            <div><p class="text-sm text-gray-600">รับสินค้า</p><p class="text-xl font-bold">${receivedCount} คะแนน</p></div>
+                            <div><p class="text-sm text-gray-600">คะแนนพิเศษ</p><p class="text-xl font-bold">${totalStars} คะแนน</p></div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <p class="text-2xl font-bold text-purple-600">คะแนนรวม: ${performanceScore}</p>
+                        </div>
+                    </div>
                 `;
                 container.classList.remove('hidden');
                 const kpiCtx = document.getElementById('kpi-user-chart').getContext('2d');
                 currentChartInstances.kpiChart = new Chart(kpiCtx, {
                     type: 'bar',
                     data: {
-                        labels: ['สร้าง TFOR', 'เช็คเสร็จ', 'รับสินค้า', 'รายงานปัญหา'],
+                        labels: ['สร้าง TFOR', 'เช็คเสร็จ', 'รับสินค้า', 'พบปัญหา', 'รายงานปัญหา'],
                         datasets: [{
                             label: 'จำนวนรายการ',
-                            data: [createdCount, checkedCount, receivedCount, issuesCount],
-                            backgroundColor: ['#3b82f6', '#22c55e', '#a855f7', '#ef4444']
+                            data: [createdCount, checkedCount, receivedCount, foundIssuesCount, reportedIssuesCount],
+                            backgroundColor: ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444']
                         }]
                     },
                     options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, responsive: true, maintainAspectRatio: false }
@@ -3612,7 +3681,10 @@
                 const issueActivity = allUserIssues
                     .filter(i => i.reportedByUid === currentUser.uid)
                     .map(i => ({...i, type: 'รายงานปัญหา', timestamp: i.createdAt}));
-                const userActivity = [...createdActivity, ...checkedActivity, ...receivedActivity, ...issueActivity]
+                const foundIssueActivity = allUserIssues
+                    .filter(i => i.checkerUid === currentUser.uid)
+                    .map(i => ({...i, type: 'พบปัญหา', timestamp: i.createdAt}));
+                const userActivity = [...createdActivity, ...checkedActivity, ...receivedActivity, ...issueActivity, ...foundIssueActivity]
                     .sort((a, b) => getMillis(b.timestamp) - getMillis(a.timestamp))
                     .slice(0, 5);
                 if (userActivity.length === 0) {
@@ -3634,6 +3706,9 @@
                     } else if (item.type === 'รายงานปัญหา') {
                         actionText = 'คุณรายงานปัญหา';
                         actionColor = 'text-red-600';
+                    } else if (item.type === 'พบปัญหา') {
+                        actionText = 'คุณพบปัญหาใน TFOR นี้';
+                        actionColor = 'text-yellow-600';
                     }
                     return `
                         <div class="p-3 bg-gray-50 rounded-lg">
