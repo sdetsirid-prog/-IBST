@@ -511,11 +511,11 @@
             <main class="container mx-auto px-4 py-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 text-center">
                     <div id="summary-todays-plan-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
-                        <h4 class="font-semibold text-gray-600">งานประจำวันนี้</h4>
+                        <h4 class="font-semibold text-gray-600">งานที่เช็คแล้ว</h4>
                         <p id="summary-todays-plan" class="text-4xl font-bold text-purple-500 mt-1">0</p>
                     </div>
                     <div id="summary-pending-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
-                        <h4 class="font-semibold text-gray-600">TFORs รอดำเนินการ</h4>
+                        <h4 class="font-semibold text-gray-600">TFOR ที่ค้าง</h4>
                         <p id="summary-pending" class="text-4xl font-bold text-yellow-500 mt-1">0</p>
                     </div>
                      <div id="summary-completed-today-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
@@ -866,7 +866,7 @@
                 <div id="completed-view" class="hidden">
                     <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12">
                         <button class="back-to-transfers-menu mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700">กลับ</button>
-                        <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">เช็คเสร็จแล้ว</h2>
+                        <h2 id="completed-view-title" class="text-3xl font-bold text-gray-900 mb-4 text-center">เช็คเสร็จแล้ว</h2>
                         <div class="mb-6"><input type="search" id="completed-search" placeholder="ค้นหา TFOR, ทะเบียนรถ, สาขา..." class="w-full p-2 border rounded-lg"></div>
                         <div id="completed-container" class="space-y-6"></div>
                     </div>
@@ -1434,12 +1434,21 @@
             
             function updateMainMenuSummary() {
                 const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-                const pendingCount = allTransfersData.filter(t => !t.scheduledDate).length;
-                const todaysPlanCount = allTransfersData.filter(t => t.scheduledDate === todayString).length;
+                // งานที่เช็คแล้ว: TFORs ที่เช็คแล้วแต่ยังไม่รับสินค้า
+                const checkedNotReceivedCount = allTransfersData.filter(t => 
+                    t.checkedPallets && t.checkedPallets.length > 0 && 
+                    (!t.receivedPallets || t.receivedPallets.length < t.palletNumbers.length)
+                ).length;
+                // TFOR ที่ค้าง: TFORs ที่มีหลายพาเลทแต่เช็คและรับไม่ครบ
+                const pendingCount = allTransfersData.filter(t => 
+                    t.palletNumbers && t.palletNumbers.length > 1 && 
+                    ((!t.checkedPallets || t.checkedPallets.length < t.palletNumbers.length) ||
+                     (!t.receivedPallets || t.receivedPallets.length < t.palletNumbers.length))
+                ).length;
                 const completedTodayCount = completedTransfersData.filter(t => t.completionDate === todayString).length;
                 const issuesCount = Object.values(issuesData).flat().length;
                 
-                document.getElementById('summary-todays-plan').textContent = todaysPlanCount;
+                document.getElementById('summary-todays-plan').textContent = checkedNotReceivedCount;
                 document.getElementById('summary-pending').textContent = pendingCount;
                 document.getElementById('summary-completed-today').textContent = completedTodayCount;
                 document.getElementById('summary-issues').textContent = issuesCount;
@@ -1461,8 +1470,9 @@
             }
             
             document.getElementById('summary-todays-plan-card').addEventListener('click', () => {
-                renderTodaysPlanView();
-                showMainView(views.todaysPlan);
+                showMainView(views.transfers);
+                renderCheckedNotReceivedView();
+                showSubView(completedView);
             });
             document.getElementById('summary-pending-card').addEventListener('click', () => {
                 showMainView(views.transfers);
@@ -1800,17 +1810,24 @@
                     receiveLog.push({ pallet: palletNum, user: currentUserProfile.firstName, timestamp: new Date().toISOString() });
                 });
                 
+                // Check if all pallets are received (not necessarily all checked)
+                const isAllReceived = receivedPallets.length === currentTforData.palletNumbers.length;
+                
                 try {
                     await updateDoc(transferDocRef, {
-                        isReceived: true,
-                        receivedDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
+                        isReceived: isAllReceived,
+                        receivedDate: isAllReceived ? new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : null,
                         receivedPallets: receivedPallets,
                         lastReceivedByUid: currentUser.uid,
                         lastReceivedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
                         receiveLog: receiveLog
                     });
                     
-                    showNotification('รับสินค้าครบถ้วนแล้ว!');
+                    if (isAllReceived) {
+                        showNotification('รับสินค้าครบถ้วนแล้ว!');
+                    } else {
+                        showNotification('รับสินค้าบางส่วนเรียบร้อยแล้ว');
+                    }
                 } catch (error) {
                     console.error("Error updating receive status: ", error);
                     showNotification('เกิดข้อผิดพลาดในการอัปเดต', false);
@@ -1833,7 +1850,8 @@
                             itemNumber: itemForm.querySelector('.issue-item-number').value,
                             quantity: itemForm.querySelector('.issue-quantity').value,
                             issueTypes: issueTypes.length > 0 ? issueTypes : ['อื่นๆ'],
-                            issueNotes: itemForm.querySelector('.issue-other-details').value,
+                            issueOtherDetails: itemForm.querySelector('.issue-other-details').value,
+                            issueNotes: itemForm.querySelector('.issue-notes') ? itemForm.querySelector('.issue-notes').value : '',
                             issueImages: imagesForThisItem,
                             reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
                             reportedByUid: currentUser.uid,
@@ -1884,7 +1902,7 @@
             
             function renderDetailsTable(filter = '', sortBy = 'date-desc') {
                 const container = document.getElementById('details-table-container');
-                let filteredData = allTransfersData.filter(d => !d.scheduledDate && !d.isReceived);
+                let filteredData = allTransfersData.filter(d => !d.scheduledDate);
                 if (filter) {
                     filteredData = filteredData.filter(d => 
                         (d.tforNumber || '').endsWith(filter) || 
@@ -1913,10 +1931,20 @@
                     <tbody class="bg-white divide-y divide-gray-200"></tbody>`;
                 const tbody = table.querySelector('tbody');
                 filteredData.forEach(data => {
-                    const statusText = (data.receivedPallets?.length || 0) > 0 ? 'รับแล้ว' : 
-                                     (data.checkedPallets?.length || 0) > 0 ? 'กำลังเช็ค' : 'ยังไม่เช็ค';
-                    const statusColor = (data.receivedPallets?.length || 0) > 0 ? 'bg-purple-100 text-purple-800' : 
-                                       (data.checkedPallets?.length || 0) > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800';
+                    let statusText, statusColor;
+                    if ((data.receivedPallets?.length || 0) === (data.palletNumbers?.length || 0)) {
+                        statusText = 'รับแล้ว';
+                        statusColor = 'bg-purple-100 text-purple-800';
+                    } else if ((data.checkedPallets?.length || 0) > 0 && (data.receivedPallets?.length || 0) < (data.palletNumbers?.length || 0)) {
+                        statusText = 'รอรับสินค้า';
+                        statusColor = 'bg-orange-100 text-orange-800';
+                    } else if ((data.checkedPallets?.length || 0) > 0) {
+                        statusText = 'กำลังเช็ค';
+                        statusColor = 'bg-yellow-100 text-yellow-800';
+                    } else {
+                        statusText = 'ยังไม่เช็ค';
+                        statusColor = 'bg-gray-100 text-gray-800';
+                    }
                     const row = tbody.insertRow();
                     row.className = 'hover:bg-gray-50 cursor-pointer';
                     row.innerHTML = `
@@ -2090,6 +2118,10 @@
                             </div>
                             <textarea class="issue-other-details hidden mt-2 w-full rounded-md border-gray-300 shadow-sm" placeholder="ระบุรายละเอียด..."></textarea>
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium">หมายเหตุเพิ่มเติม</label>
+                            <textarea class="issue-notes mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="ระบุหมายเหตุเพิ่มเติม (ถ้ามี)"></textarea>
+                        </div>
                     `;
                     itemsContainer.appendChild(itemDiv);
                     const dnd = itemDiv.querySelector('.issue-drag-drop');
@@ -2123,7 +2155,8 @@
                             itemNumber: itemForm.querySelector('.issue-item-number').value,
                             quantity: itemForm.querySelector('.issue-quantity').value,
                             issueTypes: issueTypes.length > 0 ? issueTypes : ['อื่นๆ'],
-                            issueNotes: itemForm.querySelector('.issue-other-details').value,
+                            issueOtherDetails: itemForm.querySelector('.issue-other-details').value,
+                            issueNotes: itemForm.querySelector('.issue-notes').value,
                             issueImages: imagesForThisItem,
                             reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
                             reportedByUid: currentUser.uid,
@@ -2144,8 +2177,71 @@
                 }
             }
             
+            function renderCheckedNotReceivedView(filter = '') {
+                const container = document.getElementById('completed-container');
+                const titleElement = document.getElementById('completed-view-title');
+                if (titleElement) {
+                    titleElement.textContent = 'งานที่เช็คแล้ว';
+                }
+                const filteredData = allTransfersData.filter(d => 
+                    d.checkedPallets && d.checkedPallets.length > 0 && 
+                    (!d.receivedPallets || d.receivedPallets.length < d.palletNumbers.length)
+                );
+                if (filter) {
+                    filteredData = filteredData.filter(d => 
+                        (d.tforNumber || '').includes(filter) || 
+                        (d.licensePlate || '').toLowerCase().includes(filter.toLowerCase()) ||
+                        (d.branch || '').toLowerCase().includes(filter.toLowerCase())
+                    );
+                }
+                container.innerHTML = filteredData.length === 0 ? `<p class="text-gray-500 text-center">ไม่พบข้อมูลที่เช็คแล้วแต่ยังไม่รับสินค้า</p>` : '';
+                filteredData.forEach(data => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-6 rounded-2xl shadow-md border border-gray-200';
+                    const imagesHTML = (data.images && data.images.length > 0) 
+                        ? `<div class="mt-4 grid grid-cols-3 gap-2">${data.images.slice(0,3).map(img => `<img src="${img}" class="h-24 w-full object-cover rounded-md cursor-pointer" onclick="document.getElementById('details-modal').dispatchEvent(new CustomEvent('showDetails', { detail: { item: JSON.parse(this.dataset.item) } }))" data-item='${JSON.stringify(data)}'>`).join('')}</div>`
+                        : '<p class="text-sm text-gray-400 mt-4">ไม่มีรูปภาพ</p>';
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">วันที่เช็คเสร็จ</p>
+                                <p class="font-semibold">${data.completionDate || '-'}</p>
+                                <p class="text-sm text-gray-500 mt-2">สถานะ</p>
+                                <p class="font-semibold text-purple-600">รอรับสินค้า</p>
+                            </div>
+                            <div class="delete-permission"></div>
+                        </div>
+                        <hr class="my-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><p class="text-sm text-gray-500">ทะเบียนรถ</p><p class="font-semibold">${data.licensePlate}</p></div>
+                            <div><p class="text-sm text-gray-500">TFOR</p><p class="font-semibold">...${data.tforNumber}</p></div>
+                            <div><p class="text-sm text-gray-500">สาขา</p><p class="font-semibold">${data.branch}</p></div>
+                            <div><p class="text-sm text-gray-500">ผู้เช็คคนล่าสุด</p><p class="font-semibold">${data.lastCheckedByName || 'N/A'}</p></div>
+                            <div class="md:col-span-2"><p class="text-sm text-gray-500">หมายเหตุพาเลท</p><p class="font-semibold">${data.palletNotes || '-'}</p></div>
+                            <div class="md:col-span-2"><p class="text-sm text-gray-500">พาเลทที่เช็คแล้ว</p><p class="font-semibold text-green-600">${data.checkedPallets ? data.checkedPallets.join(', ') : '-'}</p></div>
+                            <div class="md:col-span-2"><p class="text-sm text-gray-500">พาเลทที่รับแล้ว</p><p class="font-semibold text-purple-600">${data.receivedPallets ? data.receivedPallets.join(', ') : '-'}</p></div>
+                        </div>
+                        ${imagesHTML}
+                    `;
+                    
+                    const adminCell = card.querySelector('.delete-permission');
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
+                    deleteButton.className = 'text-red-500 hover:text-red-700';
+                    deleteButton.onclick = () => deleteTransfer(data.id);
+                    adminCell.appendChild(deleteButton);
+                    
+                    container.appendChild(card);
+                });
+                updateUIForRoles();
+            }
+
             function renderCompletedView(filter = '') {
                 const container = document.getElementById('completed-container');
+                const titleElement = document.getElementById('completed-view-title');
+                if (titleElement) {
+                    titleElement.textContent = 'เช็คเสร็จแล้ว';
+                }
                 const filteredData = completedTransfersData.filter(d => d.isCompleted && d.isReceived);
                 if (filter) {
                     filteredData = filteredData.filter(d => 
@@ -2232,6 +2328,7 @@
                                         <p>${issue.deliveryDate} | ${issue.licensePlate} | ...${issue.tforNumber}</p>
                                         <p class="text-sm text-red-600">${issue.issueTypes.join(', ')}</p>
                                         ${userDisplay}
+                                        ${issue.issueNotes ? `<p class="text-sm text-gray-700 mt-1"><strong>หมายเหตุ:</strong> ${issue.issueNotes}</p>` : ''}
                                     </div>
                                 </div>`;
                             issueItem.querySelector('div').addEventListener('click', () => showDetailsModal(issue));
