@@ -302,6 +302,121 @@
             font-weight: 600;
             color: #b91c1c;
         }
+        
+        /* Custom styles for pending TFORs */
+        .pending-tfor-card {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .waiting-receive-card {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+        }
+        
+        /* LOG Table Styles */
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .log-table th, .log-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .log-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .log-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .log-table tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        /* ปุ่มวางแผนงาน */
+        .plan-work-btn {
+            background-color: #8b5cf6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .plan-work-btn:hover {
+            background-color: #7c3aed;
+            transform: translateY(-1px);
+        }
+        
+        /* ปฏิทินสำหรับเลือกวันที่วางแผน */
+        .calendar-picker {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 50;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            width: 320px;
+            display: none;
+        }
+        
+        .calendar-picker.active {
+            display: block;
+        }
+        
+        .calendar-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .calendar-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .calendar-picker-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .calendar-picker-day:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .calendar-picker-day.selected {
+            background-color: #8b5cf6;
+            color: white;
+        }
+        
+        .calendar-picker-day.other-month {
+            color: #d1d5db;
+        }
+        
+        .calendar-picker-day.today {
+            font-weight: bold;
+            color: #8b5cf6;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -515,7 +630,7 @@
                         <p id="summary-todays-plan" class="text-4xl font-bold text-purple-500 mt-1">0</p>
                     </div>
                     <div id="summary-pending-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
-                        <h4 class="font-semibold text-gray-600">TFORs รอดำเนินการ</h4>
+                        <h4 class="font-semibold text-gray-600">งานที่เข้าวันนี้</h4>
                         <p id="summary-pending" class="text-4xl font-bold text-yellow-500 mt-1">0</p>
                     </div>
                      <div id="summary-completed-today-card" class="bg-white p-4 rounded-2xl shadow-lg cursor-pointer transition hover:shadow-xl hover:-translate-y-1">
@@ -534,15 +649,15 @@
                         <p class="mt-1 text-lg opacity-90">สอบถามข้อมูลกับผู้ช่วย AI</p>
                     </div>
                 </div>
+                <div id="go-to-transfers" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer text-center mb-8 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-fuchsia-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    <h2 class="text-4xl font-bold">TRANFERS</h2>
+                </div>
                 <div id="go-to-check-product" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer text-center mb-8 flex items-center justify-center">
                     <svg class="w-10 h-10 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <h2 class="text-4xl font-bold">เช็คสินค้า</h2>
-                </div>
-                <div id="go-to-transfers" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer text-center mb-8 flex items-center justify-center">
-                    <svg class="w-10 h-10 text-fuchsia-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                    <h2 class="text-4xl font-bold">TRANFERS</h2>
+                    <h2 class="text-4xl font-bold">รอรับสินค้า</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div id="go-to-calendar" class="animated-icon p-6 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
@@ -566,7 +681,7 @@
             <header class="bg-white shadow-sm">
                 <div class="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div class="flex items-center space-x-4">
-                        <h1 class="font-bold text-xl text-fuchsia-600">เช็คสินค้า</h1>
+                        <h1 class="font-bold text-xl text-fuchsia-600">รอรับสินค้า</h1>
                         <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
                     </div>
                     <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
@@ -578,7 +693,12 @@
                 </div>
             </header>
             <main class="container mx-auto px-4 py-8">
-                <div id="check-product-container" class="space-y-6"></div>
+                <!-- รายการที่เช็คแล้วแต่ยังไม่ได้รับ (Checked but not received) Section -->
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">รายการที่เช็คแล้วแต่ยังไม่ได้รับ</h2>
+                    <p class="text-gray-600 mb-4">รายการที่กดยืนยันการเช็คพาเลทแล้ว แต่ยังไม่ได้กดรับสินค้า</p>
+                    <div id="checked-tfor-container" class="space-y-4"></div>
+                </div>
             </main>
         </div>
         
@@ -793,7 +913,7 @@
                                 <h3 class="text-xl font-semibold">แบบฟอร์มลงข้อมูล</h3>
                             </div>
                             <div id="menu-2" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-                                <svg class="w-16 h-16 text-indigo-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                                <svg class="w-16 h-16 text-indigo-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                                 <h3 class="text-xl font-semibold">รายละเอียดข้อมูล TRANFERS</h3>
                             </div>
                             <div id="menu-3" class="animated-icon p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
@@ -851,7 +971,15 @@
                 <div id="details-view" class="hidden">
                      <div class="max-w-6xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12">
                         <button class="back-to-transfers-menu mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700">กลับ</button>
-                        <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">รายละเอียดข้อมูล TRANFERS</h2>
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-3xl font-bold text-gray-900 text-center flex-grow">รายละเอียดข้อมูล TRANFERS</h2>
+                            <button id="plan-work-btn" class="plan-work-btn plan-work-permission">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                วางแผนงาน
+                            </button>
+                        </div>
                         <div class="flex flex-col md:flex-row gap-4 mb-6">
                             <input type="search" id="details-search" placeholder="ค้นหา TFOR 4 ตัวท้าย, ทะเบียนรถ..." class="w-full p-2 border rounded-lg">
                             <select id="details-sort" class="w-full md:w-auto p-2 border rounded-lg">
@@ -913,7 +1041,7 @@
                         <span class="user-display hidden text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"></span>
                     </div>
                     <button class="back-to-main-menu inline-flex items-center px-4 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         กลับหน้าหลัก
                     </button>
                 </div>
@@ -1437,7 +1565,12 @@
                 const pendingCount = allTransfersData.filter(t => !t.scheduledDate).length;
                 const todaysPlanCount = allTransfersData.filter(t => t.scheduledDate === todayString).length;
                 const completedTodayCount = completedTransfersData.filter(t => t.completionDate === todayString).length;
-                const issuesCount = Object.values(issuesData).flat().length;
+                
+                // แสดงรายการมีปัญหาเฉพาะภายในวันนั้นๆ
+                const todayIssues = Object.values(issuesData)
+                    .flat()
+                    .filter(issue => issue.reportDate === todayString);
+                const issuesCount = todayIssues.length;
                 
                 document.getElementById('summary-todays-plan').textContent = todaysPlanCount;
                 document.getElementById('summary-pending').textContent = pendingCount;
@@ -1739,6 +1872,14 @@
                         lastCheckedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
                         checkLog: checkLog
                     });
+                    
+                    // Log the action
+                    await logAction('เช็คพาเลท', {
+                        transferId: currentTforData.id,
+                        palletNumber: palletNum,
+                        user: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                    });
+                    
                     if (isNowCompleted) {
                         showNotification('เช็คสินค้าครบถ้วนแล้ว!');
                     }
@@ -1776,6 +1917,13 @@
                         receiveLog: receiveLog
                     });
                     
+                    // Log the action
+                    await logAction('รับสินค้า', {
+                        transferId: currentTforData.id,
+                        palletNumber: palletNum,
+                        user: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                    });
+                    
                     if (isAllReceived) {
                         showNotification('รับสินค้าครบถ้วนแล้ว!');
                     }
@@ -1808,6 +1956,12 @@
                         lastReceivedByUid: currentUser.uid,
                         lastReceivedByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
                         receiveLog: receiveLog
+                    });
+                    
+                    // Log the action
+                    await logAction('รับสินค้าทั้งหมด', {
+                        transferId: currentTforData.id,
+                        user: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
                     });
                     
                     showNotification('รับสินค้าครบถ้วนแล้ว!');
@@ -1845,6 +1999,14 @@
                         batch.set(doc(collection(db, "issues")), newIssue);
                     }
                     await batch.commit();
+                    
+                    // Log the action
+                    await logAction('รายงานปัญหา', {
+                        transferId: currentTforData.id,
+                        palletNumber: palletNum,
+                        user: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                    });
+                    
                     showNotification(`บันทึกปัญหาสำหรับพาเลทที่ ${palletNum} เรียบร้อยแล้ว!`);
                     formWrapper.remove();
                     document.querySelectorAll('.issue-pallet-button').forEach(btn => btn.classList.remove('active'));
@@ -1862,6 +2024,13 @@
                         const issuesSnapshot = await getDocs(query(collection(db, "issues"), where("transferId", "==", transferId)));
                         issuesSnapshot.forEach(doc => batch.delete(doc.ref));
                         await batch.commit();
+                        
+                        // Log the action
+                        await logAction('ลบรายการ TFOR', {
+                            transferId: transferId,
+                            user: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                        });
+                        
                         showNotification("ลบรายการสำเร็จ");
                     } catch (error) {
                         console.error("Error deleting transfer:", error);
@@ -1874,6 +2043,13 @@
                 showConfirmationModal("คุณแน่ใจหรือไม่ว่าต้องการลบปัญหานี้?", async () => {
                     try {
                         await deleteDoc(doc(db, "issues", issueId));
+                        
+                        // Log the action
+                        await logAction('ลบปัญหา', {
+                            issueId: issueId,
+                            user: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                        });
+                        
                         showNotification("ลบปัญหาสำเร็จ");
                     } catch (error) {
                         console.error("Error deleting issue:", error);
@@ -1913,10 +2089,21 @@
                     <tbody class="bg-white divide-y divide-gray-200"></tbody>`;
                 const tbody = table.querySelector('tbody');
                 filteredData.forEach(data => {
-                    const statusText = (data.receivedPallets?.length || 0) > 0 ? 'รับแล้ว' : 
-                                     (data.checkedPallets?.length || 0) > 0 ? 'กำลังเช็ค' : 'ยังไม่เช็ค';
-                    const statusColor = (data.receivedPallets?.length || 0) > 0 ? 'bg-purple-100 text-purple-800' : 
-                                       (data.checkedPallets?.length || 0) > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800';
+                    let statusText = 'ยังไม่เช็ค';
+                    let statusColor = 'bg-gray-100 text-gray-800';
+                    
+                    // New status for "รอรับสินค้า" (waiting for product receipt)
+                    if (data.checkedPallets && data.checkedPallets.length > 0 && !data.isReceived) {
+                        statusText = 'รอรับสินค้า';
+                        statusColor = 'bg-blue-100 text-blue-800';
+                    } else if (data.receivedPallets && data.receivedPallets.length > 0) {
+                        statusText = 'รับแล้ว';
+                        statusColor = 'bg-purple-100 text-purple-800';
+                    } else if (data.checkedPallets && data.checkedPallets.length > 0) {
+                        statusText = 'กำลังเช็ค';
+                        statusColor = 'bg-yellow-100 text-yellow-800';
+                    }
+                    
                     const row = tbody.insertRow();
                     row.className = 'hover:bg-gray-50 cursor-pointer';
                     row.innerHTML = `
@@ -1949,6 +2136,260 @@
             
             document.getElementById('details-search').addEventListener('input', (e) => renderDetailsTable(e.target.value, document.getElementById('details-sort').value));
             document.getElementById('details-sort').addEventListener('change', (e) => renderDetailsTable(document.getElementById('details-search').value, e.target.value));
+            
+            // เพิ่มปุ่มวางแผนงานในหน้ารายละเอียด TRANSFERS
+            document.getElementById('plan-work-btn')?.addEventListener('click', () => {
+                if (!currentTforData) {
+                    // ถ้าไม่มีข้อมูล TFOR ที่เลือก ให้แสดงปฏิทินเพื่อเลือกวันที่วางแผน
+                    showCalendarPicker();
+                } else {
+                    // ถ้ามีข้อมูล TFOR ที่เลือก ให้แสดง modal สำหรับวางแผน
+                    showSchedulingModalForTransfer(currentTforData);
+                }
+            });
+            
+            function showCalendarPicker() {
+                // สร้างปฏิทินสำหรับเลือกวันที่วางแผน
+                const calendarPicker = document.createElement('div');
+                calendarPicker.className = 'calendar-picker';
+                
+                const today = new Date();
+                const currentMonth = today.getMonth();
+                const currentYear = today.getFullYear();
+                
+                // สร้าง header ของปฏิทิน
+                const header = document.createElement('div');
+                header.className = 'calendar-picker-header';
+                header.innerHTML = `
+                    <button id="prev-month" class="px-2 py-1 rounded hover:bg-gray-200">&lt;</button>
+                    <h3>${thaiMonths[currentMonth]} ${currentYear + 543}</h3>
+                    <button id="next-month" class="px-2 py-1 rounded hover:bg-gray-200">&gt;</button>
+                `;
+                
+                // สร้าง grid สำหรับวันที่
+                const grid = document.createElement('div');
+                grid.className = 'calendar-picker-grid';
+                
+                // สร้างชื่อวัน
+                const dayNames = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+                dayNames.forEach(day => {
+                    const dayName = document.createElement('div');
+                    dayName.className = 'text-center text-sm font-semibold';
+                    dayName.textContent = day;
+                    grid.appendChild(dayName);
+                });
+                
+                // สร้างวันที่ในเดือน
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+                
+                // เพิ่มวันที่ว่างก่อนวันแรกของเดือน
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    grid.appendChild(emptyDay);
+                }
+                
+                // เพิ่มวันที่ในเดือน
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-picker-day';
+                    dayElement.textContent = day;
+                    
+                    // เพิ่มคลาสสำหรับวันนี้
+                    if (currentYear === today.getFullYear() && currentMonth === today.getMonth() && day === today.getDate()) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    // เพิ่ม event listener สำหรับการเลือกวันที่
+                    dayElement.addEventListener('click', () => {
+                        const selectedDate = new Date(currentYear, currentMonth, day);
+                        const dateString = selectedDate.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                        
+                        // ปิดปฏิทินและแสดง modal สำหรับเลือก TFOR ที่จะวางแผน
+                        calendarPicker.remove();
+                        showSchedulingModal(dateString);
+                    });
+                    
+                    grid.appendChild(dayElement);
+                }
+                
+                calendarPicker.appendChild(header);
+                calendarPicker.appendChild(grid);
+                
+                // เพิ่มปฏิทินเข้าไปในหน้า
+                document.body.appendChild(calendarPicker);
+                
+                // เพิ่ม event listener สำหรับปุ่มเปลี่ยนเดือน
+                header.querySelector('#prev-month').addEventListener('click', () => {
+                    calendarPicker.remove();
+                    showCalendarPickerForMonth(currentMonth - 1, currentYear);
+                });
+                
+                header.querySelector('#next-month').addEventListener('click', () => {
+                    calendarPicker.remove();
+                    showCalendarPickerForMonth(currentMonth + 1, currentYear);
+                });
+                
+                // เพิ่ม event listener สำหรับการคลิกนอกปฏิทินเพื่อปิด
+                document.addEventListener('click', function closeCalendar(e) {
+                    if (!calendarPicker.contains(e.target) && e.target !== document.getElementById('plan-work-btn')) {
+                        calendarPicker.remove();
+                        document.removeEventListener('click', closeCalendar);
+                    }
+                });
+            }
+            
+            function showCalendarPickerForMonth(month, year) {
+                // สร้างปฏิทินสำหรับเดือนและปีที่ระบุ
+                const calendarPicker = document.createElement('div');
+                calendarPicker.className = 'calendar-picker';
+                
+                const today = new Date();
+                
+                // สร้าง header ของปฏิทิน
+                const header = document.createElement('div');
+                header.className = 'calendar-picker-header';
+                header.innerHTML = `
+                    <button id="prev-month" class="px-2 py-1 rounded hover:bg-gray-200">&lt;</button>
+                    <h3>${thaiMonths[month]} ${year + 543}</h3>
+                    <button id="next-month" class="px-2 py-1 rounded hover:bg-gray-200">&gt;</button>
+                `;
+                
+                // สร้าง grid สำหรับวันที่
+                const grid = document.createElement('div');
+                grid.className = 'calendar-picker-grid';
+                
+                // สร้างชื่อวัน
+                const dayNames = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+                dayNames.forEach(day => {
+                    const dayName = document.createElement('div');
+                    dayName.className = 'text-center text-sm font-semibold';
+                    dayName.textContent = day;
+                    grid.appendChild(dayName);
+                });
+                
+                // สร้างวันที่ในเดือน
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                
+                // เพิ่มวันที่ว่างก่อนวันแรกของเดือน
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    grid.appendChild(emptyDay);
+                }
+                
+                // เพิ่มวันที่ในเดือน
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-picker-day';
+                    dayElement.textContent = day;
+                    
+                    // เพิ่มคลาสสำหรับวันนี้
+                    if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    // เพิ่ม event listener สำหรับการเลือกวันที่
+                    dayElement.addEventListener('click', () => {
+                        const selectedDate = new Date(year, month, day);
+                        const dateString = selectedDate.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                        
+                        // ปิดปฏิทินและแสดง modal สำหรับเลือก TFOR ที่จะวางแผน
+                        calendarPicker.remove();
+                        showSchedulingModal(dateString);
+                    });
+                    
+                    grid.appendChild(dayElement);
+                }
+                
+                calendarPicker.appendChild(header);
+                calendarPicker.appendChild(grid);
+                
+                // เพิ่มปฏิทินเข้าไปในหน้า
+                document.body.appendChild(calendarPicker);
+                
+                // เพิ่ม event listener สำหรับปุ่มเปลี่ยนเดือน
+                header.querySelector('#prev-month').addEventListener('click', () => {
+                    calendarPicker.remove();
+                    const prevMonth = month - 1;
+                    const prevYear = prevMonth < 0 ? year - 1 : year;
+                    showCalendarPickerForMonth(prevMonth < 0 ? 11 : prevMonth, prevYear);
+                });
+                
+                header.querySelector('#next-month').addEventListener('click', () => {
+                    calendarPicker.remove();
+                    const nextMonth = month + 1;
+                    const nextYear = nextMonth > 11 ? year + 1 : year;
+                    showCalendarPickerForMonth(nextMonth > 11 ? 0 : nextMonth, nextYear);
+                });
+                
+                // เพิ่ม event listener สำหรับการคลิกนอกปฏิทินเพื่อปิด
+                document.addEventListener('click', function closeCalendar(e) {
+                    if (!calendarPicker.contains(e.target) && e.target !== document.getElementById('plan-work-btn')) {
+                        calendarPicker.remove();
+                        document.removeEventListener('click', closeCalendar);
+                    }
+                });
+            }
+            
+            function showSchedulingModalForTransfer(transferData) {
+                // แสดง modal สำหรับวางแผนงานของ TFOR ที่เลือก
+                const arrivalDate = parseThaiDate(transferData.deliveryDate);
+                let dueDateString = 'N/A';
+                if (arrivalDate) {
+                    const dueDate = calculateDueDate(arrivalDate);
+                    dueDateString = dueDate.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                }
+                
+                let modalHtml = `
+                    <button id="close-details-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                    <h3 class="text-lg font-bold mb-3">วางแผนงานสำหรับ TFOR ...${transferData.tforNumber}</h3>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <p class="font-semibold">รายละเอียด TFOR</p>
+                        <p>ทะเบียนรถ: ${transferData.licensePlate}</p>
+                        <p>สาขาต้นทาง: ${transferData.branch}</p>
+                        <p>วันที่มาถึง: ${transferData.deliveryDate}</p>
+                        <p class="text-red-600">ควรเช็คก่อนวันที่: ${dueDateString}</p>
+                        <p>จำนวนพาเลท: ${transferData.palletCount}</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เลือกวันที่ต้องการวางแผน</label>
+                        <input type="date" id="schedule-date" class="w-full p-2 border rounded-lg" min="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    <div class="text-right">
+                        <button id="save-schedule-btn" class="px-4 py-2 bg-fuchsia-600 text-white rounded-lg">บันทึกแผนงาน</button>
+                    </div>
+                `;
+                
+                showDetailsModal(modalHtml, true);
+                
+                // เพิ่ม event listener สำหรับปุ่มบันทึก
+                document.getElementById('save-schedule-btn').addEventListener('click', async () => {
+                    const scheduleDate = document.getElementById('schedule-date').value;
+                    if (!scheduleDate) {
+                        showNotification('กรุณาเลือกวันที่ต้องการวางแผน', false);
+                        return;
+                    }
+                    
+                    // แปลงวันที่เป็นรูปแบบไทย
+                    const dateObj = new Date(scheduleDate);
+                    const thaiDateString = dateObj.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    try {
+                        await updateDoc(doc(db, "transfers", transferData.id), {
+                            scheduledDate: thaiDateString,
+                            scheduledByUid: currentUser.uid,
+                            scheduledByName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`
+                        });
+                        
+                        showNotification('วางแผนงานสำเร็จ');
+                        document.getElementById('close-details-modal').click();
+                    } catch (error) {
+                        console.error("Error scheduling TFOR:", error);
+                        showNotification('เกิดข้อผิดพลาดในการวางแผนงาน', false);
+                    }
+                });
+            }
             
             function calculateDueDate(startDate) {
                 let date = new Date(startDate);
@@ -2070,8 +2511,8 @@
                                     ${(currentTforData.palletNumbers || []).map(p => `<option value="${p}">พาเลทที่ ${p}</option>`).join('')}
                                 </select>
                             </div>
-                            <div><label class="block text-sm font-medium">ITEM NUMBER</label><input type="text" class="issue-item-number mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
-                            <div><label class="block text-sm font-medium">จำนวน</label><input type="number" class="issue-quantity mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div>
+                            <div><label class="block text-sm font-medium">ITEM NUMBER</label><input type="text" class="issue-item-number mt-1 block w-full rounded-md border-gray-300 shadow-sm"></input></div>
+                            <div><label class="block text-sm font-medium">จำนวน</label><input type="number" class="issue-quantity mt-1 block w-full rounded-md border-gray-300 shadow-sm"></input></div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">รูปรายละเอียดปัญหา</label>
@@ -2089,6 +2530,11 @@
                                 <label class="flex items-center"><input type="checkbox" value="อื่นๆ" class="issue-type-cb-other rounded"> <span class="ml-2">อื่นๆ</span></label>
                             </div>
                             <textarea class="issue-other-details hidden mt-2 w-full rounded-md border-gray-300 shadow-sm" placeholder="ระบุรายละเอียด..."></textarea>
+                        </div>
+                        <!-- Add notes field for issues -->
+                        <div>
+                            <label class="block text-sm font-medium">หมายเหตุ</label>
+                            <textarea class="issue-notes mt-1 w-full rounded-md border-gray-300 shadow-sm" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
                         </div>
                     `;
                     itemsContainer.appendChild(itemDiv);
@@ -2124,6 +2570,7 @@
                             quantity: itemForm.querySelector('.issue-quantity').value,
                             issueTypes: issueTypes.length > 0 ? issueTypes : ['อื่นๆ'],
                             issueNotes: itemForm.querySelector('.issue-other-details').value,
+                            notes: itemForm.querySelector('.issue-notes').value, // Add the notes field
                             issueImages: imagesForThisItem,
                             reportDate: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }),
                             reportedByUid: currentUser.uid,
@@ -2201,19 +2648,40 @@
             function renderIssuesView() {
                 const container = document.getElementById('issues-container');
                 container.innerHTML = '';
-                Object.keys(issuesData).sort().forEach(category => {
-                    if (issuesData[category]?.length > 0) {
+                
+                // แสดงรายการมีปัญหาเฉพาะภายในวันนั้นๆ
+                const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                const todayIssues = Object.values(issuesData)
+                    .flat()
+                    .filter(issue => issue.reportDate === todayString);
+                
+                if (todayIssues.length === 0) {
+                    container.innerHTML = `<p class="text-gray-500 text-center">ไม่พบรายการสินค้ามีปัญหาสำหรับวันนี้</p>`;
+                    return;
+                }
+                
+                // จัดกลุ่มตามประเภทปัญหา
+                const issuesByType = {};
+                todayIssues.forEach(issue => {
+                    (issue.issueTypes || ['อื่นๆ']).forEach(type => {
+                        if (!issuesByType[type]) issuesByType[type] = [];
+                        issuesByType[type].push(issue);
+                    });
+                });
+                
+                Object.keys(issuesByType).sort().forEach(category => {
+                    if (issuesByType[category]?.length > 0) {
                         const categoryDiv = document.createElement('div');
                         categoryDiv.className = 'bg-white rounded-lg shadow-md';
                         categoryDiv.innerHTML = `
                             <div class="issue-category-header p-4 flex justify-between items-center cursor-pointer">
-                                <h3 class="font-semibold text-lg">${category} (${issuesData[category].length})</h3>
+                                <h3 class="font-semibold text-lg">${category} (${issuesByType[category].length})</h3>
                                 <span class="text-gray-500">▼</span>
                             </div>
                             <div class="issue-list hidden p-4 border-t space-y-2"></div>
                         `;
                         const issueList = categoryDiv.querySelector('.issue-list');
-                        issuesData[category].forEach(issue => {
+                        issuesByType[category].forEach(issue => {
                             const issueItem = document.createElement('div');
                             const allImages = [...(issue.issueImages || []), ...(issue.images || [])];
                             const imageThumb = allImages.length > 0 ? `<img src="${allImages[0]}" class="w-12 h-12 object-cover rounded-md mr-4">` : '';
@@ -2224,6 +2692,12 @@
                                 userDisplay += `<div class="text-sm text-blue-600">ผู้เช็ค: ${issue.checkerName}</div>`;
                             }
                             
+                            // Display notes if available
+                            let notesDisplay = '';
+                            if (issue.notes) {
+                                notesDisplay = `<div class="text-sm text-purple-600 mt-1">หมายเหตุ: ${issue.notes}</div>`;
+                            }
+                            
                             issueItem.className = 'p-2 hover:bg-gray-100 rounded-md flex justify-between items-center';
                             issueItem.innerHTML = `
                                 <div class="cursor-pointer flex-grow flex items-center">
@@ -2232,6 +2706,7 @@
                                         <p>${issue.deliveryDate} | ${issue.licensePlate} | ...${issue.tforNumber}</p>
                                         <p class="text-sm text-red-600">${issue.issueTypes.join(', ')}</p>
                                         ${userDisplay}
+                                        ${notesDisplay}
                                     </div>
                                 </div>`;
                             issueItem.querySelector('div').addEventListener('click', () => showDetailsModal(issue));
@@ -2250,7 +2725,7 @@
                         container.appendChild(categoryDiv);
                     }
                 });
-                if(container.innerHTML === '') container.innerHTML = `<p class="text-gray-500 text-center">ไม่พบรายการสินค้ามีปัญหา</p>`;
+                
                 updateUIForRoles();
             }
             
@@ -2270,6 +2745,12 @@
                         userDisplay += `<p><strong>ผู้เช็ค:</strong> ${item.checkerName}</p>`;
                     }
                     
+                    // Display notes if available
+                    let notesDisplay = '';
+                    if (item.notes) {
+                        notesDisplay = `<p><strong>หมายเหตุ:</strong> ${item.notes}</p>`;
+                    }
+                    
                     detailsModalContent.innerHTML += `
                         <h2 class="text-xl font-bold mb-4">รายละเอียด</h2>
                         <div class="space-y-3">
@@ -2281,7 +2762,7 @@
                             <p><strong>Item Number:</strong> ${item.itemNumber || '-'}</p>
                             <p><strong>จำนวนสินค้า:</strong> ${item.quantity || '-'}</p>
                             <p><strong>หมายเหตุ:</strong> ${item.issueNotes || item.notes || '-'}</p>
-                            <p><strong>หมายเหตุพาเลท:</strong> ${item.palletNotes || '-'}</p>
+                            ${notesDisplay}
                             ${userDisplay}
                             <p><strong>รูปภาพ:</strong></p>
                             ${imagesHTML}
@@ -2530,6 +3011,11 @@
                             <label class="flex items-center p-2 rounded-md hover:bg-gray-100">
                                 <input type="checkbox" class="form-checkbox h-5 w-5 text-fuchsia-600 rounded" value="${t.id}">
                                 <span class="ml-3">TFOR: ...${t.tforNumber} (${t.branch})</span>
+                                <div class="ml-auto text-sm text-gray-500">
+                                    <p>วันที่มา: ${t.deliveryDate}</p>
+                                    <p>ทะเบียน: ${t.licensePlate}</p>
+                                    <p>จำนวนพาเลท: ${t.palletCount}</p>
+                                </div>
                             </label>
                         `;
                     });
@@ -2566,66 +3052,215 @@
                 });
             }
             
-            function renderTodaysPlanView() {
-                const container = document.getElementById('todays-plan-container');
-                const todayString = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-                const todaysTasks = allTransfersData.filter(t => t.scheduledDate === todayString);
-                
-                container.innerHTML = todaysTasks.length === 0 ? `<p class="text-gray-500 text-center">ไม่มีแผนงานสำหรับวันนี้</p>` : '';
-                todaysTasks.forEach(data => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white p-6 rounded-2xl shadow-md border border-gray-200 cursor-pointer hover:shadow-lg';
-                    card.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <div><p class="text-sm text-gray-500">ทะเบียนรถ</p><p class="font-semibold">${data.licensePlate}</p></div>
-                            <div><p class="text-sm text-gray-500">TFOR</p><p class="font-semibold">...${data.tforNumber}</p></div>
-                            <div><p class="text-sm text-gray-500">สาขา</p><p class="font-semibold">${data.branch}</p></div>
-                            <div><p class="text-sm text-gray-500">ผู้วางแผน</p><p class="font-semibold">${data.scheduledByName || 'N/A'}</p></div>
-                        </div>
-                    `;
-                    card.addEventListener('click', () => {
-                        currentTforData = data;
-                        showMainView(views.transfers);
-                        renderCheckView();
-                        showSubView(checkView);
-                    });
-                    container.appendChild(card);
-                });
-            }
-            
             function renderCheckProductView() {
-                const container = document.getElementById('check-product-container');
-                container.innerHTML = '';
+                // แสดงรายการที่เช็คแล้วแต่ยังไม่ได้รับ (checked but not received)
+                const checkedTforContainer = document.getElementById('checked-tfor-container');
+                checkedTforContainer.innerHTML = '';
                 
-                // แสดงเฉพาะรายการที่กดยืนยันการเช็คพาเลทแล้ว แต่ยังไม่ได้รับสินค้า
+                // หา TFOR ที่เช็คครบแล้วแต่ยังไม่ได้รับสินค้า
                 const checkedNotReceived = allTransfersData.filter(t => 
-                    t.checkedPallets && t.checkedPallets.length > 0 && !t.isReceived
+                    t.checkedPallets && t.checkedPallets.length > 0 && 
+                    t.checkedPallets.length === t.palletNumbers.length &&
+                    (!t.receivedPallets || t.receivedPallets.length === 0)
                 );
                 
                 if (checkedNotReceived.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500 text-center">ไม่มีรายการที่ต้องรับสินค้า</p>';
+                    checkedTforContainer.innerHTML = '<p class="text-gray-500 text-center">ไม่มีรายการที่ต้องรับสินค้า</p>';
+                } else {
+                    checkedNotReceived.forEach(data => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white p-6 rounded-2xl shadow-md border border-gray-200 cursor-pointer hover:shadow-lg waiting-receive-card';
+                        
+                        const checkedCount = data.checkedPallets ? data.checkedPallets.length : 0;
+                        const totalCount = data.palletNumbers ? data.palletNumbers.length : 0;
+                        
+                        card.innerHTML = `
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div><p class="text-sm text-gray-500">ทะเบียนรถ</p><p class="font-semibold">${data.licensePlate}</p></div>
+                                <div><p class="text-sm text-gray-500">TFOR</p><p class="font-semibold">...${data.tforNumber}</p></div>
+                                <div><p class="text-sm text-gray-500">สาขา</p><p class="font-semibold">${data.branch}</p></div>
+                                <div><p class="text-sm text-gray-500">จำนวนพาเลท</p><p class="font-semibold">${checkedCount}/${totalCount} (เช็คครบแล้ว)</p></div>
+                            </div>
+                        `;
+                        card.addEventListener('click', () => {
+                            currentTforData = data;
+                            showMainView(views.transfers);
+                            renderCheckView();
+                            showSubView(checkView);
+                        });
+                        checkedTforContainer.appendChild(card);
+                    });
+                }
+            }
+            
+            function renderTodaysPlanView() {
+                const container = document.getElementById('todays-plan-container');
+                container.innerHTML = '';
+                
+                // Get today's date in Thai format
+                const today = new Date();
+                const todayString = today.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+                
+                // Get all transfers (both pending and completed)
+                const allTransfers = [...allTransfersData, ...completedTransfersData];
+                
+                // Filter transfers scheduled for today
+                const todaysTransfers = allTransfers.filter(t => t.scheduledDate === todayString);
+                
+                if (todaysTransfers.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-white rounded-2xl shadow-lg p-8 text-center">
+                            <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-gray-700 mb-2">ไม่มีงานวางแผนสำหรับวันนี้</h3>
+                            <p class="text-gray-500">คุณสามารถวางแผนงานได้ที่หน้าปฏิทิน</p>
+                            <button class="mt-4 px-4 py-2 bg-fuchsia-600 text-white rounded-lg hover:bg-fuchsia-700 plan-work-permission">
+                                วางแผนงานสำหรับวันนี้
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Add event listener to the planning button
+                    const planButton = container.querySelector('.plan-work-permission');
+                    if (planButton) {
+                        planButton.addEventListener('click', () => {
+                            showMainView(views.calendar);
+                            renderCalendar(new Date());
+                            // Show scheduling modal for today
+                            setTimeout(() => {
+                                showSchedulingModal(todayString);
+                            }, 300);
+                        });
+                    }
+                    
                     return;
                 }
                 
-                checkedNotReceived.forEach(data => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white p-6 rounded-2xl shadow-md border border-gray-200 cursor-pointer hover:shadow-lg';
-                    card.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <div><p class="text-sm text-gray-500">ทะเบียนรถ</p><p class="font-semibold">${data.licensePlate}</p></div>
-                            <div><p class="text-sm text-gray-500">TFOR</p><p class="font-semibold">...${data.tforNumber}</p></div>
-                            <div><p class="text-sm text-gray-500">สาขา</p><p class="font-semibold">${data.branch}</p></div>
-                            <div><p class="text-sm text-gray-500">พาเลทที่เช็คแล้ว</p><p class="font-semibold">${data.checkedPallets.length}/${data.palletCount}</p></div>
-                        </div>
+                // Group transfers by status
+                const pendingTransfers = todaysTransfers.filter(t => !t.isCompleted);
+                const completedTransfers = todaysTransfers.filter(t => t.isCompleted);
+                
+                // Render pending transfers
+                if (pendingTransfers.length > 0) {
+                    const pendingSection = document.createElement('div');
+                    pendingSection.className = 'mb-8';
+                    pendingSection.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <span class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                            งานที่รอดำเนินการ (${pendingTransfers.length})
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     `;
-                    card.addEventListener('click', () => {
-                        currentTforData = data;
-                        showMainView(views.transfers);
-                        renderCheckView();
-                        showSubView(checkView);
+                    
+                    const pendingContainer = pendingSection.querySelector('.grid');
+                    pendingTransfers.forEach(transfer => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white p-4 rounded-xl shadow-md border-l-4 border-yellow-500 cursor-pointer hover:shadow-lg transition-shadow';
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">...${transfer.tforNumber}</p>
+                                    <p class="text-sm text-gray-600">${transfer.branch}</p>
+                                    <p class="text-sm text-gray-500">${transfer.licensePlate}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-gray-500">พาเลท</p>
+                                    <p class="font-bold">${transfer.palletCount}</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
+                                    โดย ${transfer.scheduledByName || 'N/A'}
+                                </span>
+                                <button class="text-xs text-red-500 hover:text-red-700 plan-work-permission" data-id="${transfer.id}">
+                                    ยกเลิกแผน
+                                </button>
+                            </div>
+                        `;
+                        
+                        // Add click event to navigate to check view
+                        card.addEventListener('click', (e) => {
+                            if (!e.target.classList.contains('plan-work-permission')) {
+                                currentTforData = transfer;
+                                showMainView(views.transfers);
+                                renderCheckView();
+                                showSubView(checkView);
+                            }
+                        });
+                        
+                        // Add event to cancel plan
+                        card.querySelector('.plan-work-permission').addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            try {
+                                await updateDoc(doc(db, "transfers", transfer.id), { 
+                                    scheduledDate: null, 
+                                    scheduledByUid: null, 
+                                    scheduledByName: null 
+                                });
+                                showNotification('ยกเลิกแผนงานสำเร็จ');
+                                renderTodaysPlanView(); // Refresh the view
+                            } catch (error) {
+                                showNotification('เกิดข้อผิดพลาดในการยกเลิก', false);
+                            }
+                        });
+                        
+                        pendingContainer.appendChild(card);
                     });
-                    container.appendChild(card);
-                });
+                    
+                    container.appendChild(pendingSection);
+                }
+                
+                // Render completed transfers
+                if (completedTransfers.length > 0) {
+                    const completedSection = document.createElement('div');
+                    completedSection.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                            งานที่เสร็จสิ้น (${completedTransfers.length})
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    `;
+                    
+                    const completedContainer = completedSection.querySelector('.grid');
+                    completedTransfers.forEach(transfer => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white p-4 rounded-xl shadow-md border-l-4 border-green-500 cursor-pointer hover:shadow-lg transition-shadow';
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-lg">...${transfer.tforNumber}</p>
+                                    <p class="text-sm text-gray-600">${transfer.branch}</p>
+                                    <p class="text-sm text-gray-500">${transfer.licensePlate}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-gray-500">พาเลท</p>
+                                    <p class="font-bold">${transfer.palletCount}</p>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                                    เสร็จสิ้น ${transfer.completionDate || 'N/A'}
+                                </span>
+                            </div>
+                        `;
+                        
+                        // Add click event to navigate to check view
+                        card.addEventListener('click', () => {
+                            currentTforData = transfer;
+                            showMainView(views.transfers);
+                            renderCheckView();
+                            showSubView(checkView);
+                        });
+                        
+                        completedContainer.appendChild(card);
+                    });
+                    
+                    container.appendChild(completedSection);
+                }
+                
+                // Update UI for roles
+                updateUIForRoles();
             }
             
             function getStatsData(timeframe = 'month') {
@@ -3155,7 +3790,8 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         </td>
-                    `;
+                    </tr>
+                `;
                 });
                 container.appendChild(table);
                 
@@ -3899,6 +4535,21 @@
                     reader.readAsText(restoreFile);
                 });
             });
+            
+            // LOG Function
+            async function logAction(action, details) {
+                try {
+                    await addDoc(collection(db, "logs"), {
+                        action: action,
+                        details: details,
+                        userId: currentUser.uid,
+                        userName: `${currentUserProfile.firstName} ${currentUserProfile.lastName}`,
+                        timestamp: serverTimestamp()
+                    });
+                } catch (error) {
+                    console.error("Error logging action:", error);
+                }
+            }
         });
     </script>
 </body>
